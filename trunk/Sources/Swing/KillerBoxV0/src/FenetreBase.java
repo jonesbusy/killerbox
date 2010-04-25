@@ -30,6 +30,7 @@ public class FenetreBase extends JFrame
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true); 
+        this.setResizable(false);
 		
 		// le sous menu fichier
 		menu.add(quitter);
