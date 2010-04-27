@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
 /**
  * Server
  * @author Valentin Delaye
@@ -16,13 +15,12 @@ public class Server extends Observable implements Runnable, Observer
 	 * ID courant de connexion
 	 */
 	private static int ID = 1;
-	
-	
+
 	/**
 	 * Le decoder du serveur
 	 */
 	private Decoder decoder;
-	
+
 	/**
 	 * Permettre de nettoyer les connexions innactives
 	 * du serveur
@@ -61,7 +59,7 @@ public class Server extends Observable implements Runnable, Observer
 				}
 				catch (InterruptedException e)
 				{
-					
+
 				}
 			}
 		}
@@ -78,9 +76,58 @@ public class Server extends Observable implements Runnable, Observer
 				{
 					connexions.get(i).kill();
 					setChanged();
-					notifyObservers("La connexion " + connexions.get(i).getId() + " s'est deconnecte");
+					notifyObservers(new StatusConnexion(connexions.get(i).getId(), false));
 					connexions.remove(i);
 				}
+		}
+
+	}
+
+	/**
+	 * Permet de representer le nouveau status d'une connexion
+	 * @author Valentin Delaye
+	 */
+	public class StatusConnexion
+	{
+
+		/**
+		 * Id de connexion
+		 */
+		private int id;
+
+		/**
+		 * Status de la connexion
+		 */
+		private boolean status;
+
+		/**
+		 * Constructeur
+		 * @param id Identificateur de la connexion
+		 * @param status Le status. True, c'est une nouvelle connexion sinon False
+		 *        si la connexion est annulee
+		 */
+		public StatusConnexion(int id, boolean status)
+		{
+			this.id = id;
+			this.status = status;
+		}
+
+		/**
+		 * Indique si c'est une nouvelle connexion ou non
+		 * @return Le status de la connexion
+		 */
+		public boolean isNew()
+		{
+			return this.status;
+		}
+
+		/***
+		 * Retourne l'id de la connexion
+		 * @return L'id de la connexion
+		 */
+		public int getId()
+		{
+			return this.id;
 		}
 
 	}
@@ -98,9 +145,9 @@ public class Server extends Observable implements Runnable, Observer
 	/**
 	 * La liste des connexions
 	 */
-	private ArrayList<Connexion> connexions = new ArrayList<Connexion>();
-	
-	//private HashMap<Integer, Connexion> connexions = new HashMap<Integer, Connexion>();
+	private LinkedList<Connexion> connexions = new LinkedList<Connexion>();
+
+	// private HashMap<Integer, Connexion> connexions = new HashMap<Integer, Connexion>();
 
 	/**
 	 * Le thread associe au serveur. Celui qui recupere
@@ -118,7 +165,7 @@ public class Server extends Observable implements Runnable, Observer
 		{
 			this.serverSocket = new ServerSocket(numeroPort);
 		}
-		
+
 		catch (IOException e)
 		{
 			System.out.println("Un serveur existe deja sur ce numero de port.");
@@ -126,9 +173,9 @@ public class Server extends Observable implements Runnable, Observer
 		}
 
 		this.numeroPort = numeroPort;
-		
+
 		this.decoder = decoder;
-		
+
 		new ConnexionRemover();
 
 		this.activite = new Thread(this);
@@ -152,9 +199,9 @@ public class Server extends Observable implements Runnable, Observer
 	{
 		return connexions.size();
 	}
-	
+
 	/**
-	 * Permet de retourner la derniere connexion recu par 
+	 * Permet de retourner la derniere connexion recu par
 	 * le serveur
 	 * @return La dernier connexion
 	 */
@@ -162,8 +209,7 @@ public class Server extends Observable implements Runnable, Observer
 	{
 		return this.connexions.get(this.getNombreClient() - 1);
 	}
-	
-	
+
 	/**
 	 * Permet transferer un message au serveur
 	 * @param message Le message
@@ -174,41 +220,50 @@ public class Server extends Observable implements Runnable, Observer
 		setChanged();
 		notifyObservers(message);
 	}
-	
+
 	/**
 	 * Permet d'envoyer un message a tout les clients
 	 * @param message Le message
 	 */
 	public void broadcast(String message)
 	{
-		for(Connexion co : connexions)
+		for (Connexion co : connexions)
 			co.send(message);
 	}
 	
+	public void send(int id, String message)
+	{
+		// Envoyer le message a l'ID
+		for (Connexion co : connexions)
+			if(co.getId() == id)
+			{
+				co.send(message);
+				break;
+			}
+	}
+
 	/**
 	 * Permet de deconnecter une connexion
 	 * @param id L'id de la connexion
 	 */
 	public void disconnect(int id)
 	{
-		for(int i = 0 ; i < this.getNombreClient() ; i++)
+		for (int i = 0; i < this.getNombreClient(); i++)
 			if (this.connexions.get(i).getId() == id)
 			{
 				this.connexions.get(i).close();
 				return;
 			}
 	}
-	
+
 	/**
 	 * Permet de deconnecter tout les client
 	 */
 	public void disconnectAll()
 	{
-		for(int i = 0 ; i < this.getNombreClient() ; i++)
+		for (int i = 0; i < this.getNombreClient(); i++)
 			this.connexions.get(i).close();
 	}
-	
-	
 
 	/**
 	 * Permet d'executer le thread et recuperer les connexions
@@ -221,19 +276,22 @@ public class Server extends Observable implements Runnable, Observer
 			try
 			{
 				Server.ID++;
-				Connexion connexion = new Connexion(serverSocket.accept(), Server.ID, this, this.decoder);
+				Connexion connexion = new Connexion(serverSocket.accept(), Server.ID,
+						this.decoder);
+				
 				connexions.add(connexion);
+
 				setChanged();
-				notifyObservers(true);
+				notifyObservers(new StatusConnexion(Server.ID, true));
+
 			}
 
 			catch (IOException e)
 			{
-				
+
 			}
 		}
 	}
-	
 
 	/**
 	 * Lorsque le statut d'une connexion change.
@@ -242,7 +300,7 @@ public class Server extends Observable implements Runnable, Observer
 	public void update(Observable o, Object arg)
 	{
 		setChanged();
-		notifyObservers((String)arg);
+		notifyObservers((String) arg);
 	}
 
 }
