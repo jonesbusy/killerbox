@@ -17,13 +17,13 @@ import javax.swing.JTextField;
 public class PanelPrincipale extends PanelSpec implements ActionListener 
 {
 	
-
 	private final String textFieldString = "nom utilisateur";
     private final String passwordFieldString = "mot de passe";
     private JButton creercompte = new JButton("Creer un compte");
     private JButton seConnecter = new JButton("Se Connecter");
 
-    public PanelPrincipale(FenetreBase fenetreBase) {
+    public PanelPrincipale(FenetreBase fenetreBase) 
+    {
 		super(fenetreBase);
 		setLayout(new BorderLayout());
 		
@@ -107,7 +107,6 @@ public class PanelPrincipale extends PanelSpec implements ActionListener
 		{	
 			fenetreBase.setPanelType(PanelType.CreationCompte);
 		}
-				
-		
+						
 	}
 }

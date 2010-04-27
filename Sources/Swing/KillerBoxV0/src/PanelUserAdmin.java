@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -12,7 +14,7 @@ import javax.swing.JPanel;
 
 
 @SuppressWarnings("serial")
-public class PanelUserAdmin extends JPanel
+public class PanelUserAdmin extends PanelSpec implements ActionListener
 {
 	JButton nvllePartie = new JButton("Créer une partie");
 	JButton rejdrePartie = new JButton("Rejoindre une partie");
@@ -25,9 +27,11 @@ public class PanelUserAdmin extends JPanel
 	JPanel vide   = new JPanel();
 	JPanel panelgestion = new JPanel();
 	JPanel tout = new JPanel();
+	
+	public PanelUserAdmin(FenetreBase fenetreBase) 
+	{
+		super(fenetreBase);
 		
-	public PanelUserAdmin()
-	{	
 		tout.setLayout(bigLayout);
 		panel1.add(nvllePartie);
 		panel2.add(rejdrePartie);
@@ -42,5 +46,28 @@ public class PanelUserAdmin extends JPanel
 		tout.add(c);
 		
 		add(tout);
+		
+		nvllePartie.addActionListener(this);
+		rejdrePartie.addActionListener(this);
+		gestion.addActionListener(this);
+	}
+		
+	public void actionPerformed(ActionEvent e) 
+	{
+		if (e.getSource() == nvllePartie)
+		{
+			fenetreBase.setPanelType(PanelType.TypePartie);
+		}
+		
+		if (e.getSource() == rejdrePartie)
+		{
+			fenetreBase.setPanelType(PanelType.Connection);
+		}
+		
+		if (e.getSource() == gestion)
+		{
+			fenetreBase.setPanelType(PanelType.Comptes);
+		}
+		
 	}
 }

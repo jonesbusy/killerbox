@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,7 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 
-public class PanelCreationCompte extends JPanel 
+public class PanelCreationCompte extends PanelSpec implements ActionListener 
 {
 	private final String textFieldString = "nom utilisateur ";
     private final String passwordFieldString = "mot de passe ";
@@ -22,9 +24,10 @@ public class PanelCreationCompte extends JPanel
     private JButton creercompte = new JButton("Creer le compte");
     private JButton annuler = new JButton("Annuler");
 
-	public PanelCreationCompte() 
+	public PanelCreationCompte(FenetreBase fenetreBase) 
 	{
-
+		super(fenetreBase);
+		
 		JLabel textFieldLabel = new JLabel(textFieldString + ": ");
 	    textFieldLabel.setLabelFor(textField);
 	    JLabel passwordFieldLabel = new JLabel(passwordFieldString + ": ");
@@ -59,6 +62,19 @@ public class PanelCreationCompte extends JPanel
         
         add(leftPane, BorderLayout.CENTER);
         
+        creercompte.addActionListener(this);
+        annuler.addActionListener(this);
+        
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		if (e.getSource() == annuler)
+		{	
+			fenetreBase.setPanelType(PanelType.UserAdmin);
+		}
+		
 	}
 	
 }

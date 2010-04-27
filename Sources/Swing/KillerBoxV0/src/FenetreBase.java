@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class FenetreBase extends JFrame implements ActionListener
+public class FenetreBase extends JFrame implements ActionListener 
 {
 	JMenuBar menuBar 			= new JMenuBar();
 	JMenu    menu    			= new JMenu("Fichier");
@@ -30,12 +30,12 @@ public class FenetreBase extends JFrame implements ActionListener
 	
 	// Création des pannels
 	JPanel panelBienvenue 		= new PaneBienvenue(this);
-	JPanel panelComptes 		= new PanelComptes();
+	JPanel panelComptes 		= new PanelComptes(this);
 	JPanel panelConnection 		= new PanelConnection(this);
-	JPanel panelCreationCompte 	= new PanelCreationCompte();
+	JPanel panelCreationCompte 	= new PanelCreationCompte(this);
 	JPanel panelPrincipal 		= new PanelPrincipale(this);
 	JPanel panelTypePartie 		= new PanelTypePartie();
-	JPanel panelUserAdmin 		= new PanelUserAdmin();
+	JPanel panelUserAdmin 		= new PanelUserAdmin(this);
 	
 	FenetreBase(int hauteur, int largeur)
 	{	
@@ -124,8 +124,7 @@ public class FenetreBase extends JFrame implements ActionListener
 		{	
 			setPanelType(PanelType.Connection);
 		}
-		
-		
+			
 		if (e.getSource() == quitter)
 			System.exit(0);					
 	}

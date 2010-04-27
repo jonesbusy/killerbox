@@ -59,7 +59,7 @@ public class PanelConnection extends PanelSpec implements ActionListener
 		
 		if (e.getSource() == seConnecter)
 		{	
-			fenetreBase.setPanelType(PanelType.UserAdmin);
+			// fenetre de jeu
 		}
 		
 	}
