@@ -72,7 +72,7 @@ public class FenetrePrincipale extends FenetreBase
        
 	}
 	
-    private void addLabelTextRows(JLabel[] labels,
+    public static void addLabelTextRows(JLabel[] labels,
     							  JTextField[] textFields,
     							  GridBagLayout gridbag,
     							  Container container) 

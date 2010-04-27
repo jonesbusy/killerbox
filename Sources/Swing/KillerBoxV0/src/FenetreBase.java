@@ -1,5 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -11,7 +13,7 @@ import javax.swing.JTextArea;
 
 
 @SuppressWarnings("serial")
-public class FenetreBase extends JFrame 
+public class FenetreBase extends JFrame implements ActionListener
 {
 	JMenuBar menuBar 			= new JMenuBar();
 	JMenu    menu    			= new JMenu("Fichier");
@@ -20,10 +22,11 @@ public class FenetreBase extends JFrame
 	JMenuItem creer   			= new JMenuItem("Creer une partie");
 	JMenuItem rejoindre 		= new JMenuItem("Rejoindre une partie");
 	JMenuItem quitterPartie  	= new JMenuItem("Quitter la partie");
-	JMenuItem aProposDe 		= new JMenuItem("Auteurs");
+	JMenuItem aProposDe 		= new JMenuItem("A propos de");
 	JMenuItem quitter   		= new JMenuItem("Quitter");	
+	JDialog infos				= new JDialog();
 	
-	public FenetreBase(int hauteur, int largeur)
+	FenetreBase(int hauteur, int largeur)
 	{	
 		this.setTitle("KillerBox");
 		this.setSize(largeur, hauteur);
@@ -34,6 +37,7 @@ public class FenetreBase extends JFrame
 		
 		// le sous menu fichier
 		menu.add(quitter);
+		quitter.addActionListener(this);
 		
 		// le sous menu Partie
 		menuPartie.add(creer);
@@ -42,6 +46,7 @@ public class FenetreBase extends JFrame
 		
 		// le sous Menu ?
 		menuInfo.add(aProposDe);
+		aProposDe.addActionListener(this);
 		
 		// la barre de manu
 		setJMenuBar(menuBar);
@@ -49,6 +54,27 @@ public class FenetreBase extends JFrame
 		menuBar.add(menuPartie);
 		menuBar.add(menuInfo);
 					
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		if (e.getSource() == aProposDe)
+		JOptionPane.showMessageDialog(this,
+	            "Projet GEN 09/10 \n\n" +
+	            "Auteurs :\n" +
+	            "Berdoz Jonas\n" +
+	            "Beretta Piccoli Fabrizio\n" +
+	            "Delay Valentin\n" +
+	            "Sandoz Michael",
+	            "A propos de",1
+	            );
+		
+		if (e.getSource() == quitter)
+			System.exit(0);
+			
+			
+			
 	}
 	
 }
