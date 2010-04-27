@@ -66,7 +66,7 @@ public class FenetreComptes extends FenetreBase
 	{
 		private String[] nomColonnes = {"Pseudo","Score","Administrateur"};
 		private Object[][] data = {{"Toto",new Integer(1000),estAdmin(true)},
-						   		   {"Killer_STAR", new Integer(980),estAdmin(false)}
+						   		   {"Killer_STAR", new Integer(980),estAdmin(false)}					   		   
 								  };
 
 		public int getColumnCount() 

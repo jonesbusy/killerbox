@@ -18,5 +18,4 @@ public class FenetreAdmin extends FenetreUser
 		panel.add(gestion);
 		super.c.add(panel);
 	}
-
 }
