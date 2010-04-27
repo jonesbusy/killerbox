@@ -14,15 +14,17 @@ import javax.swing.JTextField;
 
 
 @SuppressWarnings("serial")
-public class PanelPrincipale extends JPanel implements ActionListener 
+public class PanelPrincipale extends PanelSpec implements ActionListener 
 {
+	
+
 	private final String textFieldString = "nom utilisateur";
     private final String passwordFieldString = "mot de passe";
     private JButton creercompte = new JButton("Creer un compte");
     private JButton seConnecter = new JButton("Se Connecter");
-	
-	public PanelPrincipale()
-	{
+
+    public PanelPrincipale(FenetreBase fenetreBase) {
+		super(fenetreBase);
 		setLayout(new BorderLayout());
 		
         JTextField textField = new JTextField(10);
@@ -68,7 +70,6 @@ public class PanelPrincipale extends JPanel implements ActionListener
         
         creercompte.addActionListener(this);
         seConnecter.addActionListener(this);
-        
 	}
 	
     public static void addLabelTextRows(JLabel[] labels,
@@ -98,19 +99,13 @@ public class PanelPrincipale extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == seConnecter)
-		{	
-			removeAll();
-			add(new PanelUserAdmin());
-			validate();
-			repaint();
+		{
+			fenetreBase.setPanelType(PanelType.UserAdmin);
 		}
 		
 		if (e.getSource() == creercompte)
 		{	
-			removeAll();
-			add(new PanelCreationCompte());
-			validate();
-			repaint();
+			fenetreBase.setPanelType(PanelType.CreationCompte);
 		}
 				
 		

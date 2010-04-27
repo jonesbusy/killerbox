@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 
 @SuppressWarnings("serial")
-public class PanelConnection extends JPanel implements ActionListener 
+public class PanelConnection extends PanelSpec implements ActionListener 
 {
 	private GridLayout extern = new GridLayout(3,0);
 	private GridLayout intern = new GridLayout(2,2);
@@ -26,8 +26,9 @@ public class PanelConnection extends JPanel implements ActionListener
     private JTextField textField = new JTextField(10);
     private Container contenu = new Container();
 	
-	public PanelConnection()
-	{	
+    public PanelConnection(FenetreBase fenetreBase) {
+		super(fenetreBase);
+		
 		setLayout(extern);
 		add(vide);
 		
@@ -53,18 +54,12 @@ public class PanelConnection extends JPanel implements ActionListener
 	{
 		if (e.getSource() == annuler)
 		{	
-			removeAll();
-			add(new PanelPrincipale());
-			validate();
-			repaint();
+			fenetreBase.setPanelType(PanelType.Principale);
 		}
 		
 		if (e.getSource() == seConnecter)
 		{	
-			removeAll();
-			add(new PanelUserAdmin());
-			validate();
-			repaint();
+			fenetreBase.setPanelType(PanelType.UserAdmin);
 		}
 		
 	}
