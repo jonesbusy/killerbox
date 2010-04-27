@@ -14,8 +14,8 @@ public class TestConnectionBase {
 	public static void main(String[] args) {
 		final String DB_SRV_SQL = "localhost";
 		final String DB_NAME = "killerbox";
-		final String DB_USER = "admin_propoker";
-		final String DB_USER_PWD = "qbUUap39hdqnNyAd";
+		final String DB_USER = "admin_killerbox";
+		final String DB_USER_PWD = "8p2TbGQ5DAWmSAy6";
 		String pseudo = "User";
 		String pwd = "User";
 		long score = 2000;
