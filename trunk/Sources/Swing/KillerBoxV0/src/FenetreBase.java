@@ -1,16 +1,18 @@
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-
+import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class FenetreBase extends JFrame implements ActionListener
@@ -33,7 +35,7 @@ public class FenetreBase extends JFrame implements ActionListener
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true); 
-        this.setResizable(false);
+        //this.setResizable(false);
 		
 		// le sous menu fichier
 		menu.add(quitter);
@@ -43,6 +45,7 @@ public class FenetreBase extends JFrame implements ActionListener
 		menuPartie.add(creer);
 		menuPartie.add(rejoindre);
 		menuPartie.add(quitterPartie);
+		rejoindre.addActionListener(this);
 		
 		// le sous Menu ?
 		menuInfo.add(aProposDe);
@@ -53,28 +56,35 @@ public class FenetreBase extends JFrame implements ActionListener
 		menuBar.add(menu);
 		menuBar.add(menuPartie);
 		menuBar.add(menuInfo);
-					
+		
+		add(new PaneBienvenue());
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == aProposDe)
-		JOptionPane.showMessageDialog(this,
-	            "Projet GEN 09/10 \n\n" +
-	            "Auteurs :\n" +
-	            "Berdoz Jonas\n" +
-	            "Beretta Piccoli Fabrizio\n" +
-	            "Delay Valentin\n" +
-	            "Sandoz Michael",
-	            "A propos de",1
-	            );
+			JOptionPane.showMessageDialog(this,
+		            "Projet GEN 09/10 \n\n" +
+		            "Auteurs :\n" +
+		            "Berdoz Jonas\n" +
+		            "Beretta Piccoli Fabrizio\n" +
+		            "Delay Valentin\n" +
+		            "Sandoz Michael",
+		            "A propos de",1
+		            );
+		
+		if(e.getSource() == rejoindre)
+		{	
+			this.getContentPane().removeAll();
+			this.getContentPane().add(new PanelConnection());
+			validate();
+			repaint();
+		}
+		
 		
 		if (e.getSource() == quitter)
-			System.exit(0);
-			
-			
-			
+			System.exit(0);					
 	}
 	
 }
