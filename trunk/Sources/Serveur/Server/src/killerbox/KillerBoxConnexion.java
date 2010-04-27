@@ -1,16 +1,10 @@
-/**
- * 
- */
 package killerbox;
-
-import java.io.*;
-import java.net.*;
 
 import network.*;
 
 /**
- * @author valentin
- *
+ * Represente une connexion entre un serveur KillerBox et un client
+ * @author Valentin Delaye
  */
 public class KillerBoxConnexion
 {
@@ -18,8 +12,7 @@ public class KillerBoxConnexion
 	/**
 	 * La connexion associee
 	 */
+	@SuppressWarnings("unused")
 	private Connexion connexion;
-	
-	
 
 }

@@ -3,9 +3,8 @@
  */
 package killerbox;
 
-import network.Connexion;
-import network.Decoder;
-import network.Server;
+import network.*;
+
 
 /**
  * @author valentin
@@ -28,11 +27,13 @@ public class KillerBoxDecoder extends Decoder
 	@Override
 	public void decode(Connexion connexion, String message)
 	{
+				
 		if(message.equals("@logout"))
 			server.disconnect(connexion.getId());
 		
 		else
 			server.sendMessage("Client " + connexion.getId() + " : " + message);
+		
 	}
 
 }

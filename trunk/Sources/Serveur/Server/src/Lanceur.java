@@ -18,13 +18,13 @@ public class Lanceur
 	{
 		Decoder decoder = new KillerBoxDecoder();
 		KillerBoxServer server = new KillerBoxServer(7000, decoder);
-		//@SuppressWarnings("unused")
+		
+		@SuppressWarnings("unused")
 		ServerGui s1 = new ServerGui(server);
 		
-		/*
-		@SuppressWarnings("unused")
-		ServerConsole s2 = new ServerConsole(server);
-		*/
+		//@SuppressWarnings("unused")
+		//ServerConsole s2 = new ServerConsole(server);
+		
 		
 		// Demarer le serveur
 		server.start();

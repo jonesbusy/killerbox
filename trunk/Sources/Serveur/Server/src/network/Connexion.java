@@ -1,7 +1,6 @@
 package network;
 
 import java.net.*;
-import java.util.*;
 import java.io.*;
 
 
@@ -28,6 +27,9 @@ public class Connexion implements Runnable
 	 */
 	private Socket socket;
 	
+	/**
+	 * Le decodeur de connexion
+	 */
 	private Decoder decoder;
 	
 
@@ -42,11 +44,6 @@ public class Connexion implements Runnable
 	private PrintWriter output;
 	
 	/**
-	 * Le serveu ou est associes la connexion
-	 */
-	private Server server;
-	
-	/**
 	 * Pour indiquer l'etat de la connexion
 	 */
 	private boolean running;
@@ -58,11 +55,10 @@ public class Connexion implements Runnable
 	 * @param Le serveur ou est ratachee la connexion
 	 * @throws IOException Si erreur d'entree sortie avec le flux d'entree
 	 */
-	public Connexion(Socket socket, int id, Server server, Decoder decoder) throws IOException
+	public Connexion(Socket socket, int id, Decoder decoder) throws IOException
 	{
 		this.socket = socket;
 		this.id = id;
-		this.server = server;
 		this.decoder = decoder;
 		
 		this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -153,6 +149,7 @@ public class Connexion implements Runnable
 				if (ligne == null)
 					break;	
 				
+				// Demande au decodeur
 				decoder.decode(this, ligne);
 				
 			}
@@ -175,5 +172,39 @@ public class Connexion implements Runnable
 			}
 		}
 	}
+
+	/**
+	 * Retourne le code de hachage pour la connexion
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+
+	/**
+	 * Indique si 2 connexions sont identiques
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Connexion other = (Connexion) obj;
+		if (id != other.id)
+			return false;
+		
+		return true;
+	}
+	
+	
 	
 }
