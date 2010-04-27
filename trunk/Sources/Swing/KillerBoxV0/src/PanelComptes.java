@@ -1,6 +1,8 @@
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 
 
 @SuppressWarnings("serial")
-public class PanelComptes extends JPanel 
+public class PanelComptes extends PanelSpec implements ActionListener 
 {
 	private JTable tab = new JTable(new MonModel());
 	private JScrollPane scrollPane = new JScrollPane(tab);
@@ -32,8 +34,10 @@ public class PanelComptes extends JPanel
 	private String[] elemLinste = {"Supprimer compte","Mettre admin","Mettre utilsateur", "reinitialiser m-d-p"};
 	private JComboBox liste = new JComboBox(elemLinste);
 	
-	public PanelComptes() 
+	public PanelComptes(FenetreBase fenetreBase) 
 	{	
+		super(fenetreBase);
+		
 		tab.setPreferredScrollableViewportSize(new Dimension(400, 400));
         tab.setFillsViewportHeight(true);
         
@@ -56,6 +60,9 @@ public class PanelComptes extends JPanel
 		splitPane.add(panel);
 		
 		add(splitPane);
+		
+		valider.addActionListener(this);
+		fermer.addActionListener(this);
 		
 	}
 	
@@ -95,6 +102,15 @@ public class PanelComptes extends JPanel
 	private String estAdmin(Boolean bool)
 	{
 		return bool?"OUI":"NON";
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{	
+		if (e.getSource() == fermer)
+		{	
+			fenetreBase.setPanelType(PanelType.UserAdmin);
+		}
 	}
 	
 }
