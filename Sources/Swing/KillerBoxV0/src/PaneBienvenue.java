@@ -1,14 +1,11 @@
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class PaneBienvenue extends JPanel implements ActionListener
+public class PaneBienvenue extends PanelSpec implements ActionListener
 {
 	JLabel bienvenue			= new JLabel("Bienvenue et bla bla bla");
 	JPanel btjouer				= new JPanel();
@@ -17,8 +14,10 @@ public class PaneBienvenue extends JPanel implements ActionListener
 	JButton jouer				= new JButton("Jouer!!");
 	GridLayout grid				= new GridLayout(3,0);
 
-	public PaneBienvenue()
+	public PaneBienvenue(FenetreBase fenetreBase)
 	{
+		super(fenetreBase);
+		
 		setLayout(grid);
 		add(vide);
 		label.add(bienvenue);
@@ -27,16 +26,11 @@ public class PaneBienvenue extends JPanel implements ActionListener
 		jouer.addActionListener(this);
 		add(btjouer);
 	}
+	public void actionPerformed(ActionEvent e) {
 
-	@Override
-	public void actionPerformed(ActionEvent e) 
-	{
 		if (e.getSource() == jouer)
 		{	
-			removeAll();
-			add(new PanelPrincipale());
-			validate();
-			repaint();
+			fenetreBase.setPanelType(PanelType.Principale);
 		}
 		
 	}

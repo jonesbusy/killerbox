@@ -28,13 +28,21 @@ public class FenetreBase extends JFrame implements ActionListener
 	JMenuItem quitter   		= new JMenuItem("Quitter");	
 	JDialog infos				= new JDialog();
 	
+	// Création des pannels
+	JPanel panelBienvenue 		= new PaneBienvenue(this);
+	JPanel panelComptes 		= new PanelComptes();
+	JPanel panelConnection 		= new PanelConnection(this);
+	JPanel panelCreationCompte 	= new PanelCreationCompte();
+	JPanel panelPrincipal 		= new PanelPrincipale(this);
+	JPanel panelTypePartie 		= new PanelTypePartie();
+	JPanel panelUserAdmin 		= new PanelUserAdmin();
+	
 	FenetreBase(int hauteur, int largeur)
 	{	
 		this.setTitle("KillerBox");
 		this.setSize(largeur, hauteur);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true); 
         //this.setResizable(false);
 		
 		// le sous menu fichier
@@ -57,7 +65,45 @@ public class FenetreBase extends JFrame implements ActionListener
 		menuBar.add(menuPartie);
 		menuBar.add(menuInfo);
 		
-		add(new PaneBienvenue());
+		setPanelType(PanelType.Bienvenue);
+		
+		// Afficher la fenêtre
+        this.setVisible(true); 
+	}
+	
+	private void changerPanel(JPanel panel)
+	{
+		getContentPane().removeAll();
+		getContentPane().add(panel);
+		getContentPane().validate();
+		getContentPane().repaint();
+	}
+	
+	public void setPanelType(PanelType panelType)
+	{
+		switch (panelType) {
+		case Bienvenue:
+			changerPanel(panelBienvenue);
+			break;
+		case Principale:
+			changerPanel(panelPrincipal);
+			break;
+		case Comptes:
+			changerPanel(panelComptes);
+			break;
+		case Connection:
+			changerPanel(panelConnection);
+			break;
+		case CreationCompte:
+			changerPanel(panelCreationCompte);
+			break;
+		case TypePartie:
+			changerPanel(panelTypePartie);
+			break;
+		case UserAdmin:
+			changerPanel(panelUserAdmin);
+			break;
+		}
 	}
 
 	@Override
@@ -76,10 +122,7 @@ public class FenetreBase extends JFrame implements ActionListener
 		
 		if(e.getSource() == rejoindre)
 		{	
-			this.getContentPane().removeAll();
-			this.getContentPane().add(new PanelConnection());
-			validate();
-			repaint();
+			setPanelType(PanelType.Connection);
 		}
 		
 		

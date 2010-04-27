@@ -9,8 +9,6 @@ public class main
 	 */
 	public static void main(String[] args) 
 	{
-		
 		FenetreBase fb 			= new FenetreBase(hauteur,largeur);
-
 	}
 }
