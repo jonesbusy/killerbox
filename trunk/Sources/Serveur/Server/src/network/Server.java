@@ -14,7 +14,7 @@ public class Server extends Observable implements Runnable, Observer
 	/**
 	 * ID courant de connexion
 	 */
-	private static int ID = 1;
+	private static int ID = 0;
 
 	/**
 	 * Le decoder du serveur

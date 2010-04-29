@@ -12,6 +12,11 @@ import network.*;
  */
 public class KillerBoxDecoder extends Decoder
 {
+	
+	/**
+	 * Serveur KillerBox
+	 */
+	private KillerBoxServer serverKiller;
 
 	/**
 	 * @param server
@@ -19,6 +24,15 @@ public class KillerBoxDecoder extends Decoder
 	public KillerBoxDecoder()
 	{
 		
+	}
+	
+	/**
+	 * Permet de setter le serveur KillerBox
+	 * @param serverKiller
+	 */
+	public void setKillerBoxServer(KillerBoxServer serverKiller)
+	{
+		this.serverKiller = serverKiller;
 	}
 
 	/**
@@ -32,7 +46,7 @@ public class KillerBoxDecoder extends Decoder
 			server.disconnect(connexion.getId());
 		
 		else
-			server.sendMessage("Client " + connexion.getId() + " : " + message);
+			server.sendMessage(serverKiller.getUserName(connexion.getId()) + " : " + message);
 		
 	}
 

@@ -34,11 +34,18 @@ public class KillerBoxServer extends Observable implements  Observer
 	 * Permet de creer un nouveau serveur KillerBox
 	 * @param numeroPort
 	 */
-	public KillerBoxServer(int numeroPort, Decoder decoder)
+	public KillerBoxServer(int numeroPort, KillerBoxDecoder decoder)
 	{
 		this.serveur = new Server(numeroPort, decoder);
-		decoder.setServer(this.serveur);
 		serveur.addObserver(this);
+		
+		// Setet les serveur du decodeur
+		decoder.setServer(this.serveur);
+		decoder.setKillerBoxServer(this);
+		
+		this.login.put("toto", 1);
+		this.login.put("tata", 2);
+		
 	}
 	
 	/**
@@ -107,8 +114,32 @@ public class KillerBoxServer extends Observable implements  Observer
 	 */
 	private void removeLogged(int id)
 	{
-		java.util.Collection<Integer> valuesId = this.login.values();
+		Collection<Integer> valuesId = this.login.values();
 		valuesId.remove(id);
+	}
+	
+	/**
+	 * Retourne le nom d'utilisateur suivant le numero d'une connexion
+	 * @param id Id de la connexion
+	 * @return Le nom d'utilisateur, null si l'id de connexion n'existe pas
+	 */
+	public String getUserName(int id)
+	{
+		for(Map.Entry<String, Integer> entry : this.login.entrySet())
+			if(entry.getValue() == id)
+				return entry.getKey();
+		
+		return null;
+	}
+	
+	/**
+	 * Retourne l'ID d'une connexion suivant le nom d'utilisateur
+	 * @param username Le nom d'utilisateur
+	 * @return L'ID de connexion ou 0 si l'utilisateur n'est pas connecte au serveur
+	 */
+	public int getId(String username)
+	{
+		return this.login.get(username);
 	}
 	
 	/**
