@@ -1,6 +1,4 @@
-import network.Decoder;
-import killerbox.KillerBoxDecoder;
-import killerbox.KillerBoxServer;;
+import killerbox.*;
 
 
 /**
@@ -16,7 +14,8 @@ public class Lanceur
 	 */
 	public static void main(String[] args)
 	{
-		Decoder decoder = new KillerBoxDecoder();
+		
+		KillerBoxDecoder decoder = new KillerBoxDecoder();
 		KillerBoxServer server = new KillerBoxServer(7000, decoder);
 		
 		@SuppressWarnings("unused")
