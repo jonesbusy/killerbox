@@ -203,9 +203,9 @@ public class Server extends Observable implements Runnable, Observer
 	/**
 	 * Permet de retourner la derniere connexion recu par
 	 * le serveur
-	 * @return La dernier connexion
+	 * @return La derniere connexion
 	 */
-	public Connexion getLastConnexion()
+	public synchronized Connexion getLastConnexion()
 	{
 		return this.connexions.get(this.getNombreClient() - 1);
 	}
@@ -246,12 +246,13 @@ public class Server extends Observable implements Runnable, Observer
 	 * Permet de deconnecter une connexion
 	 * @param id L'id de la connexion
 	 */
-	public void disconnect(int id)
+	public synchronized void disconnect(int id)
 	{
 		for (int i = 0; i < this.getNombreClient(); i++)
 			if (this.connexions.get(i).getId() == id)
 			{
 				this.connexions.get(i).close();
+				this.connexions.get(i).kill();
 				return;
 			}
 	}
@@ -259,7 +260,7 @@ public class Server extends Observable implements Runnable, Observer
 	/**
 	 * Permet de deconnecter tout les client
 	 */
-	public void disconnectAll()
+	public synchronized void disconnectAll()
 	{
 		for (int i = 0; i < this.getNombreClient(); i++)
 			this.connexions.get(i).close();
@@ -279,7 +280,11 @@ public class Server extends Observable implements Runnable, Observer
 				Connexion connexion = new Connexion(serverSocket.accept(), Server.ID,
 						this.decoder);
 				
-				connexions.add(connexion);
+				synchronized (this)
+				{
+					connexions.add(connexion);
+				}
+
 
 				setChanged();
 				notifyObservers(new StatusConnexion(Server.ID, true));
