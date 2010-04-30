@@ -205,6 +205,4 @@ public class Connexion implements Runnable
 		return true;
 	}
 	
-	
-	
 }

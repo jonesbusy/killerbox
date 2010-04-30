@@ -14,6 +14,11 @@ public class KillerBoxServer extends Observable implements  Observer
 {
 	
 	/**
+	 * La base de donnee du serveur
+	 */
+	private KillerBoxDataBase database;
+	
+	/**
 	 * Serveur associe
 	 */
 	private Server serveur;
@@ -34,17 +39,23 @@ public class KillerBoxServer extends Observable implements  Observer
 	 * Permet de creer un nouveau serveur KillerBox
 	 * @param numeroPort
 	 */
-	public KillerBoxServer(int numeroPort, KillerBoxDecoder decoder)
+	public KillerBoxServer(int numeroPort, KillerBoxDecoder decoder, String user, String pass)
 	{
 		this.serveur = new Server(numeroPort, decoder);
 		serveur.addObserver(this);
+		try
+		{
+			this.database = new KillerBoxDataBase("localhost", "killerbox", user, pass);
+		}
+		catch (Exception e)
+		{
+			
+		}
 		
 		// Setet les serveur du decodeur
 		decoder.setServer(this.serveur);
 		decoder.setKillerBoxServer(this);
-		
-		this.login.put("toto", 1);
-		this.login.put("tata", 2);
+		decoder.setDataBase(this.database);
 		
 	}
 	
@@ -143,6 +154,28 @@ public class KillerBoxServer extends Observable implements  Observer
 	}
 	
 	/**
+	 * Ajouter un utilisateur connecte et authentifie
+	 * @param username
+	 * @param id
+	 */
+	public void addConnected(String username, int id)
+	{
+		this.removeUnauthenticated(id);
+		
+		// Si plusieurs connexions on le meme login ou mot de passe, on deconnecte
+		// celle deja connectee
+		if(this.login.containsKey(username))
+			this.serveur.disconnect(this.login.get(username));
+		
+		// Ajout
+		this.login.put(username, id);
+		
+		setChanged();
+		notifyObservers(username + " est maintenant associe a la connexion : " + id);
+		
+	}
+	
+	/**
 	 * Lorsque le Server change d'etat
 	 */
 	@Override
@@ -153,7 +186,7 @@ public class KillerBoxServer extends Observable implements  Observer
 		{
 			StatusConnexion status = (StatusConnexion)obj;
 			
-			// On attend son nom d'utilisateur
+			// Recuperer la derniere connexion
 			Connexion connexion = this.serveur.getLastConnexion();
 			
 			// Nouvelle connexion
@@ -165,6 +198,7 @@ public class KillerBoxServer extends Observable implements  Observer
 				
 			}
 			
+			// Connexion supprimee
 			else
 			{
 				
@@ -173,7 +207,7 @@ public class KillerBoxServer extends Observable implements  Observer
 				removeLogged(status.getId());
 				
 				setChanged();
-				notifyObservers("connexion supprimee ID : " + connexion.getId());
+				notifyObservers("connexion supprimee ID : " + status.getId());
 				
 			}
 			
