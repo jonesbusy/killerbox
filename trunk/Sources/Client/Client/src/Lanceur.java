@@ -1,3 +1,5 @@
+import killerbox.*;
+
 /**
  * Permet de lancer les differents clients
  * @author	Valentin Delaye
@@ -11,13 +13,7 @@ public class Lanceur
 	 */
 	public static void main(String[] args)
 	{
-		
-		String ip = "192.168.30.1";
-		
-		Client c1 = new Client(ip, 7000);
-		Client c2 = new Client(ip, 7000);
-		
-		new ClientGUI(c1);
-		new ClientGUI(c2);
+		@SuppressWarnings("unused")
+		BaseWindow game = new BaseWindow();
 	}
 }

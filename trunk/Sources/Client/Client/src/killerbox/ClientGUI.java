@@ -1,7 +1,10 @@
+package killerbox;
+
+import network.*;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import javax.swing.*;
 
 
@@ -54,16 +57,17 @@ public class ClientGUI extends JFrame implements Observer
 		// Creer un nouvel ecouteur sur le client
 		this.listener = new ClientListener(client, this);
 		
-		// Pour indiquer le changemnent d'etat (Connecte, Non connecte)
+		// Pour indiquer le changemnent d'etat (Connecte, non connecte)
 		client.addObserver(listener);
 		
-		// Pour indiquer les message d'erreurs a la vue
+		// Pour indiquer les message directement erreurs a la vue
 		client.addObserver(this);
 		
 		// Creation des elements de la vue
 		this.btnEnvoyer = new JButton("Envoyer");
 		this.btnConnecter = new JButton("Se connecter");
 		this.btnDeco = new JButton("Se deconnecter");
+		
 		this.texMessage = new JTextField(30);
 		this.log = new JTextArea(20, 50);
 		this.log.setEditable(false);
@@ -158,7 +162,6 @@ public class ClientGUI extends JFrame implements Observer
 			String message = (String)obj;
 			this.ecrireLigne(message);
 		}
-		
 		
 	}
 }
