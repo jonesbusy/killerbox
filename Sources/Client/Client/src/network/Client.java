@@ -1,3 +1,5 @@
+package network;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -71,6 +73,7 @@ public class Client extends Observable
 		{
 			setChanged();
 			notifyObservers("Impossible de se connecter au server.");
+			return false;
 		}
 
 		try
@@ -155,6 +158,7 @@ public class Client extends Observable
 			notifyObservers("Erreur de fermeture du client");
 		}
 
+		// On averti que la connection est terminee
 		finally
 		{
 			setChanged();
@@ -163,7 +167,7 @@ public class Client extends Observable
 	}
 
 	/**
-	 * 
+	 * Ferme proprement les ressources a la destruction
 	 */
 	@Override
 	protected void finalize() throws Throwable

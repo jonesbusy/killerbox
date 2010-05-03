@@ -1,3 +1,6 @@
+package killerbox;
+
+import network.*;
 import java.io.*;
 import java.util.*;
 
@@ -16,7 +19,7 @@ public class ClientListener implements Observer, Runnable
 	/**
 	 * Reference sur la vue
 	 */
-	private ClientGUI fenetre;
+	private BaseWindow fenetre;
 	
 	/**
 	 * Flux d'entree
@@ -32,7 +35,7 @@ public class ClientListener implements Observer, Runnable
 	 * Permet de creer un nouvel ecouteur
 	 * @param input Le flux d'entree
 	 */
-	public ClientListener(Client client, ClientGUI fenetre)
+	public ClientListener(Client client, BaseWindow fenetre)
 	{
 		this.fenetre = fenetre;
 		this.client = client;
@@ -56,15 +59,12 @@ public class ClientListener implements Observer, Runnable
 				if(ligne == null)
 					throw new IOException();
 				
-				fenetre.ecrireLigne(ligne);
-				
 			}
 			
 			catch (IOException e)
 			{
-				fenetre.ecrireLigne("La connexion avec le serveur a ete interrompue.");
+				fenetre.sendError("La connexion avec le serveur a ete interrompue.");
 				client.close();
-				fenetre.init();
 				break;
 			}
 			
@@ -73,9 +73,9 @@ public class ClientListener implements Observer, Runnable
 
 
 	/**
-	 * 
-	 * @param o
-	 * @param arg
+	 * Indique une modification du client
+	 * @param o L'objet client
+	 * @param arg Les parametres
 	 */
 	public void update(Observable o, Object arg)
 	{
@@ -93,6 +93,5 @@ public class ClientListener implements Observer, Runnable
 			
 		}
 	}
-	
 	
 }
