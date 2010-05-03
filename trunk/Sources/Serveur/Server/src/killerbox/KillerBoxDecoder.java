@@ -1,7 +1,6 @@
 package killerbox;
 
-import java.util.StringTokenizer;
-
+import java.util.*;
 import network.*;
 
 /**
@@ -80,9 +79,22 @@ public class KillerBoxDecoder extends Decoder
 				server.send(connexion.getId(), "Nom d'utilisateur et/ou mot de passe incorrect");
 
 		}
+		
+		// Instruction destine aux autre joueurs
+		else if(instruction.equals("game"))
+		{
 
+		}
+
+		// On ne sait pas quoi faire... Simplement relayer le message au serveur
 		else
-			server.sendMessage(serverKiller.getUserName(connexion.getId()) + " : " + message);
+		{
+			String username = serverKiller.getUserName(connexion.getId());
+			if (username != null)
+				server.relay(serverKiller.getUserName(connexion.getId()) + " : " + message);
+			else
+				server.relay("guest" + connexion.getId() + " : " + message);
+		}
 
 	}
 
