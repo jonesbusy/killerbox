@@ -214,7 +214,7 @@ public class Server extends Observable implements Runnable, Observer
 	 * Permet transferer un message au serveur
 	 * @param message Le message
 	 */
-	public void sendMessage(String message)
+	public void relay(String message)
 	{
 		broadcast(message);
 		setChanged();
