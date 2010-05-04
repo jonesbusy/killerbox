@@ -276,7 +276,11 @@ public class Server extends Observable implements Runnable, Observer
 		{
 			try
 			{
-				Server.ID++;
+				synchronized (Server.class)
+				{
+					Server.ID++;	
+				}
+				
 				Connexion connexion = new Connexion(serverSocket.accept(), Server.ID,
 						this.decoder);
 				

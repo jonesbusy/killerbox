@@ -16,18 +16,16 @@ public class Lanceur
 	{
 		
 		KillerBoxDecoder decoder = new KillerBoxDecoder();
-		KillerBoxServer server = new KillerBoxServer(7000, decoder, "valentin", "1234");
+		KillerBoxServer server = new KillerBoxServer(7000, decoder, "root", "");
 		
 		@SuppressWarnings("unused")
-		ServerConsole s1 = new ServerConsole(server);
+		ServerGui s1 = new ServerGui(server);
 		
 		// Demarer le serveur
 		server.start();
 		
 		//@SuppressWarnings("unused")
 		//ServerConsole s2 = new ServerConsole(server);
-		
-	
 
 	}
 }

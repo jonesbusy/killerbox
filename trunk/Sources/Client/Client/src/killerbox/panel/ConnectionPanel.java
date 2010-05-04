@@ -39,7 +39,7 @@ public class ConnectionPanel extends KillerBoxPanel
 	/**
 	 * Pour l'affichage d'une erreur eventuelle
 	 */
-	private JLabel labMessage = new JLabel();
+	private JLabel labMessage = new JLabel("", JLabel.CENTER);
 	
 	/**
 	 * Champs pour rentrer l'adresse ip
@@ -54,20 +54,13 @@ public class ConnectionPanel extends KillerBoxPanel
 	private JTextField texPortServer = new JTextField(20);
 		
 	/**
-	 * Layout du panel
-	 */
-	private FlowLayout layout = new FlowLayout();
-
-	/**
 	 * Constructeur
 	 * @param base La fenetre de base
 	 */
-	public ConnectionPanel(final BaseWindow base, Client client, ClientListener clientListener)
+	public ConnectionPanel(final BaseWindow base)
 	{
 				
-		super(base, client, clientListener);
-		this.setLayout(layout);
-		
+		super(base);
 		
 		// Set les label
 		this.labIpServer.setLabelFor(this.texIpServer);
@@ -77,10 +70,9 @@ public class ConnectionPanel extends KillerBoxPanel
 		this.labIpServer.setPreferredSize(new Dimension(100, 40));
 		this.labPortServer.setPreferredSize(new Dimension(100, 40));
 		
-		JLabel labWelcome = new JLabel("Veuillez vous connecter a un serveur pour jouer");
-		labWelcome.setPreferredSize(new Dimension(300, 40));
-		
-		this.labMessage.setPreferredSize(new Dimension(300, 30));
+		JLabel labWelcome = new JLabel("Veuillez vous connecter a un serveur pour jouer", JLabel.CENTER);
+		labWelcome.setPreferredSize(new Dimension(base.getX(), 40));
+		this.labMessage.setPreferredSize(new Dimension(base.getX(), 40));
 		
 		// Ajout des composants
 		this.add(labWelcome);
@@ -106,7 +98,7 @@ public class ConnectionPanel extends KillerBoxPanel
 			@Override
 			public void insertUpdate(DocumentEvent e)
 			{
-				
+
 				// Enlever le message s'il y en a un
 				labMessage.setText("");
 				
