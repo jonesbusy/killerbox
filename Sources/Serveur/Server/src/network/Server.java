@@ -147,8 +147,6 @@ public class Server extends Observable implements Runnable, Observer
 	 */
 	private LinkedList<Connexion> connexions = new LinkedList<Connexion>();
 
-	// private HashMap<Integer, Connexion> connexions = new HashMap<Integer, Connexion>();
-
 	/**
 	 * Le thread associe au serveur. Celui qui recupere
 	 * les demandes de connexions.

@@ -3,7 +3,6 @@ package killerbox.panel;
 import javax.swing.*;
 
 import killerbox.*;
-import network.*;
 
 /**
  * Permet de representer la base d'un panel de l'interface
@@ -52,6 +51,15 @@ public abstract class KillerBoxPanel extends JPanel
 			base.setPanel(EnumPanel.CONNECTION_PANEL);
 			base.printError(message);
 		}
+	}
+	
+	/**
+	 * Permet d'afficher une partie uniquement visible 
+	 * par un admin
+	 */
+	public void showAdmin()
+	{
+		
 	}
 	
 }

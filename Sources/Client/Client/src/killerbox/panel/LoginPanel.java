@@ -9,7 +9,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import killerbox.*;
-import network.*;
 
 /**
  * Permet de representer le panel permettant de demander les informations
@@ -24,7 +23,7 @@ public class LoginPanel extends KillerBoxPanel
 	/**
 	 * Titre du panel
 	 */
-	private JLabel labTitre = new JLabel("Veuillez vous authentifier");
+	private JLabel labTitre = new JLabel("Veuillez vous authentifier", JLabel.CENTER);
 	
 	/**
 	 * 
@@ -57,6 +56,20 @@ public class LoginPanel extends KillerBoxPanel
 	{
 		super(base);
 		
+		this.btnConnect.setEnabled(false);
+		
+		// Associer les label
+		this.labLogin.setLabelFor(this.texLogin);
+		this.labPass.setLabelFor(this.texPass);
+		
+		// Taille des composants
+		this.labTitre.setPreferredSize(new Dimension(350, 40));
+		this.labLogin.setPreferredSize(new Dimension(100, 40));
+		this.labPass.setPreferredSize(new Dimension(100, 40));
+		this.labErreur.setPreferredSize(new Dimension(300, 40));
+		this.texLogin.setColumns(20);
+		this.texPass.setColumns(20);
+		
 		// Ajout des composants
 		this.add(this.labTitre);
 		this.add(this.labLogin);
@@ -66,21 +79,6 @@ public class LoginPanel extends KillerBoxPanel
 		this.add(this.btnConnect);
 		this.add(this.btnCreateAccount);
 		this.add(this.labErreur);
-		
-		this.btnConnect.setEnabled(false);
-		
-		// Associer les label
-		this.labLogin.setLabelFor(this.texLogin);
-		this.labPass.setLabelFor(this.texPass);
-		
-		// Taille des composants
-		this.labTitre.setPreferredSize(new Dimension(base.getX(), 40));
-		this.labTitre.setHorizontalAlignment(JLabel.CENTER);
-		this.labLogin.setPreferredSize(new Dimension(100, 40));
-		this.labPass.setPreferredSize(new Dimension(100, 40));
-		this.labErreur.setPreferredSize(new Dimension(300, 40));
-		this.texLogin.setColumns(20);
-		this.texPass.setColumns(20);
 				
 		
 		// Ecouteur des champs de texte
@@ -124,7 +122,7 @@ public class LoginPanel extends KillerBoxPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{				
-				base.getClientListener().sendLogin(texLogin.getText(), texPass.getText());
+				base.getListener().sendCredentias(texLogin.getText(), texPass.getText());
 			}
 		});
 		

@@ -62,17 +62,22 @@ public class ConnectionPanel extends KillerBoxPanel
 				
 		super(base);
 		
+		// Port par defaut
+		this.texPortServer.setText("7000");
+		this.texIpServer.setText("localhost");
+		this.btnConnect.setEnabled(true);
+		
 		// Set les label
 		this.labIpServer.setLabelFor(this.texIpServer);
 		this.labPortServer.setLabelFor(this.texPortServer);
 		
 		// Taille des text field
-		this.labIpServer.setPreferredSize(new Dimension(100, 40));
-		this.labPortServer.setPreferredSize(new Dimension(100, 40));
+		this.labIpServer.setPreferredSize(new Dimension(120, 40));
+		this.labPortServer.setPreferredSize(new Dimension(120, 40));
 		
 		JLabel labWelcome = new JLabel("Veuillez vous connecter a un serveur pour jouer", JLabel.CENTER);
-		labWelcome.setPreferredSize(new Dimension(base.getX(), 40));
-		this.labMessage.setPreferredSize(new Dimension(base.getX(), 40));
+		labWelcome.setPreferredSize(new Dimension(350, 40));
+		this.labMessage.setPreferredSize(new Dimension(350, 40));
 		
 		// Ajout des composants
 		this.add(labWelcome);
@@ -81,9 +86,7 @@ public class ConnectionPanel extends KillerBoxPanel
 		this.add(this.labPortServer);
 		this.add(this.texPortServer);
 		this.add(this.btnConnect);
-		this.add(this.labMessage);
-		this.btnConnect.setEnabled(false);
-		
+		this.add(this.labMessage);		
 		
 		// Ecouteur lors de la modification des champs
 		DocumentListener changeListener = new DocumentListener()
@@ -151,8 +154,11 @@ public class ConnectionPanel extends KillerBoxPanel
 				{
 					port = Integer.parseInt(texPortServer.getText());
 					if(port < 1 || port > 65536)
+					{
 						JOptionPane.showMessageDialog(base, "Le port doit etre compris entre 1 et 65535",
 								base.getTitle(), JOptionPane.ERROR_MESSAGE);
+						port = 0;
+					}
 				}
 				catch(NumberFormatException ex)
 				{

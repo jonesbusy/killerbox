@@ -30,23 +30,71 @@ public class KillerBoxDecoder extends Decoder
 	@Override
 	public void decode(String message)
 	{
-		StringTokenizer tokens = new StringTokenizer(message, "#");
-		String instruction = tokens.nextToken();
 		
-		// On recoit a propo du login
-		if(instruction.equals("login"))
+		try
 		{
-			instruction = tokens.nextToken();
-			if(instruction.equals("true"))
+			StringTokenizer tokens = new StringTokenizer(message, "#");
+			String instruction = tokens.nextToken();
+			
+			// Concernant le login
+			if(instruction.equals("login"))
 			{
-				this.fenetre.setPanel(EnumPanel.JOIN_GAME_PANEL);
-			}
-			else if(instruction.equals("false"))
-			{
-				// Afficher une erreur
-				this.fenetre.printError("Le nom d'utilisateur ou mot de passe est incorrect");
-			}
+				instruction = tokens.nextToken();
 				
+				// Connection ok
+				if(instruction.equals("true"))
+				{
+					this.fenetre.setPanel(EnumPanel.JOIN_GAME_PANEL);
+				}
+				
+				// Erreur d'authentification
+				else if(instruction.equals("false"))
+				{
+					// Afficher une erreur
+					this.fenetre.printError("Le nom d'utilisateur ou mot de passe est incorrect");
+				}
+					
+			}
+			
+			// Repondre a une demande de modification de compte
+			else if(instruction.equals("account"))
+			{
+				instruction = tokens.nextToken();
+				
+				// Reponse concernant une creation de compte
+				if(instruction.equals("create"))
+				{
+					instruction = tokens.nextToken();
+					if(instruction.equals("true"))
+						this.fenetre.setPanel(EnumPanel.LOGIN_PANEL);
+					
+					else if(instruction.equals("false"))
+						this.fenetre.printError("Nom de compte deja utilise");
+				}
+				
+				// On recoit les informations qu'on a demande
+				else if(instruction.equals("request"))
+				{
+					instruction = tokens.nextToken();
+					
+					if(instruction.equals("admin"))
+					{
+						// Pas le nom d'utilisateur
+						tokens.nextToken();
+						
+						instruction = tokens.nextToken();
+						System.out.println(instruction);
+						if(instruction.equals("true"))
+							this.fenetre.getPanel().showAdmin();
+					}
+				}
+				
+			}
+		}
+		
+		catch(NullPointerException e)
+		{
+			System.out.println("Impossible de decoder : " + message);
 		}
 		
 	}

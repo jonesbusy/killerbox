@@ -25,11 +25,10 @@ public class KillerBoxDataBase
 	 * @param pass Mot de pass de la base de donee
 	 * @throws Exception Si la connection est refusee
 	 */
-	public KillerBoxDataBase(String url, String name, String user, String pass)
-			throws Exception
+	public KillerBoxDataBase(String url, String name, String user, String pass) throws Exception
 	{
-		db_connection = DriverManager.getConnection("jdbc:mysql://" + url + "/" + name
-				+ "?user=" + user + "&password=" + pass);
+		db_connection = DriverManager.getConnection("jdbc:mysql://" + url + "/" + name + "?user="
+				+ user + "&password=" + pass);
 	}
 
 	/**
@@ -67,6 +66,36 @@ public class KillerBoxDataBase
 	}
 
 	/**
+	 * Indique si un utilisateur est un admin ou non
+	 * @param pseudo
+	 * @return
+	 */
+	public boolean isAdmin(String pseudo)
+	{
+
+		try
+		{
+			Statement st = db_connection.createStatement();
+			ResultSet rs = st
+					.executeQuery("SELECT `administrateur` FROM `joueur` WHERE `joueur`.`pseudo` = '"
+							+ pseudo + "';");
+			// Si trouve
+			if (rs.first())
+				return rs.getInt(1) == 1;
+
+			// Non trouve
+			else
+				return false;
+		}
+		catch (Exception e)
+		{
+			System.out.print(e.getMessage());
+			return false;
+		}
+
+	}
+
+	/**
 	 * Permet de supprimer un utilisateur
 	 * @param pseudo Pseudo a supprimer
 	 * @throws SQLException Si erreur grave
@@ -74,9 +103,7 @@ public class KillerBoxDataBase
 	public void supprimerUtilisateur(String pseudo) throws SQLException
 	{
 		Statement st = db_connection.createStatement();
-		st
-				.executeUpdate("DELETE FROM `joueur` WHERE `joueur`.`pseudo` = '" + pseudo
-						+ "';");
+		st.executeUpdate("DELETE FROM `joueur` WHERE `joueur`.`pseudo` = '" + pseudo + "';");
 	}
 
 	/**
@@ -89,8 +116,7 @@ public class KillerBoxDataBase
 	{
 		Statement st = db_connection.createStatement();
 		ResultSet rs = st
-				.executeQuery("SELECT joueur.hashConnexion FROM joueur WHERE joueur.pseudo =  '"
-						+ pseudo + "'");
+				.executeQuery("SELECT joueur.hashConnexion FROM joueur WHERE joueur.pseudo =  '"						+ pseudo + "'");
 		if (rs.first())
 			return rs.getString(1);
 		else
@@ -106,11 +132,10 @@ public class KillerBoxDataBase
 	public int getScore(String pseudo) throws SQLException
 	{
 		Statement st = db_connection.createStatement();
-		ResultSet rs = st
-				.executeQuery("SELECT joueur.score FROM joueur WHERE joueur.pseudo =  '"
-						+ pseudo + "'");
+		ResultSet rs = st.executeQuery("SELECT joueur.score FROM joueur WHERE joueur.pseudo =  '"
+				+ pseudo + "'");
 		rs.first();
-		
+
 		return rs.getInt(1);
 	}
 
@@ -127,12 +152,12 @@ public class KillerBoxDataBase
 		{
 			return creerHashConnexion(pseudo, motDePasse).equals(getHashConnexion(pseudo));
 		}
-		
+
 		catch (Exception e)
 		{
 			return false;
 		}
-		
+
 	}
 
 	/**
@@ -151,7 +176,7 @@ public class KillerBoxDataBase
 	 * Methode permettant de crypter un string en md5
 	 * @param stringACrypter
 	 * @return String Hash MD5 du string d'entree
-         * @throws Exception
+	 * @throws Exception
 	 */
 	private String crypterStringMD5(String stringACrypter)
 	{
