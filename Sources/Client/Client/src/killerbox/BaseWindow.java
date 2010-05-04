@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import killerbox.panel.*;
 import network.*;
+
 import static killerbox.panel.EnumPanel.*;
 
 /**
@@ -17,37 +18,42 @@ import static killerbox.panel.EnumPanel.*;
 @SuppressWarnings("serial")
 public class BaseWindow extends JFrame implements Observer
 {
-	
+
 	/**
 	 * Le client
 	 */
 	private Client client;
-	
+
 	/**
 	 * L'ecouteur de message
 	 */
-	private ClientListener clientListener;
-	
+	private KillerBoxListener clientListener;
+
 	/**
 	 * Le message de confirmation de fermeture
 	 */
 	private static final String CONFIRM_QUIT_MESSAGE = "Etes-vous sur de vouloir quitter ?";
-	
+
+	/**
+	 * Le message de confirmation de deconnection
+	 */
+	private static final String CONFIRM_DISCONNECT_MESSAGE = "Etes-vous sur de vouloir vous deconnecter du serveur ?";
+
 	/**
 	 * Hauteur de la fenetre
 	 */
 	public static final int HEIGHT = 400;
-	
+
 	/**
 	 * Largeur de la fenetre
 	 */
 	public static final int WIDTH = 400;
-	
+
 	/**
 	 * Boite de dialogue "About KillerBox"
 	 */
 	private AboutDialog aboutDialog = new AboutDialog(this);
-	
+
 	/**
 	 * Le bouton d'activation principal
 	 */
@@ -60,28 +66,39 @@ public class BaseWindow extends JFrame implements Observer
 	private JMenu fileMenu = new JMenu("Fichier");
 	private JMenu gameMenu = new JMenu("Partie");
 	private JMenu helpMenu = new JMenu("Aide");
-	
+
 	/**
 	 * Items
 	 */
+	private JMenuItem disconnectItem = new JMenuItem("Se deconnecter");
 	private JMenuItem quitItem = new JMenuItem("Quitter");
 	private JMenuItem aboutItem = new JMenuItem("A propos de KillerBox");
-	
+
 	/**
 	 * Le pannel courant
 	 */
 	private KillerBoxPanel panel;
-	
+
 	/**
 	 * Panel de connexion au serveur
 	 */
 	private ConnectionPanel connectionPanel;
-	
+
 	/**
 	 * Panel de demande de login
 	 */
 	private LoginPanel loginPanel;
 	
+	/**
+	 * Panel de creation de compte
+	 */
+	private CreateAccountPannel createAccountPanel;
+	
+	/**
+	 * Panel pour rejoindre une partie
+	 */
+	private JoinGamePanel joinGamePanel;
+
 	/**
 	 * Constructeur
 	 * @param height La hauteur de la fenetre
@@ -89,26 +106,51 @@ public class BaseWindow extends JFrame implements Observer
 	 */
 	public BaseWindow()
 	{
-		
+
 		this.setTitle("KillerBox");
 		this.setSize(HEIGHT, WIDTH);
 		this.setResizable(false);
-		
+
 		// Centre de l'ecran
 		this.setLocationRelativeTo(null);
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
-		
+
 		// Construire le menu
 		this.setJMenuBar(this.menu);
 		this.menu.add(this.fileMenu);
 		this.menu.add(this.gameMenu);
 		this.menu.add(this.helpMenu);
+		this.fileMenu.add(this.disconnectItem);
 		this.fileMenu.add(this.quitItem);
 		this.helpMenu.add(this.aboutItem);
-		
+
+		// Panel de connection au demarrage
+		this.setPanel(CONNECTION_PANEL);
+
+		// Afficher la fenêtre
+		this.setVisible(true);
+
 		// Action des items menu
+		this.disconnectItem.addActionListener(new ActionListener()
+		{
+			/**
+			 * Lors du clique sur le bouton deconnecter
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+
+				if (confirmQuit(BaseWindow.CONFIRM_DISCONNECT_MESSAGE))
+				{
+					client.disconnect();
+					setPanel(CONNECTION_PANEL);
+				}
+
+			}
+		});
+
 		this.quitItem.addActionListener(new ActionListener()
 		{
 			/**
@@ -117,14 +159,15 @@ public class BaseWindow extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if(confirmQuit(BaseWindow.CONFIRM_QUIT_MESSAGE))
+				if (confirmQuit(BaseWindow.CONFIRM_QUIT_MESSAGE))
 				{
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					dispose();
+					System.exit(EXIT_ON_CLOSE);
 				}
 			}
 		});
-		
+
 		// Bouton about
 		this.aboutItem.addActionListener(new ActionListener()
 		{
@@ -137,7 +180,7 @@ public class BaseWindow extends JFrame implements Observer
 				aboutDialog.setVisible(true);
 			}
 		});
-		
+
 		// Evenement de la fenetre
 		this.addWindowListener(new WindowAdapter()
 		{
@@ -148,22 +191,53 @@ public class BaseWindow extends JFrame implements Observer
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
-				if(confirmQuit(BaseWindow.CONFIRM_QUIT_MESSAGE))
+				if (confirmQuit(BaseWindow.CONFIRM_QUIT_MESSAGE))
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 				else
 					setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			}
-			
+
 		});
 
-		// Panel de connection au demarrage
-		this.setPanel(CONNECTION_PANEL);
-
-		// Afficher la fenêtre
-		this.setVisible(true);
 	}
-	
-	
+
+	/**
+	 * Permet de retourner le panel en cours
+	 * @return
+	 */
+	public KillerBoxPanel getPanel()
+	{
+		return this.panel;
+	}
+
+	/**
+	 * Retourne le panel de connecion
+	 * @return Le panel de connection
+	 */
+	public ConnectionPanel getConnectionPanel()
+	{
+		return connectionPanel;
+	}
+
+	/**
+	 * Retourne le panel de login
+	 * @return Le panel du login
+	 */
+	public LoginPanel getLoginPanel()
+	{
+		return loginPanel;
+	}
+
+	/**
+	 * Permet de retourner l'ecouteur de connexion
+	 * @return
+	 */
+	public KillerBoxListener getClientListener()
+	{
+		return clientListener;
+	}
+
 	/**
 	 * Permet de setter le client principal
 	 * @param client Le client
@@ -171,14 +245,17 @@ public class BaseWindow extends JFrame implements Observer
 	public void setClient(Client client)
 	{
 		this.client = client;
-		this.clientListener = new ClientListener(client, this);
-		
+
+		// Creation de l'ecouteur et du decoder
+		this.clientListener = new KillerBoxListener(client, this, new KillerBoxDecoder(client,
+				this));
+
 		// Message d'erreur qui peuvent provenir du client
 		client.addObserver(this);
-		
+
 		// Le client listener recoit toute les informations recues par le serveur
 		client.addObserver(this.clientListener);
-		
+
 	}
 
 	/**
@@ -189,11 +266,11 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		// Seter le panel courant
 		this.panel = panel;
-		
+
 		// Setter le bouton principal du panel
 		this.defaultButton = panel.getDefaultButton();
 		this.getRootPane().setDefaultButton(this.defaultButton);
-		
+
 		Container container = this.getContentPane();
 		container.removeAll();
 		container.add(panel);
@@ -210,16 +287,37 @@ public class BaseWindow extends JFrame implements Observer
 		switch (type)
 		{
 			case CONNECTION_PANEL:
-				loadPanel(new ConnectionPanel(this, this.client, this.clientListener));
+				this.disconnectItem.setEnabled(false);
+				this.connectionPanel = new ConnectionPanel(this);
+				loadPanel(this.connectionPanel);
 				break;
+				
 			case LOGIN_PANEL:
-				loadPanel(new LoginPanel(this, this.client, this.clientListener));
+			{
+				this.disconnectItem.setEnabled(true);
+				this.loginPanel = new LoginPanel(this);
+				loadPanel(this.loginPanel);
 				break;
+			}
+			
+			case CREATE_ACCOUNT_PANEL :
+			{
+				this.createAccountPanel = new CreateAccountPannel(this);
+				loadPanel(this.createAccountPanel);
+				break;
+			}
+			
+			case JOIN_GAME_PANEL :
+			{
+				this.joinGamePanel = new JoinGamePanel(this);
+				loadPanel(this.joinGamePanel);
+				break;
+			}
 		}
 	}
-	
+
 	/**
-	 * Permet de confirmer ou non la fermeture de la fenetre. 
+	 * Permet de confirmer ou non la fermeture de la fenetre.
 	 * Affiche de ce fait une boite de message
 	 * @param message Message a afficher
 	 * @return True l'utilisateur desire quitter, false sinon
@@ -227,18 +325,17 @@ public class BaseWindow extends JFrame implements Observer
 	private boolean confirmQuit(String message)
 	{
 		return JOptionPane.showConfirmDialog(this, message, this.getTitle(),
-				  JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.OK_OPTION;
+				JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.OK_OPTION;
 	}
-	
+
 	/**
 	 * Permet d'envoyer un message d'erreur a la vue
 	 * @param message Le message d'erreur
 	 */
-	public void sendError(String message)
+	public void printError(String message)
 	{
-		System.out.println(message);
+		this.panel.printError(message);
 	}
-
 
 	/**
 	 * Lorsque la vue recoit un message. Elle l'affiche sur le panel
@@ -248,8 +345,8 @@ public class BaseWindow extends JFrame implements Observer
 	public void update(Observable o, Object arg)
 	{
 		// Si la vue recoit un message (generalement d'erreur)
-		if(String.class.isInstance(arg))
-			this.panel.printError((String)arg);
+		if (String.class.isInstance(arg))
+			this.panel.printError((String) arg);
 	}
-	
+
 }

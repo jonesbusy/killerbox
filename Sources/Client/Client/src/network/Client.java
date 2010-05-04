@@ -119,7 +119,7 @@ public class Client extends Observable
 	 */
 	public void disconnect()
 	{
-		send("@logout");
+		send("#logout");
 		this.close();
 		this.connected = false;
 	}

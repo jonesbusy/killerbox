@@ -9,7 +9,7 @@ import java.util.*;
  * @author	Valentin Delaye
  * @version	1.0
  */
-public class ClientListener implements Observer, Runnable
+public class KillerBoxListener implements Observer, Runnable
 {
 	/**
 	 * Reference sur le client
@@ -20,6 +20,11 @@ public class ClientListener implements Observer, Runnable
 	 * Reference sur la vue
 	 */
 	private BaseWindow fenetre;
+	
+	/**
+	 * Le decodeur de message
+	 */
+	private Decoder decoder;
 	
 	/**
 	 * Flux d'entree
@@ -35,12 +40,22 @@ public class ClientListener implements Observer, Runnable
 	 * Permet de creer un nouvel ecouteur
 	 * @param input Le flux d'entree
 	 */
-	public ClientListener(Client client, BaseWindow fenetre)
+	public KillerBoxListener(Client client, BaseWindow fenetre, Decoder decoder)
 	{
 		this.fenetre = fenetre;
 		this.client = client;
+		this.decoder = decoder;
 	}
 
+	/**
+	 * Permet d'envoyer au serveur les informations de login
+	 * @param login
+	 * @param pass
+	 */
+	public void sendLogin(String login, String pass)
+	{
+		client.send("login#" + login + '#' + pass);
+	}
 
 	/**
 	 * Executer le thread.
@@ -59,11 +74,16 @@ public class ClientListener implements Observer, Runnable
 				if(ligne == null)
 					throw new IOException();
 				
+				// Decoder la ligne
+				this.decoder.decode(ligne);
+					
 			}
 			
 			catch (IOException e)
 			{
-				fenetre.sendError("La connexion avec le serveur a ete interrompue.");
+				// Seter la fin de la connecion
+				fenetre.getPanel().errorConnection = true;
+				fenetre.printError("La connexion avec le serveur a ete interrompue.");
 				client.close();
 				break;
 			}

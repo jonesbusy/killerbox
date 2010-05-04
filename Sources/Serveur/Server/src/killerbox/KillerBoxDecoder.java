@@ -4,8 +4,9 @@ import java.util.*;
 import network.*;
 
 /**
- * @author valentin
- * 
+ * Classe permettant de decoder les informations en provenance
+ * des clients. Implemente decode() de la classe abstraire Decoder
+ * @author Valentin Delaye
  */
 public class KillerBoxDecoder extends Decoder
 {
@@ -20,17 +21,10 @@ public class KillerBoxDecoder extends Decoder
 	 */
 	private KillerBoxDataBase dataBaseKiller;
 
-	/**
-	 * @param server
-	 */
-	public KillerBoxDecoder()
-	{
-
-	}
-
+	
 	/**
 	 * Permet de setter le serveur KillerBox
-	 * @param serverKiller
+	 * @param serverKiller Le serveur killerbox
 	 */
 	public void setKillerBoxServer(KillerBoxServer serverKiller)
 	{
@@ -40,7 +34,7 @@ public class KillerBoxDecoder extends Decoder
 	/**
 	 * Permet de setter la base de donnee de KillerBox. Pour notemment
 	 * verifier les nom d'utilisateur et mots de passe
-	 * @param dataBaseKiller
+	 * @param dataBaseKiller La base de donnee
 	 */
 	public void setDataBase(KillerBoxDataBase dataBaseKiller)
 	{
@@ -48,13 +42,13 @@ public class KillerBoxDecoder extends Decoder
 	}
 
 	/**
-	 * 
+	 * Permet de decoder un message
 	 */
 	@Override
 	public void decode(Connexion connexion, String message)
 	{
 
-		StringTokenizer tokens = new StringTokenizer(message, "@");
+		StringTokenizer tokens = new StringTokenizer(message, "#");
 		String instruction = tokens.nextToken();
 
 		if (instruction.equals("logout"))
@@ -64,19 +58,18 @@ public class KillerBoxDecoder extends Decoder
 		else if (instruction.equals("login"))
 		{
 			// Login/Pass correct
-			
 			String login = tokens.nextToken();
 			String pass = tokens.nextToken();
 			
 			if (this.dataBaseKiller.verifierUtilisateur(login, pass))
 			{
-				server.send(connexion.getId(), "Connexion reussie");
+				server.send(connexion.getId(), "#login#true");
 				serverKiller.addConnected(login, connexion.getId());
 			}
 			
 			// Erreur
 			else
-				server.send(connexion.getId(), "Nom d'utilisateur et/ou mot de passe incorrect");
+				server.send(connexion.getId(), "#login#false");
 
 		}
 		

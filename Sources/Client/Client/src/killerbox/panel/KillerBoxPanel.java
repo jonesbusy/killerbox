@@ -20,42 +20,18 @@ public abstract class KillerBoxPanel extends JPanel
 	protected BaseWindow base;
 	
 	/**
-	 * Le client associes
+	 * Indique s'il y a une erreur de login. Dans ce cas, on doit
+	 * fermer le panel
 	 */
-	protected final Client client;
-	
-	/**
-	 * L'ecouteur de connexion
-	 */
-	protected final ClientListener clientListener;
+	public boolean errorConnection = false;
 	
 	/**
 	 * Constructeur
 	 * @param fenetreBase
 	 */
-	public KillerBoxPanel(BaseWindow base, Client client, ClientListener clientListener)
+	public KillerBoxPanel(BaseWindow base)
 	{
 		this.base = base;
-		this.client = client;
-		this.clientListener = clientListener;
-	}
-
-	/**
-	 * Permet de retourner le client
-	 * @return Le client
-	 */
-	public Client getClient()
-	{
-		return client;
-	}
-
-	/**
-	 * Permet de retourner l'ecouteur de connexion
-	 * @return L'ecouteur de connexion
-	 */
-	public ClientListener getClientListener()
-	{
-		return clientListener;
 	}
 	
 	/**
@@ -69,6 +45,13 @@ public abstract class KillerBoxPanel extends JPanel
 	 * d'erreur
 	 * @param message Le message a afficher
 	 */
-	public abstract void printError(String message);
+	public void printError(String message)
+	{
+		if(errorConnection)
+		{
+			base.setPanel(EnumPanel.CONNECTION_PANEL);
+			base.printError(message);
+		}
+	}
 	
 }

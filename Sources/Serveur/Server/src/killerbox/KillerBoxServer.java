@@ -67,7 +67,6 @@ public class KillerBoxServer extends Observable implements  Observer
 		this.serveur.start();
 		setChanged();
 		notifyObservers("KillerBox v 1.0");
-		
 	}
 	
 	/**
