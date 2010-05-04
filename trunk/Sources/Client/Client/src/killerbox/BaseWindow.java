@@ -27,7 +27,7 @@ public class BaseWindow extends JFrame implements Observer
 	/**
 	 * L'ecouteur de message
 	 */
-	private KillerBoxListener clientListener;
+	private KillerBoxListener listener;
 
 	/**
 	 * Le message de confirmation de fermeture
@@ -212,30 +212,12 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Retourne le panel de connecion
-	 * @return Le panel de connection
-	 */
-	public ConnectionPanel getConnectionPanel()
-	{
-		return connectionPanel;
-	}
-
-	/**
-	 * Retourne le panel de login
-	 * @return Le panel du login
-	 */
-	public LoginPanel getLoginPanel()
-	{
-		return loginPanel;
-	}
-
-	/**
 	 * Permet de retourner l'ecouteur de connexion
 	 * @return
 	 */
-	public KillerBoxListener getClientListener()
+	public KillerBoxListener getListener()
 	{
-		return clientListener;
+		return listener;
 	}
 
 	/**
@@ -247,14 +229,14 @@ public class BaseWindow extends JFrame implements Observer
 		this.client = client;
 
 		// Creation de l'ecouteur et du decoder
-		this.clientListener = new KillerBoxListener(client, this, new KillerBoxDecoder(client,
+		this.listener = new KillerBoxListener(client, this, new KillerBoxDecoder(client,
 				this));
 
 		// Message d'erreur qui peuvent provenir du client
 		client.addObserver(this);
 
 		// Le client listener recoit toute les informations recues par le serveur
-		client.addObserver(this.clientListener);
+		client.addObserver(this.listener);
 
 	}
 
@@ -275,7 +257,6 @@ public class BaseWindow extends JFrame implements Observer
 		container.removeAll();
 		container.add(panel);
 		container.validate();
-		container.repaint();
 	}
 
 	/**

@@ -45,20 +45,17 @@ public class Client extends Observable
 	/**
 	 * Permet de creer un nouveau client
 	 * @param adresse Adresse du serveur
-	 * @param numeroPort Numero de port du serveur
+	 * @param portNumber Numero de port du serveur
 	 */
-	public Client(String adresse, int numeroPort)
+	public Client(String adresse, int portNumber)
 	{
 		this.adresse = adresse;
-		this.portNumber = numeroPort;
+		this.portNumber = portNumber;
 	}
 
 	/**
 	 * Permet a un client de se connecter sur un serveur
-	 * @param adresse
-	 * @param portNumber
-	 * @return
-	 * @throws IOException
+	 * @return True connection ok, false erreur
 	 */
 	public boolean connect()
 	{
@@ -85,6 +82,8 @@ public class Client extends Observable
 					.getInputStream()));
 
 			this.connected = true;
+			
+			// Indique un nouveau client
 			setChanged();
 			notifyObservers(true);
 

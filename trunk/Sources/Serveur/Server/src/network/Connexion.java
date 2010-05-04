@@ -32,7 +32,6 @@ public class Connexion implements Runnable
 	 */
 	private Decoder decoder;
 	
-
 	/**
 	 * Flux d'entree provenant du client
 	 */
@@ -171,38 +170,6 @@ public class Connexion implements Runnable
 				
 			}
 		}
-	}
-
-	/**
-	 * Retourne le code de hachage pour la connexion
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-
-
-	/**
-	 * Indique si 2 connexions sont identiques
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Connexion other = (Connexion) obj;
-		if (id != other.id)
-			return false;
-		
-		return true;
 	}
 	
 }

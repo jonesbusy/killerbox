@@ -1,6 +1,8 @@
 package killerbox;
 
 import java.util.*;
+import java.util.Map.Entry;
+
 import network.*;
 import network.Server.*;
 
@@ -116,6 +118,17 @@ public class KillerBoxServer extends Observable implements  Observer
 				this.unauthenticated.remove(i);
 				break;
 			}
+	}
+	
+	/**
+	 * Permet de changer une connexion authentifiee en connexion
+	 * non authentifiee
+	 * @param id De la connexion
+	 */
+	public void setUnauthenticated(int id)
+	{		
+		this.removeLogged(id);
+		this.unauthenticated.add(id);
 	}
 	
 	/**
