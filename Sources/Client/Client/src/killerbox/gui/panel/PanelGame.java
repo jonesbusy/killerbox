@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import killerbox.gui.*;
+import static killerbox.gui.panel.EnumPanel.*;
 
 /**
  * 
@@ -19,8 +20,9 @@ public class PanelGame extends AbstractPanel
 	/**
 	 * Message utilisateur
 	 */
-	private static final String CONFIRM_DELETE_ACCOUNT = "Etes-vous sur de vouloir supprimer votre compte ? Cette operation est irreversible.";
-
+	private static final String CONFIRM_DELETE_ACCOUNT = "Etes-vous sur de vouloir supprimer votre compte ?" +
+																		  "\nCette operation est irreversible.";
+	
 	/**
 	 * Panel partie
 	 */
@@ -60,11 +62,21 @@ public class PanelGame extends AbstractPanel
 	 * Bouton pour consulter les scores
 	 */
 	private JButton btnConsultScores = new JButton("Consulter les scores");
+	
+	/**
+	 * Bouton pour changer son mot de passe
+	 */
+	private JButton btnChangePassword = new JButton("Changer son mot de passe");
 
 	/**
 	 * Bouton pour supprimer son copmte
 	 */
 	private JButton btnDeleteAccount = new JButton("Supprimer son compte");
+	
+	/**
+	 * Bouton pour se deconnecter
+	 */
+	private JButton btnDisconnect = new JButton("Se deconnecter");
 
 	/**
 	 * Constructeur
@@ -79,7 +91,7 @@ public class PanelGame extends AbstractPanel
 
 		// Taille des composants
 		this.labGame.setPreferredSize(new Dimension(350, 50));
-		GridLayout layoutBtn = new GridLayout(6, 1);
+		GridLayout layoutBtn = new GridLayout(10, 1);
 		layoutBtn.setVgap(10);
 		this.panBtn.setLayout(layoutBtn);
 
@@ -89,7 +101,9 @@ public class PanelGame extends AbstractPanel
 		this.panBtn.add(this.btnJoin);
 		this.panBtn.add(this.btnCreate);
 		this.panBtn.add(this.btnConsultScores);
+		this.panBtn.add(this.btnChangePassword);
 		this.panBtn.add(this.btnDeleteAccount);
+		this.panBtn.add(this.btnDisconnect);
 
 		this.panBtn.add(this.labAdminZone);
 		this.panBtn.add(this.btnSetAccount);
@@ -98,6 +112,7 @@ public class PanelGame extends AbstractPanel
 		this.btnSetAccount.setVisible(false);
 
 		// Ecouteur des composants
+		this.btnDisconnect.addActionListener(this.base.getActionDisconnect());
 		this.btnDeleteAccount.addActionListener(new ActionListener()
 		{
 			/**
@@ -110,6 +125,21 @@ public class PanelGame extends AbstractPanel
 				if (JOptionPane.showConfirmDialog(base, CONFIRM_DELETE_ACCOUNT, base
 						.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 					base.getListener().requestDeleteAccount();
+			}
+		});
+		
+		// Modification du mot de passe
+		this.btnChangePassword.addActionListener(new ActionListener()
+		{
+			
+			/**
+			 * Quand l'utilisateur clique sur le bouton pour
+			 * changer son mot de passe
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				base.setPanel(CHANGE_PASS_PANEL);
 			}
 		});
 

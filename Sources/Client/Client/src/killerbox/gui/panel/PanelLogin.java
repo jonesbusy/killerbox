@@ -34,7 +34,7 @@ public class PanelLogin extends AbstractPanel
 	private JLabel labLogin = new JLabel("Login");
 	private JLabel labPass = new JLabel("Mot de passe");
 	private JTextField texLogin = new JTextField();
-	private JTextField texPass = new JTextField();
+	private JPasswordField texPass = new JPasswordField();
 	
 	/**
 	 * Bouton pour se s'authentifier
@@ -95,7 +95,7 @@ public class PanelLogin extends AbstractPanel
 				// Enlever le message s'il y en a un
 				labErreur.setText("");
 				
-				if(!texLogin.getText().isEmpty() && !texPass.getText().isEmpty())
+				if(!texLogin.getText().isEmpty() && texPass.getPassword().length != 0)
 					btnConnect.setEnabled(true);
 				else
 					btnConnect.setEnabled(false);
@@ -119,8 +119,8 @@ public class PanelLogin extends AbstractPanel
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e)
-			{				
-				base.getListener().sendCredentias(texLogin.getText(), texPass.getText());
+			{	
+				base.getListener().sendCredentias(texLogin.getText(), new String(texPass.getPassword()));
 			}
 		});
 		
