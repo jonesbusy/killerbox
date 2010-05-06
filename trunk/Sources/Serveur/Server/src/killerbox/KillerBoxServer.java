@@ -1,7 +1,6 @@
 package killerbox;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import network.*;
 import network.Server.*;
@@ -14,6 +13,11 @@ import network.Server.*;
  */
 public class KillerBoxServer extends Observable implements  Observer
 {
+	
+	/**
+	 * Message d'erreur si la connexion a la base de donnee de echoue
+	 */
+	private static String ERROR_DATA_BASE = "Erreur de connexion a la base";
 	
 	/**
 	 * La base de donnee du serveur
@@ -51,7 +55,10 @@ public class KillerBoxServer extends Observable implements  Observer
 		}
 		catch (Exception e)
 		{
-			System.out.println("Erreur de connexion a la base");			
+			setChanged();
+			notifyObservers(ERROR_DATA_BASE);
+			System.out.println(ERROR_DATA_BASE);
+			System.exit(0);
 		}
 		
 		// Setet les serveur du decodeur

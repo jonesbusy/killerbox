@@ -1,4 +1,4 @@
-package killerbox.decoder;
+package killerbox.network;
 
 import network.*;
 import killerbox.gui.*;
@@ -28,8 +28,8 @@ public class KillerBoxListener extends Listener
 
 	/**
 	 * Permet d'envoyer au serveur les informations de login
-	 * @param login
-	 * @param pass
+	 * @param login Nom d'utilisateur
+	 * @param pass Mot de passe
 	 */
 	public void sendCredentias(String login, String pass)
 	{

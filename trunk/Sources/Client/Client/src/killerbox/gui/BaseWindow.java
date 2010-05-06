@@ -6,7 +6,7 @@ import java.util.*;
 import javax.swing.*;
 
 import network.*;
-import killerbox.decoder.*;
+import killerbox.network.*;
 import killerbox.gui.panel.*;
 
 import static killerbox.gui.panel.EnumPanel.*;
