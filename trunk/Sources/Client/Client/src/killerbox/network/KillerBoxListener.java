@@ -1,8 +1,6 @@
 package killerbox.decoder;
 
 import network.*;
-import java.io.*;
-import java.util.*;
 import killerbox.gui.*;
 
 /**
@@ -10,12 +8,8 @@ import killerbox.gui.*;
  * @author Valentin Delaye
  * @version 1.0
  */
-public class KillerBoxListener implements Observer, Runnable
+public class KillerBoxListener extends Listener
 {
-	/**
-	 * Reference sur le client
-	 */
-	private Client client;
 
 	/**
 	 * Reference sur la vue
@@ -23,29 +17,13 @@ public class KillerBoxListener implements Observer, Runnable
 	private BaseWindow fenetre;
 
 	/**
-	 * Le decodeur de message
-	 */
-	private Decoder decoder;
-
-	/**
-	 * Flux d'entree
-	 */
-	private BufferedReader input;
-
-	/**
-	 * Thread associe a l'ecouteur
-	 */
-	private Thread activite;
-
-	/**
 	 * Permet de creer un nouvel ecouteur
 	 * @param input Le flux d'entree
 	 */
 	public KillerBoxListener(Client client, BaseWindow fenetre, Decoder decoder)
 	{
+		super(client, decoder);
 		this.fenetre = fenetre;
-		this.client = client;
-		this.decoder = decoder;
 	}
 
 	/**
@@ -121,61 +99,17 @@ public class KillerBoxListener implements Observer, Runnable
 	}
 
 	/**
-	 * Executer le thread.
-	 * S'occupe de lire le message recu et d'appeler le decoder
-	 * sur cette ligne
+	 * Permet de setter
 	 */
 	@Override
-	public void run()
+	public void setDeconnected()
 	{
-		String ligne = null;
-
-		while (true)
-		{
-			try
-			{
-				ligne = input.readLine();
-
-				if (ligne == null)
-					throw new IOException();
-
-				// Decoder la ligne
-				this.decoder.decode(ligne);
-
-			}
-
-			catch (IOException e)
-			{
-				// Seter la fin de la connecion
-				fenetre.getPanel().errorConnection = true;
-				fenetre.printError("La connexion avec le serveur a ete interrompue.");
-				client.close();
-				break;
-			}
-
-		}
+		// Seter la fin de la connecion
+		fenetre.getPanel().errorConnection = true;
+		fenetre.printError("La connexion avec le serveur a ete interrompue.");
+		client.close();
 	}
-
-	/**
-	 * Indique une modification du client
-	 * @param o L'objet client
-	 * @param arg Les parametres
-	 */
-	public void update(Observable o, Object arg)
-	{
-		if (Boolean.class.isInstance(arg))
-		{
-			boolean status = (Boolean) arg;
-
-			// Le client passe en status connecte
-			if (status)
-			{
-				this.input = this.client.getBufferedReader();
-				this.activite = new Thread(this);
-				this.activite.start();
-			}
-
-		}
-	}
-
+	
+	
+	
 }
