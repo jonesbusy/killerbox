@@ -209,12 +209,12 @@ public class Server extends Observable implements Runnable, Observer
 	}
 
 	/**
-	 * Permet transferer un message au serveur
+	 * Permet transferer un message non decryptable au serveur.
+	 * Celui ci averti ces observers pour un traitement. (Log, affichage, etc...)
 	 * @param message Le message
 	 */
 	public void relay(String message)
 	{
-		broadcast(message);
 		setChanged();
 		notifyObservers(message);
 	}

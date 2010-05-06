@@ -10,11 +10,13 @@ import killerbox.gui.*;
 import static killerbox.gui.panel.EnumPanel.*;
 
 /**
- * 
+ * Represente le panel de gestion de compte et des parties. L'utilisateur
+ * peut decider de creer une nouvelle partie ou de rejoindre une partie en cours
  * @author Valentin Delaye
+ * @author Fabrizio Beretta Piccoli
  */
 @SuppressWarnings("serial")
-public class PanelGame extends AbstractPanel
+public class PanelSetAccount extends AbstractPanel
 {
 
 	/**
@@ -82,7 +84,7 @@ public class PanelGame extends AbstractPanel
 	 * Constructeur
 	 * @param base Fenetre de base
 	 */
-	public PanelGame(final BaseWindow base)
+	public PanelSetAccount(final BaseWindow base)
 	{
 		super(base);
 
@@ -139,7 +141,21 @@ public class PanelGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(CHANGE_PASS_PANEL);
+				base.setPanel(PANEL_CHANGE_PASSWORD);
+			}
+		});
+		
+		// Affichage des scores
+		this.btnConsultScores.addActionListener(new ActionListener()
+		{
+			/**
+			 * Quand l'utilisateur clique sur le bouton pour
+			 * afficher les scores
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				base.setPanel(PANEL_VIEW_SCORE);
 			}
 		});
 
@@ -158,9 +174,9 @@ public class PanelGame extends AbstractPanel
 	 * Affiche une erreur sur le panel
 	 */
 	@Override
-	public void printError(String message)
+	public void printMessage(String message)
 	{
-		super.printError(message);
+		super.printMessage(message);
 
 		if (!errorConnection)
 			this.labMessage.setText(message);

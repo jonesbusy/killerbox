@@ -26,7 +26,7 @@ public class PanelCreateAccount extends AbstractPanel
 	/**
 	 * Label pour afficher differents message
 	 */
-	private JLabel labelMessage = new JLabel("", JLabel.CENTER);
+	private JLabel labMessage = new JLabel("", JLabel.CENTER);
 
 	/**
 	 * Label du login
@@ -80,7 +80,7 @@ public class PanelCreateAccount extends AbstractPanel
 
 		// Definition des tailles
 		this.labCreateAccount.setPreferredSize(new Dimension(350, 50));
-		this.labelMessage.setPreferredSize(new Dimension(350, 40));
+		this.labMessage.setPreferredSize(new Dimension(350, 40));
 		this.labLogin.setPreferredSize(new Dimension(150, 40));
 		this.labPass1.setPreferredSize(new Dimension(150, 40));
 		this.labPass2.setPreferredSize(new Dimension(150, 40));
@@ -103,7 +103,7 @@ public class PanelCreateAccount extends AbstractPanel
 		this.add(this.textPass2);
 		this.add(this.btnForward);
 		this.add(this.btnCreate);
-		this.add(this.labelMessage);
+		this.add(this.labMessage);
 
 		// Lors de la modification des champs de texte
 		DocumentListener changeText = new DocumentListener()
@@ -177,7 +177,7 @@ public class PanelCreateAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(LOGIN_PANEL);
+				base.setPanel(PANEL_LOGIN);
 			}
 		});
 
@@ -196,13 +196,13 @@ public class PanelCreateAccount extends AbstractPanel
 	 * Affiche l'erreur
 	 */
 	@Override
-	public void printError(String message)
+	public void printMessage(String message)
 	{
-		super.printError(message);
+		super.printMessage(message);
 
 		// Ce n'est pas une erreur de connection
 		if (!errorConnection)
-			this.labelMessage.setText(message);
+			this.labMessage.setText(message);
 	}
 
 }

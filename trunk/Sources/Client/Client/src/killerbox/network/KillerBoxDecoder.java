@@ -45,14 +45,14 @@ public class KillerBoxDecoder extends Decoder
 				// Connection ok
 				if(instruction.equals("true"))
 				{
-					this.fenetre.setPanel(EnumPanel.JOIN_GAME_PANEL);
+					this.fenetre.setPanel(EnumPanel.PANEL_SET_ACCOUNT);
 				}
 				
 				// Erreur d'authentification
 				else if(instruction.equals("false"))
 				{
 					// Afficher une erreur
-					this.fenetre.printError("Le nom d'utilisateur ou mot de passe est incorrect");
+					this.fenetre.printMessage("Le nom d'utilisateur ou mot de passe est incorrect");
 				}
 					
 			}
@@ -67,10 +67,10 @@ public class KillerBoxDecoder extends Decoder
 				{
 					instruction = tokens.nextToken();
 					if(instruction.equals("true"))
-						this.fenetre.setPanel(EnumPanel.LOGIN_PANEL);
+						this.fenetre.setPanel(EnumPanel.PANEL_LOGIN);
 					
 					else if(instruction.equals("false"))
-						this.fenetre.printError("Nom de compte deja utilise");
+						this.fenetre.printMessage("Nom de compte deja utilise");
 				}
 				
 				// On recoit les informations qu'on a demande

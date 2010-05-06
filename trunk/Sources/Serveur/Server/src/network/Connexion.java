@@ -65,7 +65,7 @@ public class Connexion implements Runnable
 		this.thread = new Thread(this);
 		
 		// Envoyer message
-		this.send("Connecte au serveur");
+		this.send("#welcome#" + id);
 		
 		// Demarrer le thread
 		this.running = true;

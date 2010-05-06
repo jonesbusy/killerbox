@@ -12,6 +12,7 @@ import static killerbox.gui.panel.EnumPanel.*;
 /**
  * Represente le panel pour changer son mot de passe
  * @author Valentin Delaye
+ * @author Fabrizio Beretta Piccoli
  */
 @SuppressWarnings("serial")
 public class PanelChangePassWord extends AbstractPanel
@@ -24,9 +25,9 @@ public class PanelChangePassWord extends AbstractPanel
 			"Veuillez choisir votre nouveau mot de passe", JLabel.CENTER);
 	
 	/**
-	 * Label pour afficher differents message
+	 * Label pour afficher differents messages.
 	 */
-	private JLabel labelMessage = new JLabel("", JLabel.CENTER);
+	private JLabel labMessage = new JLabel("", JLabel.CENTER);
 	
 	/**
 	 * Label du mot de passe 1
@@ -69,7 +70,7 @@ public class PanelChangePassWord extends AbstractPanel
 		
 		// Definition des tailles
 		this.labChangePass.setPreferredSize(new Dimension(350, 50));
-		this.labelMessage.setPreferredSize(new Dimension(350, 40));
+		this.labMessage.setPreferredSize(new Dimension(350, 40));
 		this.labPass1.setPreferredSize(new Dimension(150, 40));
 		this.labPass2.setPreferredSize(new Dimension(150, 40));
 		this.textPass1.setColumns(20);
@@ -87,7 +88,7 @@ public class PanelChangePassWord extends AbstractPanel
 		this.add(this.textPass2);
 		this.add(this.btnForward);
 		this.add(this.btnModify);
-		this.add(this.labelMessage);
+		this.add(this.labMessage);
 		
 		this.btnModify.setEnabled(false);
 		
@@ -138,7 +139,7 @@ public class PanelChangePassWord extends AbstractPanel
 				if (Arrays.equals(textPass1.getPassword(), textPass2.getPassword()))
 				{
 					base.getListener().requestModifyPass(new String(textPass1.getPassword()));
-					base.setPanel(JOIN_GAME_PANEL);
+					base.setPanel(PANEL_SET_ACCOUNT);
 				}
 
 				// Sinon erreur
@@ -160,7 +161,7 @@ public class PanelChangePassWord extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(JOIN_GAME_PANEL);
+				base.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 		

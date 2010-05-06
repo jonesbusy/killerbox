@@ -10,6 +10,10 @@ import killerbox.gui.*;
  */
 public class KillerBoxListener extends Listener
 {
+	/**
+	 * Affichage si deconnexion
+	 */
+	private static final String MESSAGE_DECO = "Vous etes deconnecte.";
 
 	/**
 	 * Reference sur la vue
@@ -33,7 +37,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void sendCredentias(String login, String pass)
 	{
-		client.send("login#" + login + '#' + pass);
+		client.send("#login#" + login + '#' + pass);
 	}
 
 	/**
@@ -43,7 +47,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestAccount(String login, String pass)
 	{
-		client.send("account#create#" + login + '#' + pass);
+		client.send("#account#create#" + login + '#' + pass);
 	}
 
 	/**
@@ -51,7 +55,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestDeleteAccount()
 	{
-		client.send("account#delete#");
+		client.send("#account#delete#");
 	}
 
 	/**
@@ -61,7 +65,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestDeleteAccount(String login)
 	{
-		client.send("account#delete#" + login);
+		client.send("#account#delete#" + login);
 	}
 
 	/**
@@ -69,7 +73,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestAdmin()
 	{
-		client.send("account#request#admin");
+		client.send("#account#request#admin");
 	}
 
 	/**
@@ -78,7 +82,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestAdmin(String username)
 	{
-		client.send("account#request#admin#" + username);
+		client.send("#account#request#admin#" + username);
 	}
 
 	/**
@@ -88,7 +92,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestModifyScore(String login, int score)
 	{
-		client.send("account#modify#score" + login + '#' + score);
+		client.send("#account#modify#score" + login + '#' + score);
 	}
 
 	/**
@@ -98,7 +102,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestModifyPass(String pass)
 	{
-		client.send("account#modify#pass#" + pass);
+		client.send("#account#modify#pass#" + pass);
 	}
 
 	/**
@@ -110,7 +114,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestModifyPass(String login, String pass)
 	{
-		client.send("account#modify#pass" + login + '#' + pass);
+		client.send("#account#modify#pass" + login + '#' + pass);
 	}
 
 	/**
@@ -121,7 +125,7 @@ public class KillerBoxListener extends Listener
 	{
 		// Seter la fin de la connecion
 		fenetre.getPanel().errorConnection = true;
-		fenetre.printError("La connexion avec le serveur a ete interrompue.");
+		fenetre.printMessage(MESSAGE_DECO);
 		client.close();
 	}
 

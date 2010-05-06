@@ -68,8 +68,6 @@ public class Client extends Observable
 
 		catch (UnknownHostException e)
 		{
-			setChanged();
-			notifyObservers("Impossible de se connecter au server.");
 			return false;
 		}
 
@@ -92,8 +90,6 @@ public class Client extends Observable
 
 		catch (ConnectException e)
 		{
-			setChanged();
-			notifyObservers("Impossible de se connecter au server.");
 			return false;
 		}
 
@@ -109,6 +105,7 @@ public class Client extends Observable
 	 */
 	public void send(String message)
 	{
+		System.out.println(message);
 		this.output.println(message);
 		this.output.flush();
 	}
@@ -153,8 +150,7 @@ public class Client extends Observable
 		}
 		catch (IOException e)
 		{
-			setChanged();
-			notifyObservers("Erreur de fermeture du client");
+
 		}
 
 		// On averti que la connection est terminee

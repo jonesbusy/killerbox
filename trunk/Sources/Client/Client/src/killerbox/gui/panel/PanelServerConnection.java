@@ -145,7 +145,7 @@ public class PanelServerConnection extends AbstractPanel
 				}
 				catch (UnknownHostException e1)
 				{
-					JOptionPane.showMessageDialog(base, "L'adresse est incorrecte",
+					JOptionPane.showMessageDialog(base, "L'adresse est incorrecte.",
 							base.getTitle(), JOptionPane.ERROR_MESSAGE);
 				}
 				
@@ -155,14 +155,14 @@ public class PanelServerConnection extends AbstractPanel
 					port = Integer.parseInt(texPortServer.getText());
 					if(port < 1 || port > 65536)
 					{
-						JOptionPane.showMessageDialog(base, "Le port doit etre compris entre 1 et 65535",
+						JOptionPane.showMessageDialog(base, "Le port doit etre compris entre 1 et 65535.",
 								base.getTitle(), JOptionPane.ERROR_MESSAGE);
 						port = 0;
 					}
 				}
 				catch(NumberFormatException ex)
 				{
-					JOptionPane.showMessageDialog(base, "Le port doit etre numerique",
+					JOptionPane.showMessageDialog(base, "Le port doit etre numerique.",
 							base.getTitle(), JOptionPane.ERROR_MESSAGE);
 				}
 				
@@ -176,7 +176,10 @@ public class PanelServerConnection extends AbstractPanel
 					
 					// Connection reussie
 					if(client.connect())
-						base.setPanel(LOGIN_PANEL);
+						base.setPanel(PANEL_LOGIN);
+					else
+						JOptionPane.showMessageDialog(base, "Impossible de se connecter.",
+								base.getTitle(), JOptionPane.ERROR_MESSAGE);
 					
 				}
 				
@@ -198,7 +201,7 @@ public class PanelServerConnection extends AbstractPanel
 	 * Affiche un message d'erreur
 	 */
 	@Override
-	public void printError(String message)
+	public void printMessage(String message)
 	{
 		this.labMessage.setText(message);
 	}
