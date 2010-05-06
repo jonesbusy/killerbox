@@ -1,4 +1,4 @@
-package killerbox.decoder;
+package killerbox.network;
 
 import network.*;
 import java.util.*;
