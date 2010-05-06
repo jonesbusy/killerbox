@@ -65,7 +65,9 @@ public abstract class Listener implements Observer, Runnable
 
 				if (ligne == null)
 					throw new IOException();
-
+				
+				System.out.println(ligne);
+				
 				// Decoder la ligne
 				this.decoder.decode(ligne);
 

@@ -57,7 +57,6 @@ public class KillerBoxServer extends Observable implements  Observer
 		{
 			setChanged();
 			notifyObservers(ERROR_DATA_BASE);
-			System.out.println(ERROR_DATA_BASE);
 			System.exit(0);
 		}
 		
@@ -191,10 +190,7 @@ public class KillerBoxServer extends Observable implements  Observer
 		
 		setChanged();
 		notifyObservers(username + " est maintenant associe a la connexion : " + id);
-		
-		// Broadcaster tout le monde
-		this.broadcastAny(username + " rejoint la partie");
-		
+				
 	}
 	
 	/**
@@ -224,21 +220,14 @@ public class KillerBoxServer extends Observable implements  Observer
 			// Connexion supprimee
 			else
 			{
-				
-				String username = this.getUserName(status.getId());
-				
+							
 				// Supprimer les connexions
 				removeUnauthenticated(status.getId());
 				removeLogged(status.getId());
 				
 				setChanged();
 				notifyObservers("connexion supprimee ID : " + status.getId());
-				
-				if(username != null)
-					this.broadcastAny(username + " : s'est deconnecte");
-				else
-					this.broadcastAny("guest" + status.getId() + " : s'est deconnecte");
-				
+						
 			}
 			
 		}

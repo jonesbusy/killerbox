@@ -11,25 +11,41 @@ import killerbox.gui.*;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractPanel extends JPanel
-{	
+{
 	/**
 	 * La fenetre de base du panel
 	 */
 	protected BaseWindow base;
-	
+
 	/**
 	 * Indique s'il y a une erreur de login. Dans ce cas, on doit
 	 * fermer le panel
 	 */
 	public boolean errorConnection = false;
-	
+
 	/**
-	 * Constructeur
+	 * Constructeur. Creer le panel 
 	 * @param fenetreBase
 	 */
 	public AbstractPanel(BaseWindow base)
 	{
 		this.base = base;
+	}
+
+	/**
+	 * d'erreur. Par defaut le comportement est : S'il y a une erreur
+	 * de connexion, afficher le panel de connection et afficher le message.
+	 * Si c'est un autre message, ne fait rien. Mais peut etre redefini pour savoir a quel
+	 * endroit on affiche le message sur le panel.
+	 * @param message Le message a afficher
+	 */
+	public void printMessage(String message)
+	{
+		if (errorConnection)
+		{
+			base.setPanel(EnumPanel.PANEL_CONNECTION);
+			base.printMessage(message);
+		}
 	}
 	
 	/**
@@ -37,28 +53,15 @@ public abstract class AbstractPanel extends JPanel
 	 * @return Le bouton princiapl du label
 	 */
 	public abstract JButton getDefaultButton();
-	
+
 	/**
-	 * Doit etre redefini pour savoir a quel endroit on affiche le message 
-	 * d'erreur
-	 * @param message Le message a afficher
-	 */
-	public void printError(String message)
-	{
-		if(errorConnection)
-		{
-			base.setPanel(EnumPanel.CONNECTION_PANEL);
-			base.printError(message);
-		}
-	}
-	
-	/**
-	 * Permet d'afficher une partie uniquement visible 
-	 * par un admin
+	 * Permet d'afficher une partie uniquement visible
+	 * par un admin. Est utilie pour les panels ayant une interface
+	 * differente si c'est un utilisateur ou un administrateur
 	 */
 	public void showAdmin()
 	{
-		
+
 	}
-	
+
 }

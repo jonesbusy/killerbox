@@ -30,6 +30,11 @@ public class BaseWindow extends JFrame implements Observer
 	 * L'ecouteur de message
 	 */
 	private KillerBoxListener listener;
+	
+	/**
+	 * Affichage si deconnexion
+	 */
+	private static final String MESSAGE_DECO = "Vous etes deconnecte.";
 
 	/**
 	 * Le message de confirmation de fermeture
@@ -88,26 +93,6 @@ public class BaseWindow extends JFrame implements Observer
 	private AbstractPanel panel;
 
 	/**
-	 * Panel de connexion au serveur
-	 */
-	private PanelServerConnection connectionPanel;
-
-	/**
-	 * Panel de demande de login
-	 */
-	//private PanelLogin loginPanel;
-	
-	/**
-	 * Panel de creation de compte
-	 */
-	//private PanelCreateAccount createAccountPanel;
-	
-	/**
-	 * Panel pour rejoindre une partie
-	 */
-	//private PanelGame joinGamePanel;
-
-	/**
 	 * Constructeur
 	 * @param height La hauteur de la fenetre
 	 * @param width La largeur de la fenetre
@@ -135,7 +120,7 @@ public class BaseWindow extends JFrame implements Observer
 		this.helpMenu.add(this.aboutItem);
 
 		// Panel de connection au demarrage
-		this.setPanel(CONNECTION_PANEL);
+		this.setPanel(PANEL_CONNECTION);
 
 		// Afficher la fenêtre
 		this.setVisible(true);
@@ -154,7 +139,9 @@ public class BaseWindow extends JFrame implements Observer
 				{
 					client.send("#logout");
 					client.disconnect();
-					setPanel(CONNECTION_PANEL);
+					setPanel(PANEL_CONNECTION);
+					panel.printMessage(MESSAGE_DECO);
+					
 				}
 
 			}
@@ -288,43 +275,49 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		switch (type)
 		{
-			case CONNECTION_PANEL:
+			case PANEL_CONNECTION:
 			{
 				this.disconnectItem.setEnabled(false);
-				this.connectionPanel = new PanelServerConnection(this);
-				loadPanel(this.connectionPanel);
+				this.panel = new PanelServerConnection(this);
 				break;
 			}
 				
-			case LOGIN_PANEL:
+			case PANEL_LOGIN:
 			{
 				this.disconnectItem.setEnabled(true);
 				this.panel = new PanelLogin(this);
-				loadPanel(this.panel);
 				break;
 			}
 			
-			case CREATE_ACCOUNT_PANEL :
+			case PANEL_CREATE_ACCOUNT :
 			{
 				this.panel = new PanelCreateAccount(this);
-				loadPanel(this.panel);
 				break;
 			}
 			
-			case JOIN_GAME_PANEL :
+			case PANEL_SET_ACCOUNT :
 			{
-				this.panel = new PanelGame(this);
-				loadPanel(this.panel);
+				this.panel = new PanelSetAccount(this);
 				break;
 			}
 			
-			case CHANGE_PASS_PANEL :
+			case PANEL_CHANGE_PASSWORD :
 			{
 				this.panel = new PanelChangePassWord(this);
-				loadPanel(this.panel);
 				break;
 			}
+			
+			case PANEL_VIEW_SCORE :
+			{
+				this.panel = new PanelScore(this);
+				break;
+			}
+			
 		}
+		
+		// Charge le panel
+		loadPanel(this.panel);
+		
 	}
 
 	/**
@@ -340,16 +333,17 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Permet d'envoyer un message d'erreur a la vue
+	 * Permet d'envoyer un message d'erreur a la vue. Celle ci
+	 * s'occupe de l'afficher sur la panel en cours.
 	 * @param message Le message d'erreur
 	 */
-	public void printError(String message)
+	public void printMessage(String message)
 	{
-		this.panel.printError(message);
+		this.panel.printMessage(message);
 	}
 
 	/**
-	 * Lorsque la vue recoit un message. Elle l'affiche sur le panel
+	 * Lorsque la vue recoit un message.Elle l'affiche sur le panel
 	 * en cours.
 	 */
 	@Override
@@ -357,7 +351,7 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		// Si la vue recoit un message (generalement d'erreur)
 		if (String.class.isInstance(arg))
-			this.panel.printError((String) arg);
+			this.panel.printMessage((String) arg);
 	}
 
 }

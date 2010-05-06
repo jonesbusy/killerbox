@@ -24,7 +24,7 @@ public class PanelLogin extends AbstractPanel
 	private JLabel labTitre = new JLabel("Veuillez vous authentifier", JLabel.CENTER);
 	
 	/**
-	 * 
+	 * Bouton pour creer un compte
 	 */
 	private JButton btnCreateAccount = new JButton("Creer un compte");
 	
@@ -42,9 +42,9 @@ public class PanelLogin extends AbstractPanel
 	private JButton btnConnect = new JButton("S'authentifier");
 	
 	/**
-	 * Pour afficher le message d'erreur
+	 * Pour afficher un message sur le panel
 	 */
-	private JLabel labErreur = new JLabel();
+	private JLabel labMessage = new JLabel();
 
 	/**
 	 * Constructeur
@@ -64,7 +64,7 @@ public class PanelLogin extends AbstractPanel
 		this.labTitre.setPreferredSize(new Dimension(350, 40));
 		this.labLogin.setPreferredSize(new Dimension(100, 40));
 		this.labPass.setPreferredSize(new Dimension(100, 40));
-		this.labErreur.setPreferredSize(new Dimension(300, 40));
+		this.labMessage.setPreferredSize(new Dimension(300, 40));
 		this.texLogin.setColumns(20);
 		this.texPass.setColumns(20);
 		
@@ -76,7 +76,7 @@ public class PanelLogin extends AbstractPanel
 		this.add(this.texPass);
 		this.add(this.btnConnect);
 		this.add(this.btnCreateAccount);
-		this.add(this.labErreur);
+		this.add(this.labMessage);
 				
 		
 		// Ecouteur des champs de texte
@@ -93,7 +93,7 @@ public class PanelLogin extends AbstractPanel
 			public void insertUpdate(DocumentEvent arg0)
 			{
 				// Enlever le message s'il y en a un
-				labErreur.setText("");
+				labMessage.setText("");
 				
 				if(!texLogin.getText().isEmpty() && texPass.getPassword().length != 0)
 					btnConnect.setEnabled(true);
@@ -133,7 +133,7 @@ public class PanelLogin extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				base.setPanel(EnumPanel.CREATE_ACCOUNT_PANEL);
+				base.setPanel(EnumPanel.PANEL_CREATE_ACCOUNT);
 			}
 		});
 		
@@ -153,12 +153,12 @@ public class PanelLogin extends AbstractPanel
 	 * Un charge le panel de connecion et on affiche le message d'erreur
 	 */
 	@Override
-	public void printError(String message)
+	public void printMessage(String message)
 	{
-		super.printError(message);
+		super.printMessage(message);
 		
 		if(!errorConnection)
-			this.labErreur.setText(message);
+			this.labMessage.setText(message);
 	}
 
 }
