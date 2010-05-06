@@ -47,7 +47,7 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Effectuer une demande de suppression de compte de la part du serveur
+	 * Effectuer une demande de suppression de compte
 	 */
 	public void requestDeleteAccount()
 	{
@@ -55,14 +55,15 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Effectuer une demande de creation de compte de la part du serveur
+	 * Effectuer une demande de creation de compte pour un utilisateur
+	 * donne.Uniquement un administrateur est autorise a executer ceci.
 	 * @param login Nom du compte a supprimer
 	 */
 	public void requestDeleteAccount(String login)
 	{
 		client.send("account#delete#" + login);
 	}
-	
+
 	/**
 	 * Demande s'il l'utilisateur est admin
 	 */
@@ -70,7 +71,7 @@ public class KillerBoxListener extends Listener
 	{
 		client.send("account#request#admin");
 	}
-	
+
 	/**
 	 * Indique pour un user donne s'il est admin
 	 * @param username Le nom d'utilisateur
@@ -81,19 +82,33 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Effectuer une demande de modification de score
+	 * Effectuer une demande de modification de score.Uniquement un
+	 * administrateur est autorise a executer ceci.
 	 * @param login Le compte dont on veut modifier le score
 	 */
-	public void modifyScore(String login, int score)
+	public void requestModifyScore(String login, int score)
 	{
 		client.send("account#modify#score" + login + '#' + score);
 	}
 
 	/**
-	 * Effectuer une demande de creation de compte de la part du serveur
-	 * @param login Compte a modifier
+	 * Effectuer une demande de modification de mot de passe
+	 * pour soi meme
+	 * @param pass Le nouveau mot de passe
 	 */
-	public void modifyPass(String login, String pass)
+	public void requestModifyPass(String pass)
+	{
+		client.send("account#modify#pass#" + pass);
+	}
+
+	/**
+	 * Effectuer une demande de modification de mot
+	 * de passe pour un utilisateur donne. Uniquement un
+	 * administrateur est autorise a executer ceci.
+	 * @param login Compte a modifier
+	 * @param pass Nouveau password
+	 */
+	public void requestModifyPass(String login, String pass)
 	{
 		client.send("account#modify#pass" + login + '#' + pass);
 	}
@@ -109,7 +124,5 @@ public class KillerBoxListener extends Listener
 		fenetre.printError("La connexion avec le serveur a ete interrompue.");
 		client.close();
 	}
-	
-	
-	
+
 }

@@ -57,9 +57,15 @@ public class BaseWindow extends JFrame implements Observer
 	private AboutDialog aboutDialog = new AboutDialog(this);
 
 	/**
-	 * Le bouton d'activation principal
+	 * Le bouton d'activation principal. Il est obtenu par les 
+	 * differents panel grace a la methode getDefaultButton
 	 */
 	private JButton defaultButton;
+	
+	/**
+	 * Action pour se deconnecter
+	 */
+	private ActionListener actionDisconnect;
 
 	/**
 	 * Menu principal
@@ -89,17 +95,17 @@ public class BaseWindow extends JFrame implements Observer
 	/**
 	 * Panel de demande de login
 	 */
-	private PanelLogin loginPanel;
+	//private PanelLogin loginPanel;
 	
 	/**
 	 * Panel de creation de compte
 	 */
-	private PanelCreateAccount createAccountPanel;
+	//private PanelCreateAccount createAccountPanel;
 	
 	/**
 	 * Panel pour rejoindre une partie
 	 */
-	private PanelGame joinGamePanel;
+	//private PanelGame joinGamePanel;
 
 	/**
 	 * Constructeur
@@ -133,9 +139,9 @@ public class BaseWindow extends JFrame implements Observer
 
 		// Afficher la fenêtre
 		this.setVisible(true);
-
-		// Action des items menu
-		this.disconnectItem.addActionListener(new ActionListener()
+		
+		// Creation de l'action de deconnection
+		this.actionDisconnect = new ActionListener()
 		{
 			/**
 			 * Lors du clique sur le bouton deconnecter
@@ -152,7 +158,10 @@ public class BaseWindow extends JFrame implements Observer
 				}
 
 			}
-		});
+		};
+
+		// Action des items menu	
+		this.disconnectItem.addActionListener(this.actionDisconnect);
 
 		this.quitItem.addActionListener(new ActionListener()
 		{
@@ -213,6 +222,15 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return this.panel;
 	}
+	
+	/**
+	 * Permet de retourne l'action pour se deconnecter
+	 * @return L'action pour se deconnecter
+	 */
+	public ActionListener getActionDisconnect()
+	{
+		return actionDisconnect;
+	}
 
 	/**
 	 * Permet de retourner l'ecouteur de connexion
@@ -271,30 +289,39 @@ public class BaseWindow extends JFrame implements Observer
 		switch (type)
 		{
 			case CONNECTION_PANEL:
+			{
 				this.disconnectItem.setEnabled(false);
 				this.connectionPanel = new PanelServerConnection(this);
 				loadPanel(this.connectionPanel);
 				break;
+			}
 				
 			case LOGIN_PANEL:
 			{
 				this.disconnectItem.setEnabled(true);
-				this.loginPanel = new PanelLogin(this);
-				loadPanel(this.loginPanel);
+				this.panel = new PanelLogin(this);
+				loadPanel(this.panel);
 				break;
 			}
 			
 			case CREATE_ACCOUNT_PANEL :
 			{
-				this.createAccountPanel = new PanelCreateAccount(this);
-				loadPanel(this.createAccountPanel);
+				this.panel = new PanelCreateAccount(this);
+				loadPanel(this.panel);
 				break;
 			}
 			
 			case JOIN_GAME_PANEL :
 			{
-				this.joinGamePanel = new PanelGame(this);
-				loadPanel(this.joinGamePanel);
+				this.panel = new PanelGame(this);
+				loadPanel(this.panel);
+				break;
+			}
+			
+			case CHANGE_PASS_PANEL :
+			{
+				this.panel = new PanelChangePassWord(this);
+				loadPanel(this.panel);
 				break;
 			}
 		}
