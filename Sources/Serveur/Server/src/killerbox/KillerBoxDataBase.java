@@ -25,10 +25,11 @@ public class KillerBoxDataBase
 	 * @param pass Mot de pass de la base de donee
 	 * @throws Exception Si la connection est refusee
 	 */
-	public KillerBoxDataBase(String url, String name, String user, String pass) throws Exception
+	public KillerBoxDataBase(String url, String name, String user, String pass)
+			throws Exception
 	{
-		db_connection = DriverManager.getConnection("jdbc:mysql://" + url + "/" + name + "?user="
-				+ user + "&password=" + pass);
+		db_connection = DriverManager.getConnection("jdbc:mysql://" + url + "/" + name
+				+ "?user=" + user + "&password=" + pass);
 	}
 
 	/**
@@ -89,7 +90,6 @@ public class KillerBoxDataBase
 		}
 		catch (Exception e)
 		{
-			System.out.print(e.getMessage());
 			return false;
 		}
 
@@ -103,7 +103,9 @@ public class KillerBoxDataBase
 	public void supprimerUtilisateur(String pseudo) throws SQLException
 	{
 		Statement st = db_connection.createStatement();
-		st.executeUpdate("DELETE FROM `joueur` WHERE `joueur`.`pseudo` = '" + pseudo + "';");
+		st
+				.executeUpdate("DELETE FROM `joueur` WHERE `joueur`.`pseudo` = '" + pseudo
+						+ "';");
 	}
 
 	/**
@@ -116,7 +118,8 @@ public class KillerBoxDataBase
 	{
 		Statement st = db_connection.createStatement();
 		ResultSet rs = st
-				.executeQuery("SELECT joueur.hashConnexion FROM joueur WHERE joueur.pseudo =  '"						+ pseudo + "'");
+				.executeQuery("SELECT joueur.hashConnexion FROM joueur WHERE joueur.pseudo =  '"
+						+ pseudo + "'");
 		if (rs.first())
 			return rs.getString(1);
 		else
@@ -132,8 +135,9 @@ public class KillerBoxDataBase
 	public int getScore(String pseudo) throws SQLException
 	{
 		Statement st = db_connection.createStatement();
-		ResultSet rs = st.executeQuery("SELECT joueur.score FROM joueur WHERE joueur.pseudo =  '"
-				+ pseudo + "'");
+		ResultSet rs = st
+				.executeQuery("SELECT joueur.score FROM joueur WHERE joueur.pseudo =  '"
+						+ pseudo + "'");
 		rs.first();
 
 		return rs.getInt(1);
@@ -159,55 +163,60 @@ public class KillerBoxDataBase
 		}
 
 	}
-	
+
 	/**
 	 * Permet de retourner les scores de tout les utilisateurs. C'est a dire
 	 * le nom d'utilisateur, le score et si l'utilisateur est admin.
 	 * Les informations sont mises a la suite separe par des tokens
 	 */
-	public String getAll()
+	public String getAll() throws SQLException
 	{
 		// Execute la requete
 		ResultSet rs = null;
-		try
-		{
-			Statement st = db_connection.createStatement();
-			rs = st.executeQuery("SELECT joueur.pseudo, joueur.administrateur, joueur.score, FROM joueur");
-		}
-		catch (SQLException e)
-		{
-			return "";
-		}
-		
+		Statement st = db_connection.createStatement();
+		rs = st
+				.executeQuery("SELECT joueur.pseudo, joueur.administrateur, joueur.score FROM joueur");
+
 		StringBuilder build = new StringBuilder();
-		
-		Array pseudo;
-		Array score;
-		Array admin;
-		
+
+		while (rs.next())
+			build.append("#" + rs.getString(1) + "#" + rs.getString(2) + "#"
+					+ rs.getString(3));
+
+		return build.toString();
+
+	}
+	
+	/**
+	 * Permet a un utilisateur de modifier son mot de passe
+	 * @param pseudo Pseudo de l'utilisateur
+	 * @param pass
+	 * @return
+	 */
+	public boolean modifierPass(String pseudo, String pass)
+	{
 		try
 		{
-			pseudo = rs.getArray(0);
-			score = rs.getArray(1);
-			admin = rs.getArray(2);
-			ResultSet t = pseudo.getResultSet();
+			Statement st = db_connection.createStatement();			
+			st.executeUpdate("UPDATE `joueur` SET `hashConnexion` = '" + creerHashConnexion(pseudo, pass) + "' WHERE `joueur`.`pseudo` = '" + pseudo + "';");
 		}
 		catch (SQLException e)
 		{
-			
+			System.out.println(e);
+			return false;
 		}
 		
+		return true;
 	}
 
 	/**
 	 * Permet de creer le hash de connexion
 	 * @param pseudo Nom d'utilisateur
 	 * @param motDePasse Mot de passe
-	 * @return
+	 * @return Le hash de connexion
 	 */
 	private String creerHashConnexion(String pseudo, String motDePasse)
 	{
-		// hashConnexion = hash(pseudo+salt+motdepasse)
 		return crypterStringMD5(pseudo + salt + motDePasse);
 	}
 

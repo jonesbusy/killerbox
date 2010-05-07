@@ -1,5 +1,6 @@
 package killerbox;
 
+import java.sql.SQLException;
 import java.util.*;
 import network.*;
 
@@ -104,6 +105,7 @@ public class KillerBoxDecoder extends Decoder
 			// Suppression d'un utilisateur
 			else if(instruction.equals("delete"))
 			{
+				
 				String user = null;
 				
 				if(tokens.hasMoreTokens())
@@ -111,7 +113,7 @@ public class KillerBoxDecoder extends Decoder
 				else
 					user = serverKiller.getUserName(connexion.getId());
 				
-				// L'utilisateur pout supprimer sont compte ou l'utilisateur tous
+				// L'utilisateur pout supprimer son compte
 				if(this.serverKiller.getUserName(connexion.getId()).equals(user)
 						|| this.dataBaseKiller.isAdmin(user))
 				{
@@ -137,10 +139,36 @@ public class KillerBoxDecoder extends Decoder
 				{
 					connexion.send("#account#delete#error");
 				}
+				
+			}
+			
+			// Modification sur le compte
+			else if(instruction.equals("modify"))
+			{
+				
+				// Modification de mot de passe pour soi meme
+				instruction = tokens.nextToken();
+				String user = serverKiller.getUserName(connexion.getId());
+				if(instruction.equals("pass"))
+				{
+					this.dataBaseKiller.modifierPass(user, tokens.nextToken());
+					connexion.send("#modify#pass#true");
+				}
+					
+				// Modification pour quelqu'un d'autre (Doit etre admin pour faire ca)
+				else if(instruction.equals("passadmin") && dataBaseKiller.isAdmin(tokens.nextToken()))
+				{
+					this.dataBaseKiller.modifierPass(user, tokens.nextToken());
+					connexion.send("#modify#passadmin#"+ user + "#true");
+				}
+				
+				else
+					connexion.send("#modify#pass#false");
+				
 			}
 			
 			// Demande d'information sur l'utilisateur
-			else if(instruction.endsWith("request"))
+			else if(instruction.equals("request"))
 			{
 				instruction = tokens.nextToken();
 				if(instruction.equals("admin"))
@@ -162,7 +190,17 @@ public class KillerBoxDecoder extends Decoder
 			}
 		}
 		
-		// Instruction destine aux autre joueurs
+		// On demande les score
+		else if(instruction.equals("scores"))
+			try
+			{
+				connexion.send("#scores" + this.dataBaseKiller.getAll());
+			}
+			catch (SQLException e)
+			{
+				connexion.send("#scores#");
+			}
+			
 		else if(instruction.equals("game"))
 		{
 			

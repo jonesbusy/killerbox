@@ -114,7 +114,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestModifyPass(String login, String pass)
 	{
-		client.send("#account#modify#pass" + login + '#' + pass);
+		client.send("#account#modify#passadmin" + login + '#' + pass);
 	}
 	
 	/**

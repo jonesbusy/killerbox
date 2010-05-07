@@ -1,6 +1,7 @@
 package killerbox.gui.panel;
 
-import java.awt.Dimension;
+import java.util.*;
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -55,7 +56,7 @@ public class PanelScore extends AbstractPanel
 	{
 		super(base);
 		
-		//this.base.getListener().re
+		this.base.getListener().requestScore();
 		
 		// Taille des composants
 		this.labTitle.setPreferredSize(new Dimension(350, 20));
@@ -93,10 +94,12 @@ public class PanelScore extends AbstractPanel
 	 * @param score
 	 * @param admin
 	 */
-	public void loadData(String[] user, int[]score, boolean[] admin)
+	public void loadData(ArrayList<String> user, ArrayList<Integer> score, ArrayList<Boolean> admin)
 	{
-		for(int i = 0 ; i < user.length ; i++)
-			this.modelScore.setScore(user[i], score[i], admin[i]);
+		for(int i = 0 ; i < user.size() ; i++)
+			this.modelScore.setScore(user.get(i), score.get(i), admin.get(i));
+		
+		this.repaint();
 	}
 
 	/**

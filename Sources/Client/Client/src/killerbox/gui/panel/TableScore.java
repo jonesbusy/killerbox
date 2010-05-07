@@ -73,8 +73,8 @@ public class TableScore extends AbstractTableModel
 			return users.get(row);
 		else if(col == 1)
 			return scores.get(row);
-		else if(col == 3)
-			return admin.get(row);
+		else if(col == 2)
+			return admin.get(row) ? "Oui" : "Non";
 		
 		return null;
 	}
