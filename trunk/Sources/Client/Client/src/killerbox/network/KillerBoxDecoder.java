@@ -1,10 +1,13 @@
 package killerbox.network;
 
 import network.*;
+
+import java.awt.Panel;
 import java.util.*;
 
 import killerbox.gui.*;
 import killerbox.gui.panel.EnumPanel;
+import killerbox.gui.panel.PanelScore;
 
 public class KillerBoxDecoder extends Decoder
 {
@@ -89,6 +92,29 @@ public class KillerBoxDecoder extends Decoder
 					}
 				}
 				
+			}
+			
+			else if(instruction.equals("scores"))
+			{
+				// Pour recuperer les scores
+				ArrayList<String>user = new ArrayList<String>();
+				ArrayList<Integer>score = new ArrayList<Integer>();
+				ArrayList<Boolean>admin = new ArrayList<Boolean>();
+				
+				while(tokens.hasMoreElements())
+				{
+					user.add(tokens.nextToken());
+					if(tokens.nextToken().equals("1"))
+						admin.add(true);
+					else
+						admin.add(false);
+					
+					score.add(Integer.parseInt(tokens.nextToken()));
+				}
+				
+				// C'est la panel de score
+				if(PanelScore.class.isInstance(this.fenetre.getPanel()))
+					((PanelScore)this.fenetre.getPanel()).loadData(user, score, admin);
 			}
 		}
 		
