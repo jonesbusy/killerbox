@@ -2,10 +2,11 @@ package killerbox.gui.panel;
 
 import java.awt.Dimension;
 import java.awt.event.*;
+
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
 
 import killerbox.gui.*;
+import static killerbox.gui.panel.EnumPanel.*;
 
 /**
  * Represente le panel pour afficher les scores des jouers
@@ -15,51 +16,87 @@ import killerbox.gui.*;
 @SuppressWarnings("serial")
 public class PanelScore extends AbstractPanel
 {
+	
+	/**
+	 * Afficher les 10 meilleures score
+	 */
+	JLabel labTitle = new JLabel("Voici le tableau des scores", JLabel.CENTER);
+		
+	/**
+	 * Split pane
+	 */
+	JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	
 	/**
 	 * Bouton retour
 	 */
 	JButton btnForward = new JButton("Retour");
 	
-	JPanel panTable = new JPanel();
+	/**
+	 * Donnees des joueurs
+	 */
+	TableScore modelScore = new TableScore();
 	
 	/**
 	 * Table des scores
 	 */
 	JTable tableScore = new JTable();
+	
+	/**
+	 * Barre de defilement pour le tableau
+	 */
+	JScrollPane scrollPane = new JScrollPane(tableScore);
 
 	/**
 	 * Constructeur
 	 * @param base Fenetre de base
 	 */
-	public PanelScore(BaseWindow base)
+	public PanelScore(final BaseWindow base)
 	{
 		super(base);
 		
-		this.panTable.setPreferredSize(new Dimension(350, 30));
+		//this.base.getListener().re
 		
-		TableScore modelScore = new TableScore();
-		this.tableScore.setTableHeader(new JTableHeader());
+		// Taille des composants
+		this.labTitle.setPreferredSize(new Dimension(350, 20));
+		this.tableScore.setPreferredScrollableViewportSize(new Dimension(350, 210));
+		this.tableScore.setFillsViewportHeight(true);
+		this.splitPane.setDividerSize(0);
 		
-		modelScore.setScore("toto", "1000");
-		modelScore.setScore("tata", "1000");
-		modelScore.setScore("toto", "1000");
-		modelScore.setScore("tata", "1000");
-		modelScore.setScore("toto", "1000");
-		modelScore.setScore("tata", "1000");
-		modelScore.setScore("toto", "1000");
-		modelScore.setScore("tata", "1000");
-		modelScore.setScore("toto", "1000");
-		modelScore.setScore("tata", "1000");
-		modelScore.setScore("toto", "1000");
-		modelScore.setScore("tata", "1000");
-		
-		
-		this.tableScore.setModel(modelScore);
-		
-		this.add(this.panTable);
-		this.panTable.add(this.tableScore);
+		// Ajout des composant
+		this.tableScore.setModel(this.modelScore);
+		this.add(this.labTitle);
+		this.splitPane.add(this.scrollPane);
+		this.add(this.splitPane);
 		this.add(this.btnForward);
 		
+		// Ecouteur des boutons
+		this.btnForward.addActionListener(new ActionListener()
+		{
+		
+			/**
+			 * Lorsque l'utilisteur clique sur le bouton retour. Charger le panel
+			 * pour gerer son compte et participer aux jeux
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				base.setPanel(PANEL_SET_ACCOUNT);
+			}
+		});
+		
+	}
+	
+	/**
+	 * Permet de charger les donnes sur le tableau des scores
+	 * @param user
+	 * @param score
+	 * @param admin
+	 */
+	public void loadData(String[] user, int[]score, boolean[] admin)
+	{
+		for(int i = 0 ; i < user.length ; i++)
+			this.modelScore.setScore(user[i], score[i], admin[i]);
 	}
 
 	/**
