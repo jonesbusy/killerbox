@@ -16,7 +16,13 @@ public class TableScore extends AbstractTableModel
 	 * Les differents utilisateur
 	 */
 	private ArrayList<String> users = new ArrayList<String>();
-	private ArrayList<String> scores = new ArrayList<String>();
+	private ArrayList<Integer> scores = new ArrayList<Integer>();
+	private ArrayList<Boolean> admin = new ArrayList<Boolean>(); 
+	
+	/**
+	 * Nom de colonne
+	 */
+	private String[] header = {"Nom d'utilisateur", "Score", "Administrateur"};
 
 	/**
 	 * Retourne le nombre de colonne de la table
@@ -24,7 +30,7 @@ public class TableScore extends AbstractTableModel
 	@Override
 	public int getColumnCount()
 	{
-		return 2;
+		return this.header.length;
 	}
 
 	/**
@@ -41,22 +47,34 @@ public class TableScore extends AbstractTableModel
 	 * @param user L'utilisateur
 	 * @param score Le score
 	 */
-	public void setScore(String user, String score)
+	public void setScore(String user, int score, boolean admin)
 	{
 		this.users.add(user);
 		this.scores.add(score);
+		this.admin.add(admin);
+	}
+	
+	/**
+	 * Retourne le nom de la colonne
+	 */
+	@Override
+	public String getColumnName(int column)
+	{
+		return this.header[column];
 	}
 
 	/**
 	 * Retourne la valeur a une ligne est une colone
 	 */
 	@Override
-	public String getValueAt(int row, int col)
+	public Object getValueAt(int row, int col)
 	{
 		if(col == 0)
 			return users.get(row);
 		else if(col == 1)
 			return scores.get(row);
+		else if(col == 3)
+			return admin.get(row);
 		
 		return null;
 	}

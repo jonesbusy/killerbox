@@ -116,6 +116,14 @@ public class KillerBoxListener extends Listener
 	{
 		client.send("#account#modify#pass" + login + '#' + pass);
 	}
+	
+	/**
+	 * Permet de demande les differents scores au serveur.
+	 */
+	public void requestScore()
+	{
+		client.send("#scores#");
+	}
 
 	/**
 	 * Permet de setter

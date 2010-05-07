@@ -159,6 +159,45 @@ public class KillerBoxDataBase
 		}
 
 	}
+	
+	/**
+	 * Permet de retourner les scores de tout les utilisateurs. C'est a dire
+	 * le nom d'utilisateur, le score et si l'utilisateur est admin.
+	 * Les informations sont mises a la suite separe par des tokens
+	 */
+	public String getAll()
+	{
+		// Execute la requete
+		ResultSet rs = null;
+		try
+		{
+			Statement st = db_connection.createStatement();
+			rs = st.executeQuery("SELECT joueur.pseudo, joueur.administrateur, joueur.score, FROM joueur");
+		}
+		catch (SQLException e)
+		{
+			return "";
+		}
+		
+		StringBuilder build = new StringBuilder();
+		
+		Array pseudo;
+		Array score;
+		Array admin;
+		
+		try
+		{
+			pseudo = rs.getArray(0);
+			score = rs.getArray(1);
+			admin = rs.getArray(2);
+			ResultSet t = pseudo.getResultSet();
+		}
+		catch (SQLException e)
+		{
+			
+		}
+		
+	}
 
 	/**
 	 * Permet de creer le hash de connexion
