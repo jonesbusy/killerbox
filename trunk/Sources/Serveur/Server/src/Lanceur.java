@@ -16,7 +16,7 @@ public class Lanceur
 	{
 		
 		KillerBoxDecoder decoder = new KillerBoxDecoder();
-		KillerBoxServer server = new KillerBoxServer(7000, decoder, "root", "");
+		KillerBoxServer server = new KillerBoxServer(7000, decoder, "killerbox", "1234");
 		
 		@SuppressWarnings("unused")
 		ServerGui s1 = new ServerGui(server);
