@@ -52,6 +52,8 @@ public class PanelScore extends AbstractPanel
 		modelScore.setScore("tata", "1000");
 		modelScore.setScore("toto", "1000");
 		modelScore.setScore("tata", "1000");
+		
+		
 		this.tableScore.setModel(modelScore);
 		
 		this.add(this.panTable);
