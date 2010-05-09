@@ -36,6 +36,8 @@ public class FenetreBase extends JFrame implements ActionListener
 	JPanel panelPrincipal 		= new PanelPrincipale(this);
 	JPanel panelTypePartie 		= new PanelTypePartie();
 	JPanel panelUserAdmin 		= new PanelUserAdmin(this);
+	JPanel panelDemarrer		= new PanelDemarrerTvsT(this);
+	JPanel panelDemarrerE		= new PanelDemarrerEquipe(this);
 	
 	FenetreBase(int hauteur, int largeur)
 	{	
@@ -43,7 +45,7 @@ public class FenetreBase extends JFrame implements ActionListener
 		this.setSize(largeur, hauteur);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //this.setResizable(false);
+        this.setResizable(false);
 		
 		// le sous menu fichier
 		menu.add(quitter);
@@ -65,7 +67,7 @@ public class FenetreBase extends JFrame implements ActionListener
 		menuBar.add(menuPartie);
 		menuBar.add(menuInfo);
 		
-		setPanelType(PanelType.Bienvenue);
+		setPanelType(PanelType.DemarrerEquipe);
 		
 		// Afficher la fenêtre
         this.setVisible(true); 
@@ -103,6 +105,12 @@ public class FenetreBase extends JFrame implements ActionListener
 		case UserAdmin:
 			changerPanel(panelUserAdmin);
 			break;
+		case Demarrer:
+			changerPanel(panelDemarrer);
+			break;
+		case DemarrerEquipe:
+			changerPanel(panelDemarrerE);
+			break;
 		}
 	}
 
@@ -115,7 +123,7 @@ public class FenetreBase extends JFrame implements ActionListener
 		            "Auteurs :\n" +
 		            "Berdoz Jonas\n" +
 		            "Beretta Piccoli Fabrizio\n" +
-		            "Delay Valentin\n" +
+		            "Delaye Valentin\n" +
 		            "Sandoz Michael",
 		            "A propos de",1
 		            );

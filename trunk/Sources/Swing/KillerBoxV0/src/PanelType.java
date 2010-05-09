@@ -7,5 +7,7 @@ public enum PanelType {
 	Principale,
 	TypePartie,
 	Types,
-	UserAdmin;
+	UserAdmin,
+	Demarrer,
+	DemarrerEquipe;
 }
