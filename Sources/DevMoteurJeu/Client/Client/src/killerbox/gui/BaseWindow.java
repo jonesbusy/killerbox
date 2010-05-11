@@ -313,6 +313,12 @@ public class BaseWindow extends JFrame implements Observer
 				break;
 			}
 			
+			case PANEL_JEU :
+			{
+				this.panel = new PanelJeu(this);
+				break;
+			}
+			
 		}
 		
 		// Charge le panel

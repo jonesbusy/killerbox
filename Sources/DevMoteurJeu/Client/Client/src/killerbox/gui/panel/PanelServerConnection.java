@@ -13,7 +13,7 @@ import static killerbox.gui.panel.EnumPanel.*;
 
 /**
  * Represente la panel permettant de se connecter au serveur.
- * (Adresse ip et mot de passe)
+ * (Adresse ip et port)
  * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
  */
@@ -64,7 +64,7 @@ public class PanelServerConnection extends AbstractPanel
 		
 		// Port par defaut
 		this.texPortServer.setText("7000");
-		this.texIpServer.setText("mambo-gw");
+		this.texIpServer.setText("127.0.0.1");
 		this.btnConnect.setEnabled(true);
 		
 		// Set les label

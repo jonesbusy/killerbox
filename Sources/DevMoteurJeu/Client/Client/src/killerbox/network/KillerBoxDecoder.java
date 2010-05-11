@@ -45,7 +45,7 @@ public class KillerBoxDecoder extends Decoder
 				// Connection ok
 				if(instruction.equals("true"))
 				{
-					this.fenetre.setPanel(EnumPanel.PANEL_SET_ACCOUNT);
+					this.fenetre.setPanel(EnumPanel.PANEL_JEU);
 				}
 				
 				// Erreur d'authentification
