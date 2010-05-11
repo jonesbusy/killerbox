@@ -29,15 +29,20 @@ public class PanelScore extends AbstractPanel
 	JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 	
 	/**
+	 * Les differents scores
+	 */
+	TableScore scores;
+	
+	/**
 	 * Bouton retour
 	 */
 	JButton btnForward = new JButton("Retour");
 	
 	/**
-	 * Donnees des joueurs
+	 * Le bouton actualiser
 	 */
-	TableScore modelScore = new TableScore();
-	
+	JButton btnRefresh = new JButton("Actualiser");
+		
 	/**
 	 * Table des scores
 	 */
@@ -46,7 +51,7 @@ public class PanelScore extends AbstractPanel
 	/**
 	 * Barre de defilement pour le tableau
 	 */
-	JScrollPane scrollPane = new JScrollPane(tableScore);
+	JScrollPane scrollPane = new JScrollPane(tableScore, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 	/**
 	 * Constructeur
@@ -56,6 +61,9 @@ public class PanelScore extends AbstractPanel
 	{
 		super(base);
 		
+		this.scores = base.getTableScores();
+		
+		// Faire une requete des scores pour avoir les tout dernier scores
 		this.base.getListener().requestScore();
 		
 		// Taille des composants
@@ -65,11 +73,12 @@ public class PanelScore extends AbstractPanel
 		this.splitPane.setDividerSize(0);
 		
 		// Ajout des composant
-		this.tableScore.setModel(this.modelScore);
+		this.tableScore.setModel(this.base.getTableScores());;
 		this.add(this.labTitle);
 		this.splitPane.add(this.scrollPane);
 		this.add(this.splitPane);
 		this.add(this.btnForward);
+		this.add(this.btnRefresh);
 		
 		// Ecouteur des boutons
 		this.btnForward.addActionListener(new ActionListener()
@@ -86,6 +95,23 @@ public class PanelScore extends AbstractPanel
 			}
 		});
 		
+		this.btnRefresh.addActionListener(new ActionListener()
+		{
+			/**
+			 * Lorsque l'utilisateur clique sur le bouton actualiser.
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				// Charger les donnes presente
+				base.getListener().requestScore();
+				loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+			}
+		});
+		
+		// Charger les donnes presente
+		loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+		
 	}
 	
 	/**
@@ -94,12 +120,15 @@ public class PanelScore extends AbstractPanel
 	 * @param score
 	 * @param admin
 	 */
-	public void loadData(ArrayList<String> user, ArrayList<Integer> score, ArrayList<Boolean> admin)
+	public void loadData(ArrayList<String> users, ArrayList<Integer> scores, ArrayList<Boolean> admin)
 	{
-		for(int i = 0 ; i < user.size() ; i++)
-			this.modelScore.setScore(user.get(i), score.get(i), admin.get(i));
+
+		this.base.getTableScores().loadData(users, scores, admin);
 		
+		// Mettre a jour le scroll pane
+		this.scrollPane.getViewport().setView(tableScore);
 		this.repaint();
+		this.validate();
 	}
 
 	/**

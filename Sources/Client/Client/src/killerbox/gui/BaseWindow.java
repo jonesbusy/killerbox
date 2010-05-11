@@ -3,6 +3,7 @@ package killerbox.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
 import javax.swing.*;
 
 import network.*;
@@ -25,6 +26,11 @@ public class BaseWindow extends JFrame implements Observer
 	 * Le client
 	 */
 	private Client client;
+	
+	/**
+	 * Pour stocker les differents scores recu du serveur
+	 */
+	private TableScore tableScores = new TableScore();
 
 	/**
 	 * L'ecouteur de message
@@ -122,7 +128,7 @@ public class BaseWindow extends JFrame implements Observer
 		// Panel de connection au demarrage
 		this.setPanel(PANEL_CONNECTION);
 
-		// Afficher la fenêtre
+		// Afficher la fenetre
 		this.setVisible(true);
 		
 		// Creation de l'action de deconnection
@@ -226,6 +232,15 @@ public class BaseWindow extends JFrame implements Observer
 	public KillerBoxListener getListener()
 	{
 		return listener;
+	}
+	
+	/**
+	 * Permet de retourner les scores
+	 * @return Les differents scores des utilisateur
+	 */
+	public TableScore getTableScores()
+	{
+		return this.tableScores;
 	}
 
 	/**
@@ -340,6 +355,17 @@ public class BaseWindow extends JFrame implements Observer
 	public void printMessage(String message)
 	{
 		this.panel.printMessage(message);
+	}
+	
+	/**
+	 * Permet de charger les scores recu du serveur
+	 * @param user
+	 * @param score
+	 * @param admin
+	 */
+	public void loadScores(ArrayList<String> user, ArrayList<Integer> score, ArrayList<Boolean> admin)
+	{
+		this.tableScores.loadData(user, score, admin);
 	}
 
 	/**

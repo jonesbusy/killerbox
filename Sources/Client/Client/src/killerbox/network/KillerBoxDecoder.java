@@ -94,6 +94,7 @@ public class KillerBoxDecoder extends Decoder
 				
 			}
 			
+			// On recoit des informations sur les scores
 			else if(instruction.equals("scores"))
 			{
 				// Pour recuperer les scores
@@ -113,8 +114,7 @@ public class KillerBoxDecoder extends Decoder
 				}
 				
 				// C'est la panel de score
-				if(PanelScore.class.isInstance(this.fenetre.getPanel()))
-					((PanelScore)this.fenetre.getPanel()).loadData(user, score, admin);
+				this.fenetre.loadScores(user, score, admin);
 			}
 		}
 		
