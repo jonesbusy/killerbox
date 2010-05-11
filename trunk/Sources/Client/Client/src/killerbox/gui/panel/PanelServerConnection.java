@@ -64,7 +64,7 @@ public class PanelServerConnection extends AbstractPanel
 		
 		// Port par defaut
 		this.texPortServer.setText("7000");
-		this.texIpServer.setText("mambo-gw");
+		this.texIpServer.setText("localhost");
 		this.btnConnect.setEnabled(true);
 		
 		// Set les label

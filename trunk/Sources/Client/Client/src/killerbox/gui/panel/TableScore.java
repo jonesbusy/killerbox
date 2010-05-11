@@ -1,6 +1,7 @@
 package killerbox.gui.panel;
 
 import java.util.*;
+
 import javax.swing.table.*;
 
 /**
@@ -34,6 +35,46 @@ public class TableScore extends AbstractTableModel
 	}
 
 	/**
+	 * Permet de charger les donnees de score
+	 * @param user La liste des utilisateur
+	 * @param score La liste des scores
+	 * @param admin La liste des information sur les admin
+	 */
+	public void loadData(ArrayList<String> users, ArrayList<Integer> scores, ArrayList<Boolean> admin)
+	{		
+		this.users = users;
+		this.scores = scores;
+		this.admin = admin;
+	}
+	
+	/**
+	 * Retourne la liste des utilisateur
+	 * @return Les utilisateur
+	 */
+	public ArrayList<String> getUsers()
+	{
+		return users;
+	}
+
+	/**
+	 * Retourne la liste des scores
+	 * @return La liste des scores
+	 */
+	public ArrayList<Integer> getScores()
+	{
+		return scores;
+	}
+
+	/**
+	 * Retourne les informations des 
+	 * @return Les informations sur les admin
+	 */
+	public ArrayList<Boolean> getAdmin()
+	{
+		return admin;
+	}
+
+	/**
 	 * Retourne le nombre de ligne de la table
 	 */
 	@Override
@@ -47,7 +88,7 @@ public class TableScore extends AbstractTableModel
 	 * @param user L'utilisateur
 	 * @param score Le score
 	 */
-	public void setScore(String user, int score, boolean admin)
+	public void addScore(String user, int score, boolean admin)
 	{
 		this.users.add(user);
 		this.scores.add(score);

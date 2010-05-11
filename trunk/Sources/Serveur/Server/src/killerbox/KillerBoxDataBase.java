@@ -29,7 +29,7 @@ public class KillerBoxDataBase
 			throws Exception
 	{
 		db_connection = DriverManager.getConnection("jdbc:mysql://" + url + "/" + name
-				+ "?user=" + user + "&password=" + pass);
+				+ "?user=" + user + "&password=" + pass + "&autoReconnect=true");
 	}
 
 	/**

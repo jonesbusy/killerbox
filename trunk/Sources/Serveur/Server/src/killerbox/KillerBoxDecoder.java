@@ -21,7 +21,7 @@ public class KillerBoxDecoder extends Decoder
 	 * La base de donnee
 	 */
 	private KillerBoxDataBase dataBaseKiller;
-
+	
 	
 	/**
 	 * Permet de setter le serveur KillerBox
