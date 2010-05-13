@@ -322,9 +322,15 @@ public class BaseWindow extends JFrame implements Observer
 				break;
 			}
 			
-			case PANEL_VIEW_SCORE :
+			case PANEL_VIEW_SCORES :
 			{
 				this.panel = new PanelScore(this);
+				break;
+			}
+			
+			case PANEL_ADMIN_SCORES :
+			{
+				this.panel = new PanelAdminScores(this);
 				break;
 			}
 			

@@ -92,7 +92,7 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestModifyScore(String login, int score)
 	{
-		client.send("#account#modify#score" + login + '#' + score);
+		client.send("#account#modify#scores#" + login + '#' + score);
 	}
 
 	/**
@@ -114,11 +114,12 @@ public class KillerBoxListener extends Listener
 	 */
 	public void requestModifyPass(String login, String pass)
 	{
-		client.send("#account#modify#passadmin" + login + '#' + pass);
+		client.send("#account#modify#passadmin#" + login + '#' + pass);
 	}
 	
 	/**
-	 * Permet de demande les differents scores au serveur.
+	 * Permet de demander les informations
+	 * sur les scores
 	 */
 	public void requestScore()
 	{
