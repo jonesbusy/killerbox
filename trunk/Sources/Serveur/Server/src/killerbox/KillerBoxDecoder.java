@@ -106,25 +106,26 @@ public class KillerBoxDecoder extends Decoder
 			else if(instruction.equals("delete"))
 			{
 				
-				String user = null;
+				String userToDelete = null;
 				
+				// Un admin indique l'utilisateur a supprimer
 				if(tokens.hasMoreTokens())
-					user = tokens.nextToken();
-				else
-					user = serverKiller.getUserName(connexion.getId());
+					userToDelete = tokens.nextToken();
 				
-				// L'utilisateur pout supprimer son compte
-				if(this.serverKiller.getUserName(connexion.getId()).equals(user)
-						|| this.dataBaseKiller.isAdmin(user))
+				// Supprimer son compte
+				else
+					userToDelete = serverKiller.getUserName(connexion.getId());
+				
+				// Verifier les droits
+				if(this.serverKiller.getUserName(connexion.getId()).equals(userToDelete)
+						|| this.dataBaseKiller.isAdmin(serverKiller.getUserName(connexion.getId())))
 				{
 					try
 					{
-						this.dataBaseKiller.supprimerUtilisateur(user);
-						connexion.send("#account#create#true");
-						this.server.relay(user + " : a supprime sont compte");
+						this.dataBaseKiller.supprimerUtilisateur(userToDelete);
+						connexion.send("#account#delete#true");
+						this.server.relay(userToDelete + " : a supprime sont compte");
 						
-						// La connexion passe en status non authentifiee
-						this.serverKiller.setUnauthenticated(connexion.getId());
 					}
 					
 					// Suppression impossible, probablement qu'il n'existe pas
@@ -156,14 +157,27 @@ public class KillerBoxDecoder extends Decoder
 				}
 					
 				// Modification pour quelqu'un d'autre (Doit etre admin pour faire ca)
-				else if(instruction.equals("passadmin") && dataBaseKiller.isAdmin(tokens.nextToken()))
+				else if(instruction.equals("passadmin") && dataBaseKiller.isAdmin(serverKiller.getUserName(connexion.getId())))
 				{
+					user = tokens.nextToken();
 					this.dataBaseKiller.modifierPass(user, tokens.nextToken());
 					connexion.send("#modify#passadmin#"+ user + "#true");
 				}
 				
-				else
-					connexion.send("#modify#pass#false");
+				// Modification du score
+				else if(instruction.equals("scores"))
+				{
+					try
+					{
+						this.dataBaseKiller.setScore(tokens.nextToken(), Integer.parseInt(tokens.nextToken()));
+						connexion.send("#modify#scores#true");
+					}
+					catch (Exception e)
+					{
+						connexion.send("#modify#scores#false");
+					}
+					
+				}
 				
 			}
 			

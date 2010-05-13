@@ -41,14 +41,14 @@ public class PanelSetAccount extends AbstractPanel
 	private JPanel panBtn = new JPanel();
 
 	/**
-	 * Zone admin
+	 * (Admin) Zone admin
 	 */
 	private JLabel labAdminZone = new JLabel("Zone administration");
 
 	/**
-	 * Pour la gestion des comptes
+	 * (Admin) Pour la gestion des comptes
 	 */
-	private JButton btnSetAccount = new JButton("Gestion des comptes");
+	private JButton btnAdminScore = new JButton("Gestion des comptes");
 
 	/**
 	 * Bouton rejoindre partie
@@ -108,10 +108,10 @@ public class PanelSetAccount extends AbstractPanel
 		this.panBtn.add(this.btnDisconnect);
 
 		this.panBtn.add(this.labAdminZone);
-		this.panBtn.add(this.btnSetAccount);
+		this.panBtn.add(this.btnAdminScore);
 
 		this.labAdminZone.setVisible(false);
-		this.btnSetAccount.setVisible(false);
+		this.btnAdminScore.setVisible(false);
 
 		// Ecouteur des composants
 		this.btnDisconnect.addActionListener(this.base.getActionDisconnect());
@@ -126,7 +126,11 @@ public class PanelSetAccount extends AbstractPanel
 				// Confirmer la suppression
 				if (JOptionPane.showConfirmDialog(base, CONFIRM_DELETE_ACCOUNT, base
 						.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
+				{
 					base.getListener().requestDeleteAccount();
+					base.getListener().setDeconnected();
+				}
+					
 			}
 		});
 		
@@ -155,7 +159,20 @@ public class PanelSetAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_VIEW_SCORE);
+				base.setPanel(PANEL_VIEW_SCORES);
+			}
+		});
+		
+		this.btnAdminScore.addActionListener(new ActionListener()
+		{
+			/**
+			 * Quand l'administrateur clique sur le bouton pour gerer
+			 * les comptes
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				base.setPanel(PANEL_ADMIN_SCORES);
 			}
 		});
 
@@ -190,7 +207,7 @@ public class PanelSetAccount extends AbstractPanel
 	{
 		super.showAdmin();
 		this.labAdminZone.setVisible(true);
-		this.btnSetAccount.setVisible(true);
+		this.btnAdminScore.setVisible(true);
 	}
 
 }

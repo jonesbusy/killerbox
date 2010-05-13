@@ -15,44 +15,25 @@ import static killerbox.gui.panel.EnumPanel.*;
  * @author Fabrizio Beretta Piccoli
  */
 @SuppressWarnings("serial")
-public class PanelScore extends AbstractPanel
+public class PanelScore extends AbstractTablePanel
 {
 	
 	/**
 	 * Afficher les 10 meilleures score
 	 */
-	JLabel labTitle = new JLabel("Voici le tableau des scores", JLabel.CENTER);
+	private JLabel labTitle = new JLabel("Voici le tableau des scores", JLabel.CENTER);
 		
-	/**
-	 * Split pane
-	 */
-	JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-	
-	/**
-	 * Les differents scores
-	 */
-	TableScore scores;
 	
 	/**
 	 * Bouton retour
 	 */
-	JButton btnForward = new JButton("Retour");
+	private JButton btnForward = new JButton("Retour");
 	
 	/**
 	 * Le bouton actualiser
 	 */
-	JButton btnRefresh = new JButton("Actualiser");
+	private JButton btnRefresh = new JButton("Actualiser");
 		
-	/**
-	 * Table des scores
-	 */
-	JTable tableScore = new JTable();
-	
-	/**
-	 * Barre de defilement pour le tableau
-	 */
-	JScrollPane scrollPane = new JScrollPane(tableScore, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
 	/**
 	 * Constructeur
 	 * @param base Fenetre de base
@@ -61,22 +42,12 @@ public class PanelScore extends AbstractPanel
 	{
 		super(base);
 		
-		this.scores = base.getTableScores();
-		
-		// Faire une requete des scores pour avoir les tout dernier scores
-		this.base.getListener().requestScore();
-		
 		// Taille des composants
 		this.labTitle.setPreferredSize(new Dimension(350, 20));
-		this.tableScore.setPreferredScrollableViewportSize(new Dimension(350, 210));
-		this.tableScore.setFillsViewportHeight(true);
-		this.splitPane.setDividerSize(0);
 		
 		// Ajout des composant
-		this.tableScore.setModel(this.base.getTableScores());;
 		this.add(this.labTitle);
-		this.splitPane.add(this.scrollPane);
-		this.add(this.splitPane);
+		this.addTable();
 		this.add(this.btnForward);
 		this.add(this.btnRefresh);
 		
@@ -112,23 +83,6 @@ public class PanelScore extends AbstractPanel
 		// Charger les donnes presente
 		loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
 		
-	}
-	
-	/**
-	 * Permet de charger les donnes sur le tableau des scores
-	 * @param user
-	 * @param score
-	 * @param admin
-	 */
-	public void loadData(ArrayList<String> users, ArrayList<Integer> scores, ArrayList<Boolean> admin)
-	{
-
-		this.base.getTableScores().loadData(users, scores, admin);
-		
-		// Mettre a jour le scroll pane
-		this.scrollPane.getViewport().setView(tableScore);
-		this.repaint();
-		this.validate();
 	}
 
 	/**
