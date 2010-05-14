@@ -20,7 +20,7 @@ public class KillerBoxDecoder extends Decoder
 	/**
 	 * La base de donnee
 	 */
-	private KillerBoxDataBase dataBaseKiller;
+	private DataBase database;
 	
 	
 	/**
@@ -37,9 +37,9 @@ public class KillerBoxDecoder extends Decoder
 	 * verifier les nom d'utilisateur et mots de passe
 	 * @param dataBaseKiller La base de donnee
 	 */
-	public void setDataBase(KillerBoxDataBase dataBaseKiller)
+	public void setDataBase(DataBase dataBaseKiller)
 	{
-		this.dataBaseKiller = dataBaseKiller;
+		this.database = dataBaseKiller;
 	}
 
 	/**
@@ -64,10 +64,10 @@ public class KillerBoxDecoder extends Decoder
 			String pass = tokens.nextToken();
 			
 			// Nom d'utilisateur valide
-			if (this.dataBaseKiller.verifierUtilisateur(login, pass))
+			if (this.database.isUserValid(login, pass))
 			{
 				server.send(connexion.getId(), "#login#true");
-				serverKiller.addConnected(login, connexion.getId());
+				serverKiller.setConnected(login, connexion.getId());
 			}
 			
 			// Erreur
@@ -89,7 +89,7 @@ public class KillerBoxDecoder extends Decoder
 				
 				try
 				{
-					this.dataBaseKiller.ajouterUtilisateur(user, pass, false);
+					this.database.addUser(user, pass, false);
 					this.server.send(connexion.getId(), "#account#create#true");
 					this.server.relay(user + " : nouvel utilisateur");
 				}
@@ -118,11 +118,11 @@ public class KillerBoxDecoder extends Decoder
 				
 				// Verifier les droits
 				if(this.serverKiller.getUserName(connexion.getId()).equals(userToDelete)
-						|| this.dataBaseKiller.isAdmin(serverKiller.getUserName(connexion.getId())))
+						|| this.database.isAdmin(serverKiller.getUserName(connexion.getId())))
 				{
 					try
 					{
-						this.dataBaseKiller.supprimerUtilisateur(userToDelete);
+						this.database.deleteUser(userToDelete);
 						connexion.send("#account#delete#true");
 						this.server.relay(userToDelete + " : a supprime sont compte");
 						
@@ -152,15 +152,15 @@ public class KillerBoxDecoder extends Decoder
 				String user = serverKiller.getUserName(connexion.getId());
 				if(instruction.equals("pass"))
 				{
-					this.dataBaseKiller.modifierPass(user, tokens.nextToken());
+					this.database.modifyPass(user, tokens.nextToken());
 					connexion.send("#modify#pass#true");
 				}
 					
 				// Modification pour quelqu'un d'autre (Doit etre admin pour faire ca)
-				else if(instruction.equals("passadmin") && dataBaseKiller.isAdmin(serverKiller.getUserName(connexion.getId())))
+				else if(instruction.equals("passadmin") && database.isAdmin(serverKiller.getUserName(connexion.getId())))
 				{
 					user = tokens.nextToken();
-					this.dataBaseKiller.modifierPass(user, tokens.nextToken());
+					this.database.modifyPass(user, tokens.nextToken());
 					connexion.send("#modify#passadmin#"+ user + "#true");
 				}
 				
@@ -169,7 +169,7 @@ public class KillerBoxDecoder extends Decoder
 				{
 					try
 					{
-						this.dataBaseKiller.setScore(tokens.nextToken(), Integer.parseInt(tokens.nextToken()));
+						this.database.setScore(tokens.nextToken(), Integer.parseInt(tokens.nextToken()));
 						connexion.send("#modify#scores#true");
 					}
 					catch (Exception e)
@@ -194,7 +194,7 @@ public class KillerBoxDecoder extends Decoder
 						user = serverKiller.getUserName(connexion.getId());
 					
 					// C'est un admin
-					if(this.dataBaseKiller.isAdmin(user))
+					if(this.database.isAdmin(user))
 						connexion.send("#account#request#admin#" + user + "#true");
 					
 					// Ce n'est pas un admin
@@ -208,7 +208,7 @@ public class KillerBoxDecoder extends Decoder
 		else if(instruction.equals("scores"))
 			try
 			{
-				connexion.send("#scores" + this.dataBaseKiller.getAll());
+				connexion.send("#scores" + this.database.getInfos());
 			}
 			catch (SQLException e)
 			{
@@ -217,7 +217,11 @@ public class KillerBoxDecoder extends Decoder
 			
 		else if(instruction.equals("game"))
 		{
+			instruction = tokens.nextToken();
 			
+			// Le client aimerait la liste des parties
+			if(instruction.equals("list"))
+				serverKiller.sendGames(this.serverKiller.getUserName(connexion.getId()));
 		}
 
 		// Sinon passer au serveur

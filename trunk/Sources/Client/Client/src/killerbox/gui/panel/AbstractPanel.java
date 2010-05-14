@@ -33,7 +33,8 @@ public abstract class AbstractPanel extends JPanel
 	}
 
 	/**
-	 * Permet d'afficher un message sur le panel. Par defaut le comportement est : S'il y a une erreur
+	 * Permet d'afficher un message sur le panel. Par defaut le comportement est : S'il y a
+	 * une erreur
 	 * de connexion, afficher le panel de connection et afficher le message.
 	 * Si c'est un autre message, ne fait rien. Mais peut etre redefini pour savoir a quel
 	 * endroit on affiche le message sur le panel.
@@ -47,7 +48,7 @@ public abstract class AbstractPanel extends JPanel
 			base.printMessage(message);
 		}
 	}
-	
+
 	/**
 	 * Permet de retourner le bouton principal. Null s'il n'y a
 	 * aucun bouton principal sur le Panel
@@ -61,6 +62,14 @@ public abstract class AbstractPanel extends JPanel
 	 * differente si c'est un utilisateur ou un administrateur.
 	 */
 	public void showAdmin()
+	{
+
+	}
+
+	/**
+	 * Est utilise pour les panel ayant besoin de recevoir des informations en continu
+	 */
+	public void getData()
 	{
 
 	}

@@ -20,17 +20,17 @@ public class KillerBoxDecoder extends Decoder
 	/**
 	 * Reference sur la fenetre
 	 */
-	private BaseWindow fenetre;;
+	private BaseWindow base;
 
 	/**
 	 * Constructeur. Permet de creer un nouveau decodeur de message.
 	 * @param client Le programme client
-	 * @param fenetre La fenetre graphique
+	 * @param base La fenetre graphique
 	 */
-	public KillerBoxDecoder(Client client, BaseWindow fenetre)
+	public KillerBoxDecoder(Client client, BaseWindow base)
 	{
 		super(client);
-		this.fenetre = fenetre;
+		this.base = base;
 	}
 
 	/**
@@ -57,14 +57,14 @@ public class KillerBoxDecoder extends Decoder
 				// Connection ok
 				if(instruction.equals("true"))
 				{
-					this.fenetre.setPanel(EnumPanel.PANEL_SET_ACCOUNT);
+					this.base.setPanel(EnumPanel.PANEL_SET_ACCOUNT);
 				}
 				
 				// Erreur d'authentification
 				else if(instruction.equals("false"))
 				{
 					// Afficher une erreur
-					this.fenetre.printMessage("Le nom d'utilisateur ou mot de passe est incorrect");
+					this.base.printMessage("Le nom d'utilisateur ou mot de passe est incorrect");
 				}
 					
 			}
@@ -81,10 +81,10 @@ public class KillerBoxDecoder extends Decoder
 				{
 					instruction = tokens.nextToken();
 					if(instruction.equals("true"))
-						this.fenetre.setPanel(EnumPanel.PANEL_LOGIN);
+						this.base.setPanel(EnumPanel.PANEL_LOGIN);
 					
 					else if(instruction.equals("false"))
-						this.fenetre.printMessage("Nom de compte deja utilise");
+						this.base.printMessage("Nom de compte deja utilise");
 				}
 				
 				// On recoit les informations qu'on a demande
@@ -99,7 +99,7 @@ public class KillerBoxDecoder extends Decoder
 						
 						instruction = tokens.nextToken();
 						if(instruction.equals("true"))
-							this.fenetre.getPanel().showAdmin();
+							this.base.getPanel().showAdmin();
 					}
 				}
 				
@@ -140,8 +140,68 @@ public class KillerBoxDecoder extends Decoder
 				}
 				
 				// Charger les scores dans la fenetre
-				this.fenetre.loadScores(user, score, admin);
+				this.base.loadScores(user, score, admin);
 			}
+			
+			/**
+			 * Concernant les parties
+			 */
+			else if(instruction.equals("game"))
+			{
+				instruction = tokens.nextToken();
+				if(instruction.equals("list"))
+				{
+					// Pour recuperer les scores. On va stocker tout ces informations
+					// dans des tableaux dynamique
+					ArrayList<Integer> id = new ArrayList<Integer>();
+					ArrayList<String> owners = new ArrayList<String>();
+					ArrayList<Integer> types = new ArrayList<Integer>();
+					ArrayList<Integer> nbPlayers = new ArrayList<Integer>();
+					
+					while(tokens.hasMoreElements())
+					{
+						// Ajouter l'ID de la partie
+						try
+						{
+							id.add(Integer.parseInt(tokens.nextToken()));
+						}
+						catch (NumberFormatException e)
+						{
+							id.add(-1);
+						}
+						
+						// Ajouter le proprietaire de la partie
+						owners.add(tokens.nextToken());
+						
+						// Ajouter le type de partie
+						try
+						{
+							types.add(Integer.parseInt(tokens.nextToken()));
+						}
+						catch (NumberFormatException e)
+						{
+							types.add(-1);
+						}
+						
+						// Ajouter le nombre d'utilisateur
+						try
+						{
+							nbPlayers.add(Integer.parseInt(tokens.nextToken()));
+						}
+						catch (NumberFormatException e)
+						{
+							nbPlayers.add(-1);
+						}
+
+					}
+					
+					// Charger les donnees
+					this.base.loadGames(id, owners, types, nbPlayers);
+					this.base.getPanel().getData();
+					
+				}
+			}
+			
 		}
 		
 		// Si le serveur nous envoie n'importe quoi

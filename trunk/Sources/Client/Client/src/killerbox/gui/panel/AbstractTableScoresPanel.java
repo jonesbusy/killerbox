@@ -17,7 +17,7 @@ import killerbox.gui.BaseWindow;
  * @see AbstractPanel
  */
 @SuppressWarnings("serial")
-public abstract class AbstractTablePanel extends AbstractPanel
+public abstract class AbstractTableScoresPanel extends AbstractPanel
 {
 	
 	/**
@@ -47,7 +47,7 @@ public abstract class AbstractTablePanel extends AbstractPanel
 	 * Constructeur. Permet de creer le nouveau Panel.
 	 * @param base Reference sur la vue
 	 */
-	public AbstractTablePanel(BaseWindow base)
+	public AbstractTableScoresPanel(BaseWindow base)
 	{
 		super(base);
 				

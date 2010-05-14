@@ -124,6 +124,14 @@ public class KillerBoxListener extends Listener
 	{
 		client.send("#scores#");
 	}
+	
+	/**
+	 * Permet de demander les informations sur les differentes parties
+	 */
+	public void requestGames()
+	{
+		client.send("#game#list#");
+	}
 
 	/**
 	 * Action lorsque l'ecouteur n'obtient plus d'informations du serveur.

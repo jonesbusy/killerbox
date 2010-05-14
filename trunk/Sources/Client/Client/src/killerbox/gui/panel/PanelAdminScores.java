@@ -16,7 +16,7 @@ import static killerbox.gui.panel.EnumPanel.*;
  * @see AbstractTablePanel
  */
 @SuppressWarnings("serial")
-public class PanelAdminScores extends AbstractTablePanel
+public class PanelAdminScores extends AbstractTableScoresPanel
 {
 	/**
 	 * Message de confirmation de suppression de compte

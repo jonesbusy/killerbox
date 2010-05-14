@@ -16,7 +16,7 @@ import static killerbox.gui.panel.EnumPanel.*;
  * @see AbstractTablePanel
  */
 @SuppressWarnings("serial")
-public class PanelScores extends AbstractTablePanel
+public class PanelScores extends AbstractTableScoresPanel
 {
 	
 	/**
