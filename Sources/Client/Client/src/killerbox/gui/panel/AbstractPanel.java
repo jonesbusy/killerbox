@@ -49,8 +49,9 @@ public abstract class AbstractPanel extends JPanel
 	}
 	
 	/**
-	 * Permet de retourner le bouton principal du panel
-	 * @return Le bouton princiapl du label
+	 * Permet de retourner le bouton principal. Null s'il n'y a
+	 * aucun bouton principal sur le Panel
+	 * @return Le bouton principal du panel
 	 */
 	public abstract JButton getDefaultButton();
 

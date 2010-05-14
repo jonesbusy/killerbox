@@ -140,7 +140,9 @@ public class PanelLogin extends AbstractPanel
 	}
 
 	/**
-	 * Le bouton principal est le bouton de connecion
+	 * Permet de retourner le bouton principal. Null s'il n'y a
+	 * aucun bouton principal sur le Panel
+	 * @return Le bouton principal du panel
 	 */
 	@Override
 	public JButton getDefaultButton()

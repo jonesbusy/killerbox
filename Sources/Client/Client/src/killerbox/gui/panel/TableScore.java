@@ -5,8 +5,11 @@ import java.util.*;
 import javax.swing.table.*;
 
 /**
- * Represente une table de score
- * @author valentin
+ * Represente les donnnes contenues dans le tableau d'affichage des scores.
+ * Ce model est egalement utilise dans le PanelAdminScore. Celui-ci contient
+ * 3 listes (utilisateur, scores, admin). Admin est un boolean qui indique
+ * si l'utilisateur est un administrateur.
+ * @author Valentin Delaye
  *
  */
 @SuppressWarnings("serial")
@@ -14,10 +17,18 @@ public class TableScore extends AbstractTableModel
 {
 	
 	/**
-	 * Les differents utilisateur
+	 * Les differents utilisateurs
 	 */
 	private ArrayList<String> users = new ArrayList<String>();
+	
+	/**
+	 * Les differents scores
+	 */
 	private ArrayList<Integer> scores = new ArrayList<Integer>();
+	
+	/**
+	 * Indication si administrateur
+	 */
 	private ArrayList<Boolean> admin = new ArrayList<Boolean>(); 
 	
 	/**
@@ -110,14 +121,22 @@ public class TableScore extends AbstractTableModel
 	@Override
 	public Object getValueAt(int row, int col)
 	{
-		if(col == 0)
-			return users.get(row);
-		else if(col == 1)
-			return scores.get(row);
-		else if(col == 2)
-			return admin.get(row) ? "Oui" : "Non";
+		try
+		{
+			if(col == 0)
+				return users.get(row);
+			else if(col == 1)
+				return scores.get(row);
+			else if(col == 2)
+				return admin.get(row) ? "Oui" : "Non";
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			return null;
+		}
 		
 		return null;
+
 	}
 
 }
