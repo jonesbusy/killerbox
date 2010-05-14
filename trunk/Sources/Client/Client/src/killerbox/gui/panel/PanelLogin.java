@@ -10,56 +10,60 @@ import killerbox.gui.*;
 
 /**
  * Permet de representer le panel permettant de demander les informations
- * de connection
+ * de connexion.
+ * 
  * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
+ * @version 1.0
+ * @see AbstractPanel
  */
 @SuppressWarnings("serial")
 public class PanelLogin extends AbstractPanel
 {
-	
+
 	/**
-	 * Titre du panel
+	 * Titre du panel.
 	 */
 	private JLabel labTitre = new JLabel("Veuillez vous authentifier", JLabel.CENTER);
-	
+
 	/**
-	 * Bouton pour creer un compte
+	 * Bouton pour creer un compte.
 	 */
 	private JButton btnCreateAccount = new JButton("Creer un compte");
-	
+
 	/**
-	 * Informations pour s'authentifier
+	 * Informations pour s'authentifier.
 	 */
 	private JLabel labLogin = new JLabel("Login");
 	private JLabel labPass = new JLabel("Mot de passe");
 	private JTextField texLogin = new JTextField();
 	private JPasswordField texPass = new JPasswordField();
-	
+
 	/**
 	 * Bouton pour se s'authentifier
 	 */
 	private JButton btnConnect = new JButton("S'authentifier");
-	
+
 	/**
-	 * Pour afficher un message sur le panel
+	 * Pour afficher un message sur le panel.
 	 */
 	private JLabel labMessage = new JLabel();
 
 	/**
-	 * Constructeur
+	 * Constructeur. Permet de creer le nouveau Panel. Place
+	 * les composants et cree les ecouteur des composants.
 	 * @param base Fenetre de base
 	 */
 	public PanelLogin(final BaseWindow base)
 	{
 		super(base);
-		
+
 		this.btnConnect.setEnabled(false);
-		
+
 		// Associer les label
 		this.labLogin.setLabelFor(this.texLogin);
 		this.labPass.setLabelFor(this.texPass);
-		
+
 		// Taille des composants
 		this.labTitre.setPreferredSize(new Dimension(350, 40));
 		this.labLogin.setPreferredSize(new Dimension(100, 40));
@@ -67,7 +71,7 @@ public class PanelLogin extends AbstractPanel
 		this.labMessage.setPreferredSize(new Dimension(300, 40));
 		this.texLogin.setColumns(20);
 		this.texPass.setColumns(20);
-		
+
 		// Ajout des composants
 		this.add(this.labTitre);
 		this.add(this.labLogin);
@@ -77,66 +81,78 @@ public class PanelLogin extends AbstractPanel
 		this.add(this.btnConnect);
 		this.add(this.btnCreateAccount);
 		this.add(this.labMessage);
-				
-		
+
 		// Ecouteur des champs de texte
 		DocumentListener changeListener = new DocumentListener()
 		{
-			
+
+			/**
+			 * Lorsqu'un caractere est enleve de la zone de saisie.
+			 * Effectue la meme action que quand un caractere est ajoute dans la zone.
+			 */
 			@Override
-			public void removeUpdate(DocumentEvent arg0)
+			public void removeUpdate(DocumentEvent event)
 			{
-				insertUpdate(arg0);
+				insertUpdate(event);
 			}
-			
+
+			/**
+			 * Lorsqu'un caractere est ajoute de la zone de saisie
+			 */
 			@Override
-			public void insertUpdate(DocumentEvent arg0)
+			public void insertUpdate(DocumentEvent event)
 			{
 				// Enlever le message s'il y en a un
 				labMessage.setText("");
-				
-				if(!texLogin.getText().isEmpty() && texPass.getPassword().length != 0)
+
+				if (!texLogin.getText().isEmpty() && texPass.getPassword().length != 0)
 					btnConnect.setEnabled(true);
 				else
 					btnConnect.setEnabled(false);
 			}
-			
+
+			/**
+			 * Notification quand un propriete du document ecoute change. Non
+			 * utilise dans ce cas la.
+			 */
 			@Override
-			public void changedUpdate(DocumentEvent arg0)
+			public void changedUpdate(DocumentEvent event)
 			{
 
 			}
 		};
-		
+
 		// Ecouteur des boutons
 		this.texLogin.getDocument().addDocumentListener(changeListener);
 		this.texPass.getDocument().addDocumentListener(changeListener);
-		
+
 		this.btnConnect.addActionListener(new ActionListener()
 		{
 			/**
-			 * Lors du clique sur le bouton s'authentifier
+			 * Lors du clique sur le bouton s'authentifier. Celui-ci
+			 * fait appel au controleur pour envoyer les informations d'authentification.
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e)
-			{	
-				base.getListener().sendCredentias(texLogin.getText(), new String(texPass.getPassword()));
+			{
+				base.getListener().sendCredentias(texLogin.getText(),
+						new String(texPass.getPassword()));
 			}
 		});
-		
+
 		this.btnCreateAccount.addActionListener(new ActionListener()
 		{
-		
+
 			/**
-			 * Pour aller a la creation du compte
+			 * Lorsque l'utilisateur clique sur le bouton pour creer un nouveau compte.
 			 */
 			@Override
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
 				base.setPanel(EnumPanel.PANEL_CREATE_ACCOUNT);
 			}
 		});
-		
+
 	}
 
 	/**
@@ -158,8 +174,8 @@ public class PanelLogin extends AbstractPanel
 	public void printMessage(String message)
 	{
 		super.printMessage(message);
-		
-		if(!errorConnection)
+
+		if (!errorConnection)
 			this.labMessage.setText(message);
 	}
 

@@ -5,7 +5,15 @@ import java.net.*;
 import java.util.*;
 
 /**
- * Permet de representer un modele de client
+ * Permet de representer un modele de client. Concretement un client
+ * est un socket associe a un socket serveur. Le client permet d'effectuer
+ * des operations de bases tel que d'envoyer une chaine de caractere au serveur.
+ * 
+ * Un client est un objet Observable car il peut changer de status durant le deroulement
+ * du programme. En effet, un client peut passer d'un status "Connecte" a un status
+ * "Deconnecte". Ce modele de client se veut reutilisable dans d'autre application
+ * reseau.
+ * 
  * @author Valentin Delaye
  * @version 1.0
  */
@@ -13,17 +21,17 @@ public class Client extends Observable
 {
 
 	/**
-	 * Socket du client
+	 * Socket du client.
 	 */
 	private Socket socket;
 
 	/**
-	 * Indique si le client est connecte a un serveur ou non
+	 * Indique si le client est connecte a un serveur ou non.
 	 */
 	private boolean connected = false;
 
 	/**
-	 * Adresse ou est connecte le client
+	 * Port ou est connecte le client.
 	 */
 	private int portNumber;
 
@@ -43,7 +51,7 @@ public class Client extends Observable
 	private BufferedReader input;
 
 	/**
-	 * Permet de creer un nouveau client
+	 * Constructeur. Permet de creer un nouveau client.
 	 * @param adresse Adresse du serveur
 	 * @param portNumber Numero de port du serveur
 	 */
@@ -54,8 +62,8 @@ public class Client extends Observable
 	}
 
 	/**
-	 * Permet a un client de se connecter sur un serveur
-	 * @return True connection ok, false erreur
+	 * Permet a un client de se connecter sur un serveur.
+	 * @return True connexion ok, false connexion impossible
 	 */
 	public boolean connect()
 	{
@@ -75,13 +83,14 @@ public class Client extends Observable
 		{
 			this.socket = new Socket(adresseServer, this.portNumber);
 
+			// Creation des flux
 			this.output = new PrintWriter(this.socket.getOutputStream());
 			this.input = new BufferedReader(new InputStreamReader(this.socket
 					.getInputStream()));
 
 			this.connected = true;
 			
-			// Indique un nouveau client
+			// Le client passe en status connecte
 			setChanged();
 			notifyObservers(true);
 
@@ -100,37 +109,39 @@ public class Client extends Observable
 	}
 
 	/**
-	 * Permet d'envoyer un message au serveur
+	 * Permet d'envoyer un message au serveur.
 	 * @param message Le texte a envoyer
 	 */
 	public void send(String message)
 	{
+		// -- Pour le debug, afficher sur la console --
 		System.out.println(message);
 		this.output.println(message);
 		this.output.flush();
 	}
 
 	/**
-	 * Envoie une information de deconnection au serveur
+	 * Permet de deconnecter le client. Ferme les ressource et passe
+	 * en status deconnecte.
 	 */
 	public void disconnect()
 	{
-		send("#logout");
 		this.close();
 		this.connected = false;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Indique si le client est connecte
+	 * @return True le client est connecte, false sinon.
 	 */
 	public boolean isConnected()
 	{
 		return this.connected;
 	}
-
+	
 	/**
-	 * Retourne le flux d'entree
+	 * Retourne le flux d'entree. Permet par exemple, pour un controleur
+	 * d'analyser les message arrivant au client.
 	 * @return Le flux d'entree
 	 */
 	public BufferedReader getBufferedReader()
@@ -139,9 +150,10 @@ public class Client extends Observable
 	}
 
 	/**
-	 * Permet de fermer le socket et le flux de sortie
+	 * Permet de fermer le socket et le flux de sortie. 
+	 * Averti les observateur de la deconnection.
 	 */
-	public void close()
+	private void close()
 	{
 		try
 		{
@@ -153,7 +165,6 @@ public class Client extends Observable
 
 		}
 
-		// On averti que la connection est terminee
 		finally
 		{
 			setChanged();
@@ -162,7 +173,8 @@ public class Client extends Observable
 	}
 
 	/**
-	 * Ferme proprement les ressources a la destruction
+	 * Ferme proprement les ressources a la destruction.
+	 * de l'objet.
 	 */
 	@Override
 	protected void finalize() throws Throwable

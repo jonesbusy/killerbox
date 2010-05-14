@@ -1,8 +1,10 @@
 package killerbox.gui.panel;
 
 /**
- * Enumeration des panels
+ * Enumeration des differents type de Panel.
+ * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
+ * @version 1.0
  */
 public enum EnumPanel
 {

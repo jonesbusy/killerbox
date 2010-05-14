@@ -13,7 +13,7 @@ import javax.swing.table.*;
  *
  */
 @SuppressWarnings("serial")
-public class TableScore extends AbstractTableModel
+public class ScoresInfo extends AbstractTableModel
 {
 	
 	/**

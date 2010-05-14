@@ -6,17 +6,20 @@ import killerbox.gui.BaseWindow;
 import killerbox.gui.panel.AbstractPanel;
 
 /**
- * Permet de representer le panel pour creer une partie
+ * Permet de representer le panel pour creer une partie.
+ * 
  * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
+ * @version 1.0
+ * @see AbstractPanel
  */
 @SuppressWarnings("serial")
 public class PanelCreateGame extends AbstractPanel
 {
 
 	/**
-	 * Constructeur. Permet de creer le nouveau Panel
-	 * @param base Reference sur la fenetre
+	 * Constructeur. Permet de creer le nouveau Panel.
+	 * @param base Reference sur la fenetre.
 	 */
 	public PanelCreateGame(BaseWindow base)
 	{

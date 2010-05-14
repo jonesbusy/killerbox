@@ -10,8 +10,12 @@ import killerbox.gui.*;
 import static killerbox.gui.panel.EnumPanel.*;
 
 /**
- * Represente le panel de creation de compte
+ * Represente le panel de creation de compte.
+ * 
+ * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
+ * @version 1.0
+ * @see AbstractPanel
  */
 @SuppressWarnings("serial")
 public class PanelCreateAccount extends AbstractPanel

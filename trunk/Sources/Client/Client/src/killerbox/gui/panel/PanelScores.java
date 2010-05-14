@@ -2,7 +2,6 @@ package killerbox.gui.panel;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 import killerbox.gui.*;
@@ -42,7 +41,7 @@ public class PanelScores extends AbstractTablePanel
 		super(base);
 		
 		// Permettre de trier les colonnes
-		this.tableScore.setAutoCreateRowSorter(true);
+		this.scoresTable.setAutoCreateRowSorter(true);
 		
 		// Taille des composants
 		this.labTitle.setPreferredSize(new Dimension(350, 20));
@@ -78,12 +77,12 @@ public class PanelScores extends AbstractTablePanel
 			{
 				// Charger les donnes presente
 				base.getListener().requestScore();
-				loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+				loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 			}
 		});
 		
 		// Charger les donnes presente
-		loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+		loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 		
 	}
 
