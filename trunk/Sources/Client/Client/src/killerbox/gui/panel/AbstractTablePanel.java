@@ -3,6 +3,7 @@ package killerbox.gui.panel;
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+import killerbox.*;
 import killerbox.gui.BaseWindow;
 
 /**

@@ -1,4 +1,4 @@
-package killerbox.gui.panel;
+package killerbox;
 
 import java.util.*;
 

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.util.*;
 
 import network.*;
+import killerbox.*;
 import killerbox.network.*;
 import killerbox.gui.panel.*;
 

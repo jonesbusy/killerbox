@@ -8,16 +8,19 @@ import killerbox.gui.*;
 import static killerbox.gui.panel.EnumPanel.*;
 
 /**
- * Represente le panel pour afficher les scores des jouers
+ * Represente le panel pour afficher les scores des joueurs.
+ * 
  * @author Valentin Delaye
  * @author Fabrizio Beretta Piccoli
+ * @version 1.0
+ * @see AbstractTablePanel
  */
 @SuppressWarnings("serial")
 public class PanelScores extends AbstractTablePanel
 {
 	
 	/**
-	 * Afficher les 10 meilleures score
+	 * Titre du panel.
 	 */
 	private JLabel labTitle = new JLabel("Voici le tableau des scores", JLabel.CENTER);
 		
@@ -33,7 +36,7 @@ public class PanelScores extends AbstractTablePanel
 	private JButton btnRefresh = new JButton("Actualiser");
 		
 	/**
-	 * Constructeur
+	 * Constructeur. Permet de creer le Panel.
 	 * @param base Fenetre de base
 	 */
 	public PanelScores(final BaseWindow base)
@@ -58,7 +61,7 @@ public class PanelScores extends AbstractTablePanel
 		
 			/**
 			 * Lorsque l'utilisteur clique sur le bouton retour. Charger le panel
-			 * pour gerer son compte et participer aux jeux
+			 * pour gerer son compte.
 			 */
 			@Override
 			public void actionPerformed(ActionEvent arg0)
