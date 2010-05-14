@@ -44,6 +44,13 @@ public class BaseWindow extends JFrame implements Observer
 	 * Les panel sont alors libres de recuperer ces scores a tout moment.
 	 */
 	private ScoresInfo scoresInfo = new ScoresInfo();
+	
+	/**
+	 * Pour stocker temporairement les differentes informations concernant les
+	 * parties. Les panels sont alors libres de recuperer ces informations
+	 * a tout moment;
+	 */
+	private GamesInfo gamesInfo = new GamesInfo();
 
 	/**
 	 * Controleur. Permet a la fenetre et aux Panels d'envoyer des messages
@@ -364,6 +371,12 @@ public class BaseWindow extends JFrame implements Observer
 				this.panel = new PanelAdminScores(this);
 				break;
 			}
+			
+			case PANEL_JOIN_GAME:
+			{
+				this.panel = new PanelJoinGame(this);
+				break;
+			}
 
 		}
 
@@ -404,6 +417,19 @@ public class BaseWindow extends JFrame implements Observer
 			ArrayList<Boolean> admin)
 	{
 		this.scoresInfo.loadData(user, score, admin);
+	}
+	
+	/**
+	 * Permet de charger les informations concernant les parties
+	 * @param id La liste des ID de parties
+	 * @param owners La liste des createurs des parties
+	 * @param types La liste des types de partie
+	 * @param nbPlayers Le nombre de joueur des parties
+	 */
+	public void loadGames(ArrayList<Integer> id, ArrayList<String> owners,
+			ArrayList<Integer> types, ArrayList<Integer> nbPlayers)
+	{
+		this.gamesInfo.loadData(id, owners, types, nbPlayers);
 	}
 
 	/**

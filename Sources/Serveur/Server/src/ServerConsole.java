@@ -1,20 +1,24 @@
 import java.util.*;
 
-import killerbox.KillerBoxServer;;
+import killerbox.KillerBoxServer;
+
 
 /**
- * Permet d'afficher les messages serveur sur la console
+ * Permet de creer une vue de serveur sur la console.
+ * @author Valentin Delaye
+ * @version 1.0
+ * @see KillerBoxServer
  */
 public class ServerConsole implements Observer
 {
 	/**
-	 * Le serveur observe
+	 * Le serveur de jeu
 	 */
 	private KillerBoxServer server;
 	
 	/**
-	 * Permet de creer un nouveau serveur sur la console
-	 * @param server La serveur
+	 * Constructeur. Permet de creer une nouvelle vue.
+	 * @param server Le serveur de jeu
 	 */
 	public ServerConsole(KillerBoxServer server)
 	{
@@ -23,13 +27,12 @@ public class ServerConsole implements Observer
 	}
 
 	/**
-	 * Afficher les messages recu sur la console
+	 * Afficher les messages recus sur la console.
 	 */
 	@Override
 	public void update(Observable o, Object obj)
 	{
-		System.out.println((String)obj);
+		System.out.println(obj);
 	}
-	
 	
 }

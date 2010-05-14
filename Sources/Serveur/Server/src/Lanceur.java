@@ -2,9 +2,12 @@ import killerbox.*;
 
 
 /**
- * Permet de creer 
- * @author valentin
- *
+ * Programme principal.
+ * Permet de creer et de lancer un serveur.
+ * @author Valentin Delaye
+ * @version 1.0
+ * @see KillerBoxServer
+ * @see KillerBoxDecoder
  */
 public class Lanceur
 {
@@ -18,14 +21,12 @@ public class Lanceur
 		KillerBoxDecoder decoder = new KillerBoxDecoder();
 		KillerBoxServer server = new KillerBoxServer(7000, decoder, "killerbox", "1234");
 		
-		@SuppressWarnings("unused")
-		ServerGui s1 = new ServerGui(server);
+		// Affichage sur la console et GUI
+		new ServerGui(server);
+		new ServerConsole(server);
 		
 		// Demarer le serveur
 		server.start();
-		
-		//@SuppressWarnings("unused")
-		//ServerConsole s2 = new ServerConsole(server);
 
 	}
 }

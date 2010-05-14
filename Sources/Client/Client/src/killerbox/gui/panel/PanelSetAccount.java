@@ -170,9 +170,21 @@ public class PanelSetAccount extends AbstractPanel
 			 * les comptes
 			 */
 			@Override
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
 				base.setPanel(PANEL_ADMIN_SCORES);
+			}
+		});
+		
+		this.btnJoin.addActionListener(new ActionListener()
+		{
+			/**
+			 * Quand l'utilisateur clique pour rejoindre une partie
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				base.setPanel(PANEL_JOIN_GAME);
 			}
 		});
 

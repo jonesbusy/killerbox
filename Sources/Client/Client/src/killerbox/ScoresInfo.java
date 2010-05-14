@@ -35,7 +35,7 @@ public class ScoresInfo extends AbstractTableModel
 	 * Nom de colonne
 	 */
 	private String[] header = {"Nom d'utilisateur", "Score", "Administrateur"};
-
+	
 	/**
 	 * Retourne le nombre de colonne de la table
 	 */

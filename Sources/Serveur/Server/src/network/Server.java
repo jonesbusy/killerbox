@@ -84,8 +84,13 @@ public class Server extends Observable implements Runnable, Observer
 	}
 
 	/**
-	 * Permet de representer le nouveau status d'une connexion
+	 * Permet de representer le nouveau status d'une connexion. L'objet est 
+	 * representer par l'ID de connexion ainsi que le nouveau status (nouveau, ancien).
+	 * Cela permet d'avertir les vues qu'il y a une nouvelle connexion ou qu'une connexion
+	 * a ete supprimee.
 	 * @author Valentin Delaye
+	 * @version 1.0
+	 * @see Connexion
 	 */
 	public class StatusConnexion
 	{
@@ -220,7 +225,7 @@ public class Server extends Observable implements Runnable, Observer
 	}
 
 	/**
-	 * Permet d'envoyer un message a tout les clients
+	 * Permet d'envoyer un message a tout les clients connectes.
 	 * @param message Le message
 	 */
 	public void broadcast(String message)
@@ -229,6 +234,11 @@ public class Server extends Observable implements Runnable, Observer
 			co.send(message);
 	}
 	
+	/**
+	 * Permet d'envoyer un message a un client donne
+	 * @param id ID du client
+	 * @param message Le message a lui envoyer
+	 */
 	public void send(int id, String message)
 	{
 		// Envoyer le message a l'ID
