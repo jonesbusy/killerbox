@@ -48,9 +48,9 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Permet d'effectuer une demande de creation de compte sur le serveur
+	 * Permet d'effectuer une demande de creation de compte sur le serveur.
 	 * @param login Le login
-	 * @param pass Le mot de passe choisi
+	 * @param pass Le mot de passe
 	 */
 	public void requestAccount(String login, String pass)
 	{
@@ -58,7 +58,7 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Effectuer une demande de suppression de compte
+	 * Effectuer une demande de suppression de compte.
 	 */
 	public void requestDeleteAccount()
 	{
@@ -67,8 +67,8 @@ public class KillerBoxListener extends Listener
 
 	/**
 	 * Effectuer une demande de creation de compte pour un utilisateur
-	 * donne.Uniquement un administrateur est autorise a executer ceci.
-	 * @param login Nom du compte a supprimer
+	 * donne. Uniquement un administrateur est autorise a executer ceci.
+	 * @param login Nom du compte a supprimer.
 	 */
 	public void requestDeleteAccount(String login)
 	{
@@ -84,18 +84,11 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Indique pour un user donne s'il est admin
-	 * @param username Le nom d'utilisateur
-	 */
-	public void requestAdmin(String username)
-	{
-		client.send("#account#request#admin#" + username);
-	}
-
-	/**
-	 * Effectuer une demande de modification de score.Uniquement un
-	 * administrateur est autorise a executer ceci.
-	 * @param login Le compte dont on veut modifier le score
+	 * Effectuer une demande de modification de score. Uniquement un
+	 * administrateur est autorise a executer ceci. La modification d'un score
+	 * a la fin d'une partie est automatiquement change par le serveur lui meme. Un client
+	 * (non administrateur) n'a pas la possibilite de changer son score.
+	 * @param login Le compte dont on veut modifier le score.
 	 */
 	public void requestModifyScore(String login, int score)
 	{
@@ -103,8 +96,7 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Effectuer une demande de modification de mot de passe
-	 * pour soi meme
+	 * Effectuer une demande de modification de mot de passe.
 	 * @param pass Le nouveau mot de passe
 	 */
 	public void requestModifyPass(String pass)
@@ -116,8 +108,8 @@ public class KillerBoxListener extends Listener
 	 * Effectuer une demande de modification de mot
 	 * de passe pour un utilisateur donne. Uniquement un
 	 * administrateur est autorise a executer ceci.
-	 * @param login Compte a modifier
-	 * @param pass Nouveau password
+	 * @param login Nom d'utilisateur
+	 * @param pass Nouveau mot-de-passe
 	 */
 	public void requestModifyPass(String login, String pass)
 	{
@@ -126,7 +118,7 @@ public class KillerBoxListener extends Listener
 	
 	/**
 	 * Permet de demander les informations
-	 * sur les scores
+	 * sur les utilisateurs et leur scores.
 	 */
 	public void requestScore()
 	{

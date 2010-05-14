@@ -13,6 +13,8 @@ import static killerbox.gui.panel.EnumPanel.*;
  * Represente le panel pour changer son mot de passe
  * @author Valentin Delaye
  * @author Fabrizio Beretta Piccoli
+ * @version 1.0
+ * @see AbstractPanel
  */
 @SuppressWarnings("serial")
 public class PanelChangePassWord extends AbstractPanel
