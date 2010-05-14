@@ -4,25 +4,32 @@ import network.*;
 import killerbox.gui.*;
 
 /**
- * Classe permettant d'ecouter les differents message du serveur
+ * Classe permettant d'ecouter les differents message du serveur et de les passer ensuite
+ * au decodeur associe.
+ * Par le biais de cette classe, les clients peuvent envoyer des messages au serveur.
  * @author Valentin Delaye
  * @version 1.0
+ * @see Listener
+ * @see KillerBoxDecoder
  */
 public class KillerBoxListener extends Listener
 {
 	/**
-	 * Affichage si deconnexion
+	 * Affichage si l'ecouteur detecte une deconnexion.
 	 */
 	private static final String MESSAGE_DECO = "Vous etes deconnecte.";
 
 	/**
-	 * Reference sur la vue
+	 * Reference sur la vue. Cette vue est ensuite passe au decodeur pour qu'il
+	 * puisse effectuer les actions appropriees.
 	 */
 	private BaseWindow fenetre;
 
 	/**
-	 * Permet de creer un nouvel ecouteur
-	 * @param input Le flux d'entree
+	 * Permet de creer un nouvel ecouteur.
+	 * @param client Reference sur le client
+	 * @param fenetre Reference sur la fenetre principale
+	 * @param decoder Le decodeur
 	 */
 	public KillerBoxListener(Client client, BaseWindow fenetre, Decoder decoder)
 	{
@@ -127,7 +134,8 @@ public class KillerBoxListener extends Listener
 	}
 
 	/**
-	 * Permet de setter
+	 * Action lorsque l'ecouteur n'obtient plus d'informations du serveur.
+	 * Generalement lors d'une deconnexion
 	 */
 	@Override
 	public void setDeconnected()
@@ -135,7 +143,9 @@ public class KillerBoxListener extends Listener
 		// Seter la fin de la connecion
 		fenetre.getPanel().errorConnection = true;
 		fenetre.printMessage(MESSAGE_DECO);
-		client.close();
+		
+		// Fermer proprement le client
+		client.disconnect();
 	}
 
 }

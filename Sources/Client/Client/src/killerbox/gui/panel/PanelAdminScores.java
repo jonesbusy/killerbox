@@ -7,26 +7,34 @@ import java.awt.event.*;
 import killerbox.gui.*;
 import static killerbox.gui.panel.EnumPanel.*;
 
+/**
+ * Permet de represente le panel d'administration des scores et utilisateurs.
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @author Valentin Delaye
+ * @version 1.0
+ * @see AbstractTablePanel
+ */
 @SuppressWarnings("serial")
 public class PanelAdminScores extends AbstractTablePanel
 {
 	/**
-	 * Message
+	 * Message de confirmation de suppression de compte
 	 */
 	private static final String CONFIRM_DELETE_ACCOUNT = "Etes-vous sur de vouloir supprimer le compte de ";
 
 	/**
-	 * Message
+	 * Message de confirmation de reinitialisation du score
 	 */
 	private static final String CONFIRM_MODIFY_SCORE = "Etes-vous sur de vouloir remettre le score a zero de ";
 
 	/**
-	 * Message
+	 * Message de confirmation de reinitialisation du mot de passe
 	 */
 	private static final String CONFIRM_MODIFY_PASS = "Etes-vous sur de vouloir reinitialiser le mot de passe de ";
 
 	/**
-	 * Label de titre
+	 * Titre du panel
 	 */
 	private JLabel labTitle = new JLabel("Gestion des comptes et scores");
 
@@ -59,10 +67,10 @@ public class PanelAdminScores extends AbstractTablePanel
 	{
 		super(base);
 		
-		this.tableScore.setAutoCreateRowSorter(true);
+		this.scoresTable.setAutoCreateRowSorter(true);
 
 		// Selection simple
-		this.tableScore.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.scoresTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		// Config de composants
 		this.btnValidate.setEnabled(false);
@@ -97,7 +105,7 @@ public class PanelAdminScores extends AbstractTablePanel
 			public void actionPerformed(ActionEvent e)
 			{
 				// Recuperer les informations de la ligne selectionne
-				String user = (String) tableScore.getModel().getValueAt(rowSelected, 0);
+				String user = (String) scoresTable.getModel().getValueAt(rowSelected, 0);
 				System.out.println(user);
 
 				// Recuperer l'action
@@ -125,7 +133,7 @@ public class PanelAdminScores extends AbstractTablePanel
 									JOptionPane.INFORMATION_MESSAGE);
 
 							// Charger ces donnes et mettre a jour le tableau
-							loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+							loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 							
 
 						}
@@ -152,7 +160,7 @@ public class PanelAdminScores extends AbstractTablePanel
 									JOptionPane.INFORMATION_MESSAGE);
 
 							// Charger ces donnes et mettre a jour le tableau
-							loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+							loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 
 						}
 						
@@ -177,7 +185,7 @@ public class PanelAdminScores extends AbstractTablePanel
 									JOptionPane.INFORMATION_MESSAGE);
 
 							// Charger ces donnes et mettre a jour le tableau
-							loadData(scores.getUsers(), scores.getScores(), scores.getAdmin());
+							loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 
 						}
 
@@ -188,7 +196,7 @@ public class PanelAdminScores extends AbstractTablePanel
 			}
 		});
 
-		this.tableScore.getSelectionModel().addListSelectionListener(
+		this.scoresTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener()
 				{
 					/**

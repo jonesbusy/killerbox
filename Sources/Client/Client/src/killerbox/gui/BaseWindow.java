@@ -2,9 +2,8 @@ package killerbox.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-
 import javax.swing.*;
+import java.util.*;
 
 import network.*;
 import killerbox.network.*;
@@ -13,9 +12,22 @@ import killerbox.gui.panel.*;
 import static killerbox.gui.panel.EnumPanel.*;
 
 /**
- * Represente la classe de base de la fenetre
+ * Represente la classe principale de la fenetre. Celle-ci contient
+ * differentes informations comme le client, le controleur (KillerBoxListener),
+ * les differentes scores, etc. La fenetre s'occupe de contenir differents panel.
+ * 
+ * La fenetre comprends toujours une reference sur le panel en cours (AbstractPanel)
+ * ainsi que sur le bouton principal (Actionne avec la touche ENTER).
+ * 
+ * La vue se charge d'observer les eventuels message du client et du controleur. La
+ * plupart des messages recu sont des messages d'erreur.
+ *
  * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
+ * @version 1.0
+ * @see Client
+ * @see KillerBoxListener
+ * @see AbstractPanel
  */
 @SuppressWarnings("serial")
 public class BaseWindow extends JFrame implements Observer
@@ -27,27 +39,29 @@ public class BaseWindow extends JFrame implements Observer
 	private Client client;
 
 	/**
-	 * Pour stocker les differents scores recu du serveur
+	 * Pour stocker temporairement les differents scores recu du serveur.
+	 * Les panel sont alors libres de recuperer ces scores a tout moment.
 	 */
-	private TableScore tableScores = new TableScore();
+	private ScoresInfo scoresInfo = new ScoresInfo();
 
 	/**
-	 * L'ecouteur de message
+	 * Controleur. Permet a la fenetre et aux Panels d'envoyer des messages
+	 * au serveur.
 	 */
 	private KillerBoxListener listener;
 
 	/**
-	 * Affichage si deconnexion
+	 * Messages a afficher en cas de deconnexion.
 	 */
 	private static final String MESSAGE_DECO = "Vous etes deconnecte.";
 
 	/**
-	 * Le message de confirmation de fermeture
+	 * Le message de confirmation de fermeture de la fenetre.
 	 */
 	private static final String CONFIRM_QUIT_MESSAGE = "Etes-vous sur de vouloir quitter ?";
 
 	/**
-	 * Le message de confirmation de deconnection
+	 * Le message de confirmation de deconnection.
 	 */
 	private static final String CONFIRM_DISCONNECT_MESSAGE = "Etes-vous sur de vouloir vous deconnecter du serveur ?";
 
@@ -73,7 +87,7 @@ public class BaseWindow extends JFrame implements Observer
 	private JButton defaultButton;
 
 	/**
-	 * Action pour se deconnecter
+	 * Action pour le bouton et menu "Se deconnecter"
 	 */
 	private ActionListener actionDisconnect;
 
@@ -86,19 +100,19 @@ public class BaseWindow extends JFrame implements Observer
 	private JMenu helpMenu = new JMenu("Aide");
 
 	/**
-	 * Items
+	 * Items du mene principal
 	 */
 	private JMenuItem disconnectItem = new JMenuItem("Se deconnecter");
 	private JMenuItem quitItem = new JMenuItem("Quitter");
 	private JMenuItem aboutItem = new JMenuItem("A propos de KillerBox");
 
 	/**
-	 * Le pannel courant
+	 * Reference sur la Panel courant.
 	 */
 	private AbstractPanel panel;
 
 	/**
-	 * Constructeur
+	 * Constructeur. Permet de creer la fenetre et places les composants
 	 * @param height La hauteur de la fenetre
 	 * @param width La largeur de la fenetre
 	 */
@@ -134,7 +148,9 @@ public class BaseWindow extends JFrame implements Observer
 		this.actionDisconnect = new ActionListener()
 		{
 			/**
-			 * Lors du clique sur le bouton deconnecter
+			 * Lors du clique sur le bouton deconnecter. Envoyer un message au serveur, se deconnecter,
+			 * charger le panel de connexion au serveur et afficher un message comme quoi l'utilisateur
+			 * s'est bien deconnecte.
 			 */
 			@Override
 			public void actionPerformed(ActionEvent arg0)
@@ -158,11 +174,12 @@ public class BaseWindow extends JFrame implements Observer
 		this.quitItem.addActionListener(new ActionListener()
 		{
 			/**
-			 * Lors du clique sur le bouton quitter
+			 * Lorsque l'utilisateur clique sur "Quitter"
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				// Confirmer la fermeture
 				if (confirmQuit(BaseWindow.CONFIRM_QUIT_MESSAGE))
 				{
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -176,7 +193,7 @@ public class BaseWindow extends JFrame implements Observer
 		this.aboutItem.addActionListener(new ActionListener()
 		{
 			/**
-			 * Lors du clique sur le bouton about
+			 * Lorsque l'utilisateur clique sur le bouton "About"
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -190,7 +207,7 @@ public class BaseWindow extends JFrame implements Observer
 		{
 
 			/**
-			 * Lorsque la fenetre se ferme
+			 * Lorsque l'utilisateur clique sur le bouton de fermeture.
 			 */
 			@Override
 			public void windowClosing(WindowEvent e)
@@ -207,8 +224,8 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Permet de retourner le panel en cours
-	 * @return
+	 * Permet de retourner le panel charge sur la fenetre.
+	 * @return Le panel en cours
 	 */
 	public AbstractPanel getPanel()
 	{
@@ -216,7 +233,8 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Permet de retourne l'action pour se deconnecter
+	 * Permet de retourne l'action pour se deconnecter. Permet aux Panels
+	 * qui veulent ajouter un bouton "Deconnecter" d'utiliser le meme evenement.
 	 * @return L'action pour se deconnecter
 	 */
 	public ActionListener getActionDisconnect()
@@ -225,8 +243,9 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Permet de retourner l'ecouteur de connexion
-	 * @return
+	 * Permet de retourner le controlleur et permettre aux Panels
+	 * d'envoyer des messages au serveur.
+	 * @return Le controleur
 	 */
 	public KillerBoxListener getListener()
 	{
@@ -234,17 +253,18 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Permet de retourner les scores
-	 * @return Les differents scores des utilisateur
+	 * Permet de retourner les scores. Permettre ainsi anx Panels d'afficher
+	 * a tout moment les differents scores.
+	 * @return Les differents scores des utilisateurs
 	 */
-	public TableScore getTableScores()
+	public ScoresInfo getScoresInfo()
 	{
-		return this.tableScores;
+		return this.scoresInfo;
 	}
 
 	/**
-	 * Permet de setter le client principal
-	 * @param client Le client
+	 * Permet de setter le client principal.
+	 * @param client Le programme client.
 	 */
 	public void setClient(Client client)
 	{
@@ -285,6 +305,7 @@ public class BaseWindow extends JFrame implements Observer
 
 		}
 
+		// Mettre a jour la vue
 		Container container = this.getContentPane();
 		container.removeAll();
 		container.add(panel);
@@ -293,7 +314,7 @@ public class BaseWindow extends JFrame implements Observer
 
 	/**
 	 * Permet de changer le panel de la fenetre
-	 * @param type
+	 * @param type Le type enumere du panel
 	 */
 	public void setPanel(EnumPanel type)
 	{
@@ -352,9 +373,9 @@ public class BaseWindow extends JFrame implements Observer
 
 	/**
 	 * Permet de confirmer ou non la fermeture de la fenetre.
-	 * Affiche de ce fait une boite de message
-	 * @param message Message a afficher
-	 * @return True l'utilisateur desire quitter, false sinon
+	 * Affiche une boite de message.
+	 * @param message Message a afficher.
+	 * @return True si l'utilisateur desire quitter, false sinon.
 	 */
 	private boolean confirmQuit(String message)
 	{
@@ -365,7 +386,7 @@ public class BaseWindow extends JFrame implements Observer
 	/**
 	 * Permet d'envoyer un message d'erreur a la vue. Celle ci
 	 * s'occupe de l'afficher sur la panel en cours.
-	 * @param message Le message d'erreur
+	 * @param message Le message d'erreur.
 	 */
 	public void printMessage(String message)
 	{
@@ -374,19 +395,20 @@ public class BaseWindow extends JFrame implements Observer
 
 	/**
 	 * Permet de charger les scores recu du serveur
-	 * @param user
-	 * @param score
-	 * @param admin
+	 * @param user La liste des utilisateurs
+	 * @param score La liste des scores
+	 * @param admin Liste de boolean pour indiquer le status d'administrateur
 	 */
 	public void loadScores(ArrayList<String> user, ArrayList<Integer> score,
 			ArrayList<Boolean> admin)
 	{
-		this.tableScores.loadData(user, score, admin);
+		this.scoresInfo.loadData(user, score, admin);
 	}
 
 	/**
-	 * Lorsque la vue recoit un message.Elle l'affiche sur le panel
-	 * en cours.
+	 * Lorsque la vue recoit un message du controleur, elle l'affiche sur le panel
+	 * en cours. Est utilise par exemple quand le controleur indiquer une action
+	 * impossible (Erreur de creation de compte, mauvaises informations de login, etc.)
 	 */
 	@Override
 	public void update(Observable o, Object arg)

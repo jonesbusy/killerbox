@@ -1,10 +1,9 @@
 package network;
 
-import javax.swing.*;
 
 /**
  * Classe abstraire qui permet de decoder une instruction
- * en provenance du serveur
+ * en provenance du serveur.
  * @author Valentin Delaye
  */
 public abstract class Decoder
@@ -15,23 +14,17 @@ public abstract class Decoder
 	protected Client client;
 	
 	/**
-	 * Vue
+	 * Construit un nouveau decoder.
+	 * @param client Programme client.
 	 */
-	protected JFrame fenetre;
-	
-	/**
-	 * Construit un nouveau decoder
-	 * @param client Le client
-	 * @param fenetre La vue
-	 */
-	public Decoder(Client client, JFrame fenetre)
+	public Decoder(Client client)
 	{
 		this.client = client;
-		this.fenetre = fenetre;
 	}
 	
 	/**
-	 * Permet de decoder une instruction
+	 * Permet de decoder une instruction. Les classes derivant Decoder devront definir
+	 * le protocole afin de decoder le message et d'effectuer les actions correspondantes.
 	 * @param message Le message a decoder
 	 */
 	public abstract void decode(String message);
