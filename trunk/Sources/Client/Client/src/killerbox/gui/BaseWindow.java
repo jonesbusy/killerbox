@@ -12,7 +12,6 @@ import killerbox.gui.panel.*;
 
 import static killerbox.gui.panel.EnumPanel.*;
 
-
 /**
  * Represente la classe de base de la fenetre
  * @author Fabrizio Beretta Piccoli
@@ -26,7 +25,7 @@ public class BaseWindow extends JFrame implements Observer
 	 * Le client
 	 */
 	private Client client;
-	
+
 	/**
 	 * Pour stocker les differents scores recu du serveur
 	 */
@@ -36,7 +35,7 @@ public class BaseWindow extends JFrame implements Observer
 	 * L'ecouteur de message
 	 */
 	private KillerBoxListener listener;
-	
+
 	/**
 	 * Affichage si deconnexion
 	 */
@@ -68,11 +67,11 @@ public class BaseWindow extends JFrame implements Observer
 	private AboutDialog aboutDialog = new AboutDialog(this);
 
 	/**
-	 * Le bouton d'activation principal. Il est obtenu par les 
+	 * Le bouton d'activation principal. Il est obtenu par les
 	 * differents panel grace a la methode getDefaultButton
 	 */
 	private JButton defaultButton;
-	
+
 	/**
 	 * Action pour se deconnecter
 	 */
@@ -130,7 +129,7 @@ public class BaseWindow extends JFrame implements Observer
 
 		// Afficher la fenetre
 		this.setVisible(true);
-		
+
 		// Creation de l'action de deconnection
 		this.actionDisconnect = new ActionListener()
 		{
@@ -147,13 +146,13 @@ public class BaseWindow extends JFrame implements Observer
 					client.disconnect();
 					setPanel(PANEL_CONNECTION);
 					panel.printMessage(MESSAGE_DECO);
-					
+
 				}
 
 			}
 		};
 
-		// Action des items menu	
+		// Action des items menu
 		this.disconnectItem.addActionListener(this.actionDisconnect);
 
 		this.quitItem.addActionListener(new ActionListener()
@@ -215,7 +214,7 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return this.panel;
 	}
-	
+
 	/**
 	 * Permet de retourne l'action pour se deconnecter
 	 * @return L'action pour se deconnecter
@@ -233,7 +232,7 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return listener;
 	}
-	
+
 	/**
 	 * Permet de retourner les scores
 	 * @return Les differents scores des utilisateur
@@ -274,7 +273,17 @@ public class BaseWindow extends JFrame implements Observer
 
 		// Setter le bouton principal du panel
 		this.defaultButton = panel.getDefaultButton();
-		this.getRootPane().setDefaultButton(this.defaultButton);
+
+		// Le getRootPane crache parfoit une exception depuis AWT
+		// Incomprehensible...
+		try
+		{
+			this.getRootPane().setDefaultButton(this.defaultButton);
+		}
+		catch (Exception e)
+		{
+
+		}
 
 		Container container = this.getContentPane();
 		container.removeAll();
@@ -296,49 +305,49 @@ public class BaseWindow extends JFrame implements Observer
 				this.panel = new PanelServerConnection(this);
 				break;
 			}
-				
+
 			case PANEL_LOGIN:
 			{
 				this.disconnectItem.setEnabled(true);
 				this.panel = new PanelLogin(this);
 				break;
 			}
-			
-			case PANEL_CREATE_ACCOUNT :
+
+			case PANEL_CREATE_ACCOUNT:
 			{
 				this.panel = new PanelCreateAccount(this);
 				break;
 			}
-			
-			case PANEL_SET_ACCOUNT :
+
+			case PANEL_SET_ACCOUNT:
 			{
 				this.panel = new PanelSetAccount(this);
 				break;
 			}
-			
-			case PANEL_CHANGE_PASSWORD :
+
+			case PANEL_CHANGE_PASSWORD:
 			{
 				this.panel = new PanelChangePassWord(this);
 				break;
 			}
-			
-			case PANEL_VIEW_SCORES :
+
+			case PANEL_VIEW_SCORES:
 			{
-				this.panel = new PanelScore(this);
+				this.panel = new PanelScores(this);
 				break;
 			}
-			
-			case PANEL_ADMIN_SCORES :
+
+			case PANEL_ADMIN_SCORES:
 			{
 				this.panel = new PanelAdminScores(this);
 				break;
 			}
-			
+
 		}
-		
+
 		// Charge le panel
 		loadPanel(this.panel);
-		
+
 	}
 
 	/**
@@ -362,14 +371,15 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		this.panel.printMessage(message);
 	}
-	
+
 	/**
 	 * Permet de charger les scores recu du serveur
 	 * @param user
 	 * @param score
 	 * @param admin
 	 */
-	public void loadScores(ArrayList<String> user, ArrayList<Integer> score, ArrayList<Boolean> admin)
+	public void loadScores(ArrayList<String> user, ArrayList<Integer> score,
+			ArrayList<Boolean> admin)
 	{
 		this.tableScores.loadData(user, score, admin);
 	}

@@ -1,6 +1,5 @@
 package killerbox.gui.panel;
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,7 +14,7 @@ import static killerbox.gui.panel.EnumPanel.*;
  * @author Fabrizio Beretta Piccoli
  */
 @SuppressWarnings("serial")
-public class PanelScore extends AbstractTablePanel
+public class PanelScores extends AbstractTablePanel
 {
 	
 	/**
@@ -38,9 +37,12 @@ public class PanelScore extends AbstractTablePanel
 	 * Constructeur
 	 * @param base Fenetre de base
 	 */
-	public PanelScore(final BaseWindow base)
+	public PanelScores(final BaseWindow base)
 	{
 		super(base);
+		
+		// Permettre de trier les colonnes
+		this.tableScore.setAutoCreateRowSorter(true);
 		
 		// Taille des composants
 		this.labTitle.setPreferredSize(new Dimension(350, 20));
@@ -86,7 +88,9 @@ public class PanelScore extends AbstractTablePanel
 	}
 
 	/**
-	 * Retourne le bouton principal du panel
+	 * Permet de retourner le bouton principal. Null s'il n'y a
+	 * aucun bouton principal sur le Panel
+	 * @return Le bouton principal du panel
 	 */
 	@Override
 	public JButton getDefaultButton()

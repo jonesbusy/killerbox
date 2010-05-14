@@ -189,7 +189,9 @@ public class PanelServerConnection extends AbstractPanel
 	}
 
 	/**
-	 * Retourne le bouton principal
+	 * Permet de retourner le bouton principal. Null s'il n'y a
+	 * aucun bouton principal sur le Panel
+	 * @return Le bouton principal du panel
 	 */
 	@Override
 	public JButton getDefaultButton()

@@ -2,12 +2,10 @@ package killerbox.network;
 
 import network.*;
 
-import java.awt.Panel;
 import java.util.*;
 
 import killerbox.gui.*;
-import killerbox.gui.panel.EnumPanel;
-import killerbox.gui.panel.PanelScore;
+import killerbox.gui.panel.*;
 
 public class KillerBoxDecoder extends Decoder
 {
