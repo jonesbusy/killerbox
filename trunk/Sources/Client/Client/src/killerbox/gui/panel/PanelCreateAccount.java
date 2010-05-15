@@ -74,11 +74,11 @@ public class PanelCreateAccount extends AbstractPanel
 
 	/**
 	 * Constructeur
-	 * @param base Fenetre de base
+	 * @param window Fenetre de base
 	 */
-	public PanelCreateAccount(final BaseWindow base)
+	public PanelCreateAccount(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 
 		btnCreate.setEnabled(false);
 
@@ -158,13 +158,13 @@ public class PanelCreateAccount extends AbstractPanel
 				// Les deux password ok
 				if (Arrays.equals(textPass1.getPassword(), textPass2.getPassword()))
 				{
-					base.getListener().requestAccount(textLogin.getText(), new String(textPass1.getPassword()));
+					controller.requestAccount(textLogin.getText(), new String(textPass1.getPassword()));
 				}
 
 				// Sinon erreur
 				else
 				{
-					JOptionPane.showMessageDialog(base, "Les mots de passe sont differents", base
+					JOptionPane.showMessageDialog(window, "Les mots de passe sont differents", window
 							.getTitle(), JOptionPane.ERROR_MESSAGE);
 					textPass1.setText("");
 					textPass2.setText("");
@@ -181,7 +181,7 @@ public class PanelCreateAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_LOGIN);
+				window.setPanel(PANEL_LOGIN);
 			}
 		});
 

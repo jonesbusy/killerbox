@@ -61,11 +61,11 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 
 	/**
 	 * Constructeur
-	 * @param base Reference sur la vue
+	 * @param window Reference sur la vue
 	 */
-	public PanelAdminScores(final BaseWindow base)
+	public PanelAdminScores(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 		
 		this.scoresTable.setAutoCreateRowSorter(true);
 
@@ -91,7 +91,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_SET_ACCOUNT);
+				window.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 
@@ -116,17 +116,17 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 					case 0:
 					{
 						// Ok
-						if (JOptionPane.showConfirmDialog(base, CONFIRM_DELETE_ACCOUNT + user
-								+ " ?", base.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
+						if (JOptionPane.showConfirmDialog(window, CONFIRM_DELETE_ACCOUNT + user
+								+ " ?", window.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
 							// Demande la suppression du compte
-							base.getListener().requestDeleteAccount(user);
+							controller.requestDeleteAccount(user);
 
 							// Actualiser les donnes presentes
-							base.getListener().requestScore();
+							controller.requestScore();
 
-							JOptionPane.showMessageDialog(base,
-									"L'utilisateur a bien ete supprime", base.getTitle(),
+							JOptionPane.showMessageDialog(window,
+									"L'utilisateur a bien ete supprime", window.getTitle(),
 									JOptionPane.INFORMATION_MESSAGE);				
 
 						}
@@ -139,17 +139,17 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 					case 1:
 					{
 						// Ok
-						if (JOptionPane.showConfirmDialog(base, CONFIRM_MODIFY_PASS + user
-								+ " ?", base.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
+						if (JOptionPane.showConfirmDialog(window, CONFIRM_MODIFY_PASS + user
+								+ " ?", window.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
-							base.getListener().requestModifyPass(user, "1234");
+							controller.requestModifyPass(user, "1234");
 
 							// Actualiser les donnes presentes
-							base.getListener().requestScore();
+							controller.requestScore();
 
 							// Afficher la confirmation
-							JOptionPane.showMessageDialog(base, "Le score de " + user
-									+ " a bien ete reinitialiser a 1234", base.getTitle(),
+							JOptionPane.showMessageDialog(window, "Le score de " + user
+									+ " a bien ete reinitialiser a 1234", window.getTitle(),
 									JOptionPane.INFORMATION_MESSAGE);
 
 						}
@@ -161,17 +161,17 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 					case 2:
 					{
 						// Ok
-						if (JOptionPane.showConfirmDialog(base, CONFIRM_MODIFY_SCORE + user
-								+ " ?", base.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
+						if (JOptionPane.showConfirmDialog(window, CONFIRM_MODIFY_SCORE + user
+								+ " ?", window.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
-							base.getListener().requestModifyScore(user, 0);
+							controller.requestModifyScore(user, 0);
 
 							// Actualiser les donnes presentes
-							base.getListener().requestScore();
+							controller.requestScore();
 
 							// Afficher la confirmation
-							JOptionPane.showMessageDialog(base, "Le score de " + user
-									+ " a bien ete remis a 0", base.getTitle(),
+							JOptionPane.showMessageDialog(window, "Le score de " + user
+									+ " a bien ete remis a 0", window.getTitle(),
 									JOptionPane.INFORMATION_MESSAGE);
 
 						}

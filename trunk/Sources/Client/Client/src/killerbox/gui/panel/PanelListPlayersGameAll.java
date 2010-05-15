@@ -17,7 +17,7 @@ public class PanelListPlayersGameAll extends AbstractPanel
 {
 	
 	/**
-	 * Pour permettre d'afficher un message sur la Panel
+	 * Pour permettre d'afficher un message sur la Panel.
 	 */
 	private JLabel labMessage = new JLabel();
 
@@ -28,11 +28,11 @@ public class PanelListPlayersGameAll extends AbstractPanel
 	
 	/**
 	 * Constructeur. Permet de creer le nouveau Panel
-	 * @param base Reference sur la fenetre
+	 * @param window Reference sur la fenetre
 	 */
-	public PanelListPlayersGameAll(final BaseWindow base)
+	public PanelListPlayersGameAll(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 		
 		// Ecouteurs des composants
 		this.btnEndGame.addActionListener(new ActionListener()
@@ -43,8 +43,8 @@ public class PanelListPlayersGameAll extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.getListener().requestDeleteGame();
-				base.setPanel(PANEL_SET_ACCOUNT);
+				controller.requestDeleteGame();
+				window.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 		
@@ -62,12 +62,13 @@ public class PanelListPlayersGameAll extends AbstractPanel
 	}
 
 	/**
-	 * Permet d'afficher un message d'erreur sur le panel
+	 * Permet d'afficher un message sur le panel.
 	 */
 	@Override
 	public void printMessage(String message)
 	{
 		super.printMessage(message);
+		this.labMessage.setText(message);
 	}
 	
 	

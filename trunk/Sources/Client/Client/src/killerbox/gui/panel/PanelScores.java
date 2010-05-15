@@ -37,12 +37,12 @@ public class PanelScores extends AbstractTableScoresPanel
 		
 	/**
 	 * Constructeur. Permet de creer le Panel.
-	 * @param base Fenetre de base
+	 * @param window Fenetre de base
 	 */
-	public PanelScores(final BaseWindow base)
+	public PanelScores(final BaseWindow window)
 	{
 
-		super(base);
+		super(window);
 		
 		// Permettre de trier les colonnes
 		this.scoresTable.setAutoCreateRowSorter(true);
@@ -65,9 +65,9 @@ public class PanelScores extends AbstractTableScoresPanel
 			 * pour gerer son compte.
 			 */
 			@Override
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_SET_ACCOUNT);
+				window.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 		
@@ -77,10 +77,10 @@ public class PanelScores extends AbstractTableScoresPanel
 			 * Lorsque l'utilisateur clique sur le bouton actualiser.
 			 */
 			@Override
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
 				// Charger les donnes presente
-				base.getListener().requestScore();
+				controller.requestScore();
 			}
 		});
 		

@@ -52,11 +52,11 @@ public class PanelLogin extends AbstractPanel
 	/**
 	 * Constructeur. Permet de creer le nouveau Panel. Place
 	 * les composants et cree les ecouteur des composants.
-	 * @param base Fenetre de base
+	 * @param window Fenetre de base
 	 */
-	public PanelLogin(final BaseWindow base)
+	public PanelLogin(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 
 		this.btnConnect.setEnabled(false);
 
@@ -135,7 +135,7 @@ public class PanelLogin extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.getListener().sendCredentias(texLogin.getText(),
+				controller.sendCredentias(texLogin.getText(),
 						new String(texPass.getPassword()));
 			}
 		});
@@ -149,7 +149,7 @@ public class PanelLogin extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(EnumPanel.PANEL_CREATE_ACCOUNT);
+				window.setPanel(EnumPanel.PANEL_CREATE_ACCOUNT);
 			}
 		});
 
