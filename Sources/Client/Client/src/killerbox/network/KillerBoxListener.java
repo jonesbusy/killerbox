@@ -132,6 +132,32 @@ public class KillerBoxListener extends Listener
 	{
 		client.send("#game#list#");
 	}
+	
+	/**
+	 * Permet de demander la creation d'une nouvelle partie
+	 * @param type Type de la partie. 0 pour Tous vs Tous ou 1 pour par equipe.
+	 */
+	public void requestCreateGame(int type)
+	{
+		client.send("#game#create#" + type + "#");
+	}
+	
+	/**
+	 * Demande de suppression de partie.
+	 */
+	public void requestDeleteGame()
+	{
+		client.send("#game#delete#");
+	}
+	
+	/**
+	 * Demande de rejoindre une partie
+	 * @param id ID de la partie
+	 */
+	public void requestJoinGame(int id)
+	{
+		client.send("#game#join#" + id + "#");
+	}
 
 	/**
 	 * Action lorsque l'ecouteur n'obtient plus d'informations du serveur.

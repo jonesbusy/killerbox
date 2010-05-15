@@ -113,6 +113,14 @@ public class Game
 	{
 		this.players.remove(user);
 	}
+	
+	/**
+	 * Permet d'enlever tout les joueurs de la partie.
+	 */
+	public synchronized void deletePlayers()
+	{
+		this.players.clear();
+	}
 
 	/**
 	 * Creer un code de hachage pour la partie

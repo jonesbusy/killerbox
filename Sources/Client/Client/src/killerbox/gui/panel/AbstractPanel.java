@@ -23,6 +23,7 @@ public abstract class AbstractPanel extends JPanel
 	 */
 	public boolean errorConnection = false;
 
+
 	/**
 	 * Constructeur. Creer le panel .
 	 * @param base La fenetre de base
@@ -67,11 +68,14 @@ public abstract class AbstractPanel extends JPanel
 	}
 
 	/**
-	 * Est utilise pour les panel ayant besoin de recevoir des informations en continu
+	 * Est utilise pour les panel ayant besoin de recevoir des informations en continu.
+	 * La fonction est appelee par le decodeur pour indiquer que de nouvelles informations
+	 * sont disponibles et qu'il faut remettre a jour le paneaux. Est principalement
+	 * utilise pour la tableau des scores et des parties.
 	 */
-	public void getData()
+	public void refreshData()
 	{
-
+		
 	}
 
 }

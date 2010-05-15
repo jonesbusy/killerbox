@@ -118,7 +118,8 @@ public class PanelSetAccount extends AbstractPanel
 		this.btnDeleteAccount.addActionListener(new ActionListener()
 		{
 			/**
-			 * Lors du clique sur le bouton pour supprimer son compte
+			 * Lorsque l'utilisateur clique sur le bouton pour supprimer
+			 * son compte.
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -185,6 +186,19 @@ public class PanelSetAccount extends AbstractPanel
 			public void actionPerformed(ActionEvent arg0)
 			{
 				base.setPanel(PANEL_JOIN_GAME);
+			}
+		});
+		
+		this.btnCreate.addActionListener(new ActionListener()
+		{
+		
+			/**
+			 * Quand l'utilisateur clique sur le bouton pour creer une partie
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				base.setPanel(PANEL_CREATE_GAME);
 			}
 		});
 

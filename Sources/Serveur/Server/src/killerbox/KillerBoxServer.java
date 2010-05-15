@@ -217,6 +217,15 @@ public class KillerBoxServer extends Observable implements Observer
 	{
 		return this.users.get(username);
 	}
+	
+	/**
+	 * Permet de retourner la liste des parties disponibles.
+	 * @return La liste des parties disponibles.
+	 */
+	public GameList getGameList()
+	{
+		return this.gameList;
+	}
 
 	/**
 	 * Change le status d'une connexion. Celle-ci devient authentifiee et un nom
@@ -273,11 +282,14 @@ public class KillerBoxServer extends Observable implements Observer
 			// Connexion supprimee
 			else
 			{
+				
+				// Supprimer eventuellement les parties de ce proprietaire
+				this.gameList.deleteGame(this.getUserName(connexion.getId()));
 
 				// Supprimer les connexions
-				removeUnauthenticated(status.getId());
-				removeLogged(status.getId());
-
+				this.removeUnauthenticated(status.getId());
+				this.removeLogged(status.getId());
+				
 				setChanged();
 				notifyObservers("Connexion supprimee ID : " + status.getId());
 
