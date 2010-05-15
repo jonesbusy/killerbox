@@ -2,6 +2,7 @@ package killerbox.gui.panel;
 
 import javax.swing.*;
 import killerbox.gui.*;
+import killerbox.network.KillerBoxListener;
 
 /**
  * Permet de representer la base d'un panel de l'interface
@@ -15,7 +16,12 @@ public abstract class AbstractPanel extends JPanel
 	/**
 	 * La fenetre de base du panel
 	 */
-	protected BaseWindow base;
+	protected BaseWindow window;
+	
+	/**
+	 * Le controleur
+	 */
+	protected KillerBoxListener controller;
 
 	/**
 	 * Indique s'il y a une erreur de login. Dans ce cas, on doit
@@ -26,11 +32,12 @@ public abstract class AbstractPanel extends JPanel
 
 	/**
 	 * Constructeur. Creer le panel .
-	 * @param base La fenetre de base
+	 * @param window La fenetre de base
 	 */
-	public AbstractPanel(BaseWindow base)
+	public AbstractPanel(BaseWindow window)
 	{
-		this.base = base;
+		this.window = window;
+		this.controller = this.window.getListener();
 	}
 
 	/**
@@ -45,8 +52,8 @@ public abstract class AbstractPanel extends JPanel
 	{
 		if (errorConnection)
 		{
-			base.setPanel(EnumPanel.PANEL_CONNECTION);
-			base.printMessage(message);
+			window.setPanel(EnumPanel.PANEL_CONNECTION);
+			window.printMessage(message);
 		}
 	}
 

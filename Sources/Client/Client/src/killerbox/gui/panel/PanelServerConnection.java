@@ -55,12 +55,12 @@ public class PanelServerConnection extends AbstractPanel
 		
 	/**
 	 * Constructeur
-	 * @param base La fenetre de base
+	 * @param window La fenetre de base
 	 */
-	public PanelServerConnection(final BaseWindow base)
+	public PanelServerConnection(final BaseWindow window)
 	{
 				
-		super(base);
+		super(window);
 		
 		// Port par defaut
 		this.texPortServer.setText("7000");
@@ -145,8 +145,8 @@ public class PanelServerConnection extends AbstractPanel
 				}
 				catch (UnknownHostException e1)
 				{
-					JOptionPane.showMessageDialog(base, "L'adresse est incorrecte.",
-							base.getTitle(), JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(window, "L'adresse est incorrecte.",
+							window.getTitle(), JOptionPane.ERROR_MESSAGE);
 				}
 				
 				// Format du port
@@ -155,15 +155,15 @@ public class PanelServerConnection extends AbstractPanel
 					port = Integer.parseInt(texPortServer.getText());
 					if(port < 1 || port > 65536)
 					{
-						JOptionPane.showMessageDialog(base, "Le port doit etre compris entre 1 et 65535.",
-								base.getTitle(), JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(window, "Le port doit etre compris entre 1 et 65535.",
+								window.getTitle(), JOptionPane.ERROR_MESSAGE);
 						port = 0;
 					}
 				}
 				catch(NumberFormatException ex)
 				{
-					JOptionPane.showMessageDialog(base, "Le port doit etre numerique.",
-							base.getTitle(), JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(window, "Le port doit etre numerique.",
+							window.getTitle(), JOptionPane.ERROR_MESSAGE);
 				}
 				
 				// Si correct, essayer de connecter le client
@@ -172,14 +172,14 @@ public class PanelServerConnection extends AbstractPanel
 					client = new Client(address.getHostAddress(), port);
 					
 					// Connecter le client
-					base.setClient(client);
+					window.setClient(client);
 					
 					// Connection reussie
 					if(client.connect())
-						base.setPanel(PANEL_LOGIN);
+						window.setPanel(PANEL_LOGIN);
 					else
-						JOptionPane.showMessageDialog(base, "Impossible de se connecter.",
-								base.getTitle(), JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(window, "Impossible de se connecter.",
+								window.getTitle(), JOptionPane.ERROR_MESSAGE);
 					
 				}
 				

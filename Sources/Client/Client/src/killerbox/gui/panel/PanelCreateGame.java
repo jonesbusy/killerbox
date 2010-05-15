@@ -57,11 +57,11 @@ public class PanelCreateGame extends AbstractPanel
 	
 	/**
 	 * Constructeur. Permet de creer le nouveau Panel.
-	 * @param base Reference sur la fenetre.
+	 * @param window Reference sur la fenetre.
 	 */
-	public PanelCreateGame(final BaseWindow base)
+	public PanelCreateGame(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 		
 		// Taille des composants
 		this.labTitle.setPreferredSize(new Dimension(350, 100));
@@ -86,8 +86,8 @@ public class PanelCreateGame extends AbstractPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				int type = Integer.parseInt(groupBtn.getSelection().getActionCommand());
-				base.getListener().requestCreateGame(type);
-				base.setPanel(PANEL_LIST_PLAYERS_GAME);
+				controller.requestCreateGame(type);
+				window.setPanel(PANEL_LIST_PLAYERS_GAME);
 			}
 		});
 		
@@ -99,7 +99,7 @@ public class PanelCreateGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_SET_ACCOUNT);
+				window.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 		

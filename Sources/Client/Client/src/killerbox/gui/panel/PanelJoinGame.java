@@ -27,7 +27,7 @@ public class PanelJoinGame extends AbstractPanel
 	 * Classe Thread permettant de mettre a jour tout les tant de temps
 	 * les donnees concernants les parties.
 	 * @author Valentin Delaye
-	 *
+	 * @version 1.0
 	 */
 	private class GamesLoader extends Thread
 	{
@@ -41,7 +41,7 @@ public class PanelJoinGame extends AbstractPanel
 			this.notify();
 			
 			// Recuperer les donnes sur les parties
-			gamesInfo = base.getGamesInfo();
+			gamesInfo = window.getGamesInfo();
 			
 			// Seter le model
 			gamesTable.setModel(gamesInfo);
@@ -64,7 +64,7 @@ public class PanelJoinGame extends AbstractPanel
 		{
 			while(true)
 			{
-				base.getListener().requestGames();
+				controller.requestGames();
 
 				try
 				{
@@ -73,7 +73,7 @@ public class PanelJoinGame extends AbstractPanel
 						this.wait();
 					}
 
-					Thread.sleep(10000);
+					Thread.sleep(UPDATE_TIME);
 				}
 				catch (InterruptedException e)
 				{
@@ -83,6 +83,11 @@ public class PanelJoinGame extends AbstractPanel
 		}
 		
 	}
+	
+	/**
+	 * Mettre a jour le panel toutes les 5 secondes
+	 */
+	public static final int UPDATE_TIME = 5000;
 	
 	/**
 	 * Label de titre
@@ -144,11 +149,11 @@ public class PanelJoinGame extends AbstractPanel
 
 	/**
 	 * Constructeur. Permet de creer le panel
-	 * @param base Reference sur la vue
+	 * @param window Reference sur la vue
 	 */
-	public PanelJoinGame(final BaseWindow base)
+	public PanelJoinGame(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 		this.loader = new GamesLoader();
 		
 		// Taille zone pour le tableau
@@ -174,7 +179,7 @@ public class PanelJoinGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_SET_ACCOUNT);
+				window.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 		
@@ -187,7 +192,8 @@ public class PanelJoinGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.getListener().requestGames();
+				controller.requestGames();
+				labMessage.setText("");
 			}
 		});
 		
@@ -199,7 +205,7 @@ public class PanelJoinGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.getListener().requestJoinGame(gameSelected);
+				controller.requestJoinGame(gameSelected);
 			}
 		});
 		
@@ -254,7 +260,8 @@ public class PanelJoinGame extends AbstractPanel
 	}
 
 	/**
-	 * Indique si la partie est pleine
+	 * Affiche un message sur le panel. Est utilise pour indiquer si une
+	 * partie est pleine.
 	 */
 	@Override
 	public void printMessage(String message)

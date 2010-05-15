@@ -38,7 +38,7 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 			this.notify();	
 
 			// Recuperer les donnes sur les scores
-			scoresInfo = base.getScoresInfo();
+			scoresInfo = window.getScoresInfo();
 			
 			// Seter le model
 			scoresTable.setModel(scoresInfo);
@@ -67,7 +67,7 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 					// Demander les scores et attendre la reponse
 					synchronized (this)
 					{
-						base.getListener().requestScore();
+						controller.requestScore();
 						this.wait();
 						Thread.sleep(UPDATE_TIME);
 					}
@@ -118,11 +118,11 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 	
 	/**
 	 * Constructeur. Permet de creer le nouveau Panel.
-	 * @param base Reference sur la vue
+	 * @param window Reference sur la vue
 	 */
-	public AbstractTableScoresPanel(BaseWindow base)
+	public AbstractTableScoresPanel(BaseWindow window)
 	{
-		super(base);
+		super(window);
 				
 		// Creer le chargeur de scores
 		this.loader = new ScoresLoader();

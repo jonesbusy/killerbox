@@ -64,11 +64,11 @@ public class PanelChangePassWord extends AbstractPanel
 	
 	/**
 	 * Constructeur du panel
-	 * @param base Fenetre de base
+	 * @param window Fenetre de base
 	 */
-	public PanelChangePassWord(final BaseWindow base)
+	public PanelChangePassWord(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 		
 		// Definition des tailles
 		this.labChangePass.setPreferredSize(new Dimension(350, 50));
@@ -140,14 +140,14 @@ public class PanelChangePassWord extends AbstractPanel
 				// Les deux password ok
 				if (Arrays.equals(textPass1.getPassword(), textPass2.getPassword()))
 				{
-					base.getListener().requestModifyPass(new String(textPass1.getPassword()));
-					base.setPanel(PANEL_SET_ACCOUNT);
+					controller.requestModifyPass(new String(textPass1.getPassword()));
+					window.setPanel(PANEL_SET_ACCOUNT);
 				}
 
 				// Sinon erreur
 				else
 				{
-					JOptionPane.showMessageDialog(base, "Les mots de passe sont differents", base
+					JOptionPane.showMessageDialog(window, "Les mots de passe sont differents", window
 							.getTitle(), JOptionPane.ERROR_MESSAGE);
 					textPass1.setText("");
 					textPass2.setText("");
@@ -163,7 +163,7 @@ public class PanelChangePassWord extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_SET_ACCOUNT);
+				window.setPanel(PANEL_SET_ACCOUNT);
 			}
 		});
 		

@@ -32,7 +32,7 @@ public class KillerBoxServer extends Observable implements Observer
 	/**
 	 * Liste des parties.
 	 */
-	private GameList gameList = new GameList(this);
+	private GameList gameList = new GameList();
 
 	/**
 	 * Permet de mettre en correspondance les numero de connexion
@@ -53,8 +53,6 @@ public class KillerBoxServer extends Observable implements Observer
 	public KillerBoxServer(int numeroPort, KillerBoxDecoder decoder, String user,
 			String pass)
 	{
-		this.gameList.createGame("toto", Game.ALL_VS_ALL);
-		this.gameList.createGame("tata", Game.TEAM);
 		
 		this.serveur = new Server(numeroPort, decoder);
 		serveur.addObserver(this);
@@ -144,7 +142,7 @@ public class KillerBoxServer extends Observable implements Observer
 	public void sendGames(String user)
 	{
 		StringBuilder builder = new StringBuilder("#game#list#");
-		Game[] games = this.gameList.getGames();
+		Game[] games = this.gameList.getAllGames();
 		for(Game game : games)
 		{
 			// Ajouter l'ID de la partie, le proprietaire ainsi que le nombre de joueur

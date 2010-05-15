@@ -17,6 +17,11 @@ public class GameList
 	 * Represente le numero de la prochaine partie
 	 */
 	private static int ID = 1;
+	
+	/**
+	 * Nombre de parties possibles
+	 */
+	//private static final int MAX_GAMES = 10;
 
 	/**
 	 * Permet de lister les differentes qui se jouent en ce moment.
@@ -25,25 +30,11 @@ public class GameList
 
 	/**
 	 * Les differentes parties en attente de joueur. Ou alors le proprietaire n'a pas
-	 * encore demare
-	 * la partie.
+	 * encore demare la partie.
 	 */
 	private ArrayList<Game> waiting = new ArrayList<Game>();
 
-	/**
-	 * Reference sur le serveur
-	 */
-	private KillerBoxServer server;
-
-	/**
-	 * Constructeur. Permet de construire un nouvel ensemble de parties
-	 * @param server Le serveur de jeu
-	 */
-	public GameList(KillerBoxServer server)
-	{
-		this.server = server;
-	}
-
+	
 	/**
 	 * Creer une nouvelle partie sur le serveur
 	 * @param user Le nom d'utilisateur du createur de la partie
@@ -62,51 +53,30 @@ public class GameList
 	{
 		// Chercher dans les parties en attente
 		for (int i = 0; i < this.waiting.size() ; i++)
-			if (this.waiting.get(i).getOwner().equals(owner))
+		{
+			Game game = this.waiting.get(i);
+			if (game.getOwner().equals(owner))
 			{
-				this.waiting.get(i).deletePlayers();
-				this.waiting.remove(i);
+				game.deletePlayers();
+				this.waiting.remove(game);
 				return;
 			}
+		}
 				
 		
 		// Chercher dans les parties en cours de jeu
 		for(int i = 0 ; i < this.played.size() ; i++)
+		{
+			Game game = this.waiting.get(i);
 			if (this.played.get(i).getOwner().equals(owner))
 			{
-				this.played.get(i).deletePlayers();
-				this.played.remove(i);
+				game.deletePlayers();
+				this.played.remove(game);
 				return;
 			}
+		}
 	}
 	
-	/**
-	 * Permet de supprimer une partie dont l'ID de la partie est donne en parametre
-	 * @param owner Le createur de la partie
-	 */
-	public synchronized void deleteGame(int id)
-	{
-		// Chercher dans les parties en attente
-		for (int i = 0; i < this.waiting.size() ; i++)
-			if (this.waiting.get(i).getID() == id)
-			{
-				this.waiting.get(i).deletePlayers();
-				this.waiting.remove(i);
-				return;
-			}
-				
-		
-		// Chercher dans les parties en cours de jeu
-		for(int i = 0 ; i < this.played.size() ; i++)
-			if (this.played.get(i).getID() == id)
-			{
-				this.played.get(i).deletePlayers();
-				this.played.remove(i);
-				return;
-			}
-				
-	}
-
 	/**
 	 * Permet de demarrer une partie en attente
 	 * @param user Le nom d'utilisateur du createur de la partie
@@ -114,25 +84,15 @@ public class GameList
 	public synchronized void startGame(String user)
 	{
 		for (int i = 0; i < this.waiting.size(); i++)
-			if (this.waiting.get(i).getOwner().equals(user))
+		{
+			Game game = this.waiting.get(i);
+			if (game.getOwner().equals(user))
 			{
-				this.played.add(this.waiting.remove(i));
+				this.played.add(game);
+				this.played.remove(i);
 				break;
 			}
-	}
-
-	/**
-	 * Permet de demarrer une partie en attente
-	 * @param id Numero unique de la partie
-	 */
-	public synchronized void startGame(int id)
-	{
-		for (int i = 0; i < this.waiting.size(); i++)
-			if (this.waiting.get(i).getID() == id)
-			{
-				this.played.add(this.waiting.remove(i));
-				break;
-			}
+		}
 	}
 
 	/**
@@ -158,7 +118,7 @@ public class GameList
 				break;
 			}
 	}
-
+	
 	/**
 	 * Permet de retourner le createur de la partie pour un ID donne
 	 * @param id Identificateur de la partie
@@ -166,9 +126,21 @@ public class GameList
 	 */
 	public String getOwner(int id)
 	{
+		// Chercher dans les parties en attente
 		for (int i = 0; i < this.waiting.size(); i++)
-			if (this.waiting.get(i).getID() == id)
-				return this.waiting.get(i).getOwner();
+		{
+			Game game = this.waiting.get(i);
+			if (game.getID() == id)
+				return game.getOwner();
+		}
+		
+		// Chercher dans les parties en cours de jeu
+		for (int i = 0; i < this.played.size(); i++)
+		{
+			Game game = this.played.get(i);
+			if (game.getID() == id)
+				return game.getOwner();
+		}
 
 		return null;
 
@@ -222,11 +194,29 @@ public class GameList
 	 * cours de jeu.
 	 * @return Le tableau de toute les parties
 	 */
-	public Game[] getGames()
+	public Game[] getAllGames()
 	{
 		ArrayList<Game> liste = new ArrayList<Game>(this.waiting);
 		liste.addAll(this.played);
 		return (Game[]) liste.toArray(new Game[liste.size()]);
+	}
+	
+	/**
+	 * Permet de retourner les parties en attente.
+	 * @return Les parties en attente
+	 */
+	public Game[] getWaitingGames()
+	{
+		return (Game[]) this.waiting.toArray(new Game[this.waiting.size()]);
+	}
+	
+	/**
+	 * Permet de retourner les parties en en cours de jeu.
+	 * @return Les parties en attente
+	 */
+	public Game[] getPlayedGames()
+	{
+		return (Game[]) this.played.toArray(new Game[this.played.size()]);
 	}
 
 }

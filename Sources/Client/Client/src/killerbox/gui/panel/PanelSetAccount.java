@@ -82,14 +82,14 @@ public class PanelSetAccount extends AbstractPanel
 
 	/**
 	 * Constructeur
-	 * @param base Fenetre de base
+	 * @param window Fenetre de base
 	 */
-	public PanelSetAccount(final BaseWindow base)
+	public PanelSetAccount(final BaseWindow window)
 	{
-		super(base);
+		super(window);
 
 		// Damande si admin
-		this.base.getListener().requestAdmin();
+		this.controller.requestAdmin();
 
 		// Taille des composants
 		this.labGame.setPreferredSize(new Dimension(350, 50));
@@ -114,7 +114,7 @@ public class PanelSetAccount extends AbstractPanel
 		this.btnAdminScore.setVisible(false);
 
 		// Ecouteur des composants
-		this.btnDisconnect.addActionListener(this.base.getActionDisconnect());
+		this.btnDisconnect.addActionListener(this.window.getActionDisconnect());
 		this.btnDeleteAccount.addActionListener(new ActionListener()
 		{
 			/**
@@ -125,11 +125,11 @@ public class PanelSetAccount extends AbstractPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				// Confirmer la suppression
-				if (JOptionPane.showConfirmDialog(base, CONFIRM_DELETE_ACCOUNT, base
+				if (JOptionPane.showConfirmDialog(window, CONFIRM_DELETE_ACCOUNT, window
 						.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 				{
-					base.getListener().requestDeleteAccount();
-					base.getListener().setDeconnected();
+					controller.requestDeleteAccount();
+					controller.setDeconnected();
 				}
 					
 			}
@@ -146,7 +146,7 @@ public class PanelSetAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_CHANGE_PASSWORD);
+				window.setPanel(PANEL_CHANGE_PASSWORD);
 			}
 		});
 		
@@ -160,7 +160,7 @@ public class PanelSetAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_VIEW_SCORES);
+				window.setPanel(PANEL_VIEW_SCORES);
 			}
 		});
 		
@@ -173,7 +173,7 @@ public class PanelSetAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_ADMIN_SCORES);
+				window.setPanel(PANEL_ADMIN_SCORES);
 			}
 		});
 		
@@ -185,7 +185,7 @@ public class PanelSetAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				base.setPanel(PANEL_JOIN_GAME);
+				window.setPanel(PANEL_JOIN_GAME);
 			}
 		});
 		
@@ -198,7 +198,7 @@ public class PanelSetAccount extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				base.setPanel(PANEL_CREATE_GAME);
+				window.setPanel(PANEL_CREATE_GAME);
 			}
 		});
 
