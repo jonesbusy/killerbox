@@ -139,8 +139,9 @@ public class KillerBoxDecoder extends Decoder
 
 				}
 				
-				// Charger les scores dans la fenetre
+				// Charger les scores dans la fenetre et refraichir
 				this.base.loadScores(user, score, admin);
+				this.base.getPanel().refreshData();
 			}
 			
 			/**
@@ -149,6 +150,10 @@ public class KillerBoxDecoder extends Decoder
 			else if(instruction.equals("game"))
 			{
 				instruction = tokens.nextToken();
+				
+				/**
+				 * On recoit la liste des parties
+				 */
 				if(instruction.equals("list"))
 				{
 					// Pour recuperer les scores. On va stocker tout ces informations
@@ -197,8 +202,22 @@ public class KillerBoxDecoder extends Decoder
 					
 					// Charger les donnees
 					this.base.loadGames(id, owners, types, nbPlayers);
-					this.base.getPanel().getData();
+					this.base.getPanel().refreshData();
 					
+				}
+				
+				/**
+				 * Si on veut rejoindre une partie pleine
+				 */
+				else if(instruction.equals("full"))
+					this.base.getPanel().printMessage("Impossible de rejoindre cette partie. Trop de joueurs");
+				
+				/**
+				 * Fin de la partie en cours
+				 */
+				else if(instruction.equals("end"))
+				{
+					this.base.getPanel().printMessage("La partie s'est terminee");
 				}
 			}
 			

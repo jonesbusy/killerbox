@@ -2,7 +2,6 @@ package killerbox.gui.panel;
 
 import java.awt.*;
 import javax.swing.*;
-import java.util.*;
 import killerbox.*;
 import killerbox.gui.BaseWindow;
 
@@ -19,6 +18,76 @@ import killerbox.gui.BaseWindow;
 @SuppressWarnings("serial")
 public abstract class AbstractTableScoresPanel extends AbstractPanel
 {
+	
+	/**
+	 * Classe Thread permettant de mettre a jour tout les tant de temps
+	 * les donnes concernants les scores.
+	 * @author Valentin Delaye
+	 *
+	 */
+	protected class ScoresLoader extends Thread
+	{
+		
+		/**
+		 * Les donnes sont pretes. On peut les recuperer et 
+		 * mettre a jour le tableau des parties
+		 */
+		public synchronized void getData()
+		{
+
+			this.notify();	
+
+			// Recuperer les donnes sur les scores
+			scoresInfo = base.getScoresInfo();
+			
+			// Seter le model
+			scoresTable.setModel(scoresInfo);
+			
+			// Mettre a jour le scroll pane
+			scoresTable.repaint();
+			scoresTable.validate();
+			scrollPane.getViewport().setView(scoresTable);
+			repaint();
+			validate();
+			
+		}
+
+		/**
+		 * Permet d'executer le thread. Permet de mettre a jour les donnes concernant
+		 * les parties.
+		 */
+		@Override
+		public void run()
+		{
+			while(true)
+			{
+				
+				try
+				{
+					// Demander les scores et attendre la reponse
+					synchronized (this)
+					{
+						base.getListener().requestScore();
+						this.wait();
+						Thread.sleep(UPDATE_TIME);
+					}
+					
+				}
+				catch (InterruptedException e)
+				{
+
+				}
+			}
+		}
+		
+	}
+	
+	/**
+	 * Pour les panels ayant besoin d'avoir une mise a jour
+	 * repetee de donnees. (Comme par exemple les tableaux des scores ou les tableau
+	 * de parties)
+	 */
+	public static final int UPDATE_TIME = 3000;
 	
 	/**
 	 * Pour permettre de coupe le panel en deux zone. La zone du haut contient
@@ -42,6 +111,10 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 	 */
 	protected JScrollPane scrollPane = new JScrollPane(scoresTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+	/**
+	 * Pour permettre d'effectuer une mise a jour des scores
+	 */
+	protected ScoresLoader loader;
 	
 	/**
 	 * Constructeur. Permet de creer le nouveau Panel.
@@ -51,39 +124,14 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 	{
 		super(base);
 				
-		// Faire une requete des scores pour avoir les resultats a jours
-		this.base.getListener().requestScore();
+		// Creer le chargeur de scores
+		this.loader = new ScoresLoader();
 		
 		// Taille zone pour le tableau
 		this.scoresTable.setPreferredScrollableViewportSize(new Dimension(350, 210));
 		this.scoresTable.setFillsViewportHeight(true);
 		this.splitPane.setDividerSize(0);
 		
-		// Recuperer les donnes sur les scores
-		this.scoresInfo = base.getScoresInfo();
-		
-		// Seter le model
-		this.scoresTable.setModel(this.scoresInfo);
-		
-	}
-	
-	/**
-	 * Permet de charger les donnees sur le tableau des scores.
-	 * @param user Liste des utilisateurs
-	 * @param score Liste des scores
-	 * @param admin Indication du status d'administrateur.
-	 */
-	public void loadData(ArrayList<String> users, ArrayList<Integer> scores, ArrayList<Boolean> admin)
-	{
-
-		this.base.getScoresInfo().loadData(users, scores, admin);
-		
-		// Mettre a jour le scroll pane
-		scoresTable.repaint();
-		scoresTable.validate();
-		this.scrollPane.getViewport().setView(scoresTable);
-		this.repaint();
-		this.validate();
 	}
 	
 	/**
@@ -94,6 +142,15 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 		this.splitPane.add(this.scrollPane);
 		this.add(this.splitPane);
 	}
-	
 
+	/**
+	 * Permet d'effectuer une mise a jours des donnees. Indique au chargeur qu'il faut
+	 * recuperer les nouvelles donnees.
+	 */
+	@Override
+	public void refreshData()
+	{
+		this.loader.getData();
+	}
+	
 }

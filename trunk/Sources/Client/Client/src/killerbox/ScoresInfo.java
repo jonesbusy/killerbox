@@ -110,9 +110,12 @@ public class ScoresInfo extends AbstractTableModel
 	 * Retourne le nom de la colonne
 	 */
 	@Override
-	public String getColumnName(int column)
+	public String getColumnName(int col)
 	{
-		return this.header[column];
+		if(col < this.header.length)
+			return this.header[col];
+		else
+			return null;
 	}
 
 	/**

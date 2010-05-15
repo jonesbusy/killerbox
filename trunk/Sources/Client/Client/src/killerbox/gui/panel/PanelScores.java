@@ -41,6 +41,7 @@ public class PanelScores extends AbstractTableScoresPanel
 	 */
 	public PanelScores(final BaseWindow base)
 	{
+
 		super(base);
 		
 		// Permettre de trier les colonnes
@@ -80,12 +81,12 @@ public class PanelScores extends AbstractTableScoresPanel
 			{
 				// Charger les donnes presente
 				base.getListener().requestScore();
-				loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 			}
 		});
 		
-		// Charger les donnes presente
-		loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
+		
+		// Demarrer le thread de recuperation des donnees
+		this.loader.start();
 		
 	}
 

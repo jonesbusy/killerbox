@@ -116,8 +116,12 @@ public class Client extends Observable
 	{
 		// -- Pour le debug, afficher sur la console --
 		System.out.println(message);
-		this.output.println(message);
-		this.output.flush();
+		
+		if(this.output != null)
+		{
+			this.output.println(message);
+			this.output.flush();
+		}
 	}
 
 	/**

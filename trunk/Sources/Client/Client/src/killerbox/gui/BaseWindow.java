@@ -261,13 +261,23 @@ public class BaseWindow extends JFrame implements Observer
 	}
 
 	/**
-	 * Permet de retourner les scores. Permettre ainsi anx Panels d'afficher
-	 * a tout moment les differents scores.
+	 * Permet de retourner les scores.
+	 * Permettre ainsi aux Panels d'afficher a tout moment les differents scores.
 	 * @return Les differents scores des utilisateurs
 	 */
 	public ScoresInfo getScoresInfo()
 	{
 		return this.scoresInfo;
+	}
+	
+	/**
+	 * Permet de retourner les informations sur les parties en cours.
+	 * Permettre ainsi aux Panels d'afficher a tout moment les differentes parties.
+	 * @return Les differentes parties
+	 */
+	public GamesInfo getGamesInfo()
+	{
+		return this.gamesInfo;
 	}
 
 	/**
@@ -375,6 +385,18 @@ public class BaseWindow extends JFrame implements Observer
 			case PANEL_JOIN_GAME:
 			{
 				this.panel = new PanelJoinGame(this);
+				break;
+			}
+			
+			case PANEL_CREATE_GAME:
+			{
+				this.panel = new PanelCreateGame(this);
+				break;
+			}
+			
+			case PANEL_LIST_PLAYERS_GAME:
+			{
+				this.panel = new PanelListPlayersGameAll(this);
 				break;
 			}
 

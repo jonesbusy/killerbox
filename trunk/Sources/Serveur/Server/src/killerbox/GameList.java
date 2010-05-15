@@ -53,6 +53,59 @@ public class GameList
 	{
 		this.waiting.add(new Game(ID++, user, type));
 	}
+	
+	/**
+	 * Permet de supprimer une partie dont le createur est donne en parametre
+	 * @param owner Le createur de la partie
+	 */
+	public synchronized void deleteGame(String owner)
+	{
+		// Chercher dans les parties en attente
+		for (int i = 0; i < this.waiting.size() ; i++)
+			if (this.waiting.get(i).getOwner().equals(owner))
+			{
+				this.waiting.get(i).deletePlayers();
+				this.waiting.remove(i);
+				return;
+			}
+				
+		
+		// Chercher dans les parties en cours de jeu
+		for(int i = 0 ; i < this.played.size() ; i++)
+			if (this.played.get(i).getOwner().equals(owner))
+			{
+				this.played.get(i).deletePlayers();
+				this.played.remove(i);
+				return;
+			}
+	}
+	
+	/**
+	 * Permet de supprimer une partie dont l'ID de la partie est donne en parametre
+	 * @param owner Le createur de la partie
+	 */
+	public synchronized void deleteGame(int id)
+	{
+		// Chercher dans les parties en attente
+		for (int i = 0; i < this.waiting.size() ; i++)
+			if (this.waiting.get(i).getID() == id)
+			{
+				this.waiting.get(i).deletePlayers();
+				this.waiting.remove(i);
+				return;
+			}
+				
+		
+		// Chercher dans les parties en cours de jeu
+		for(int i = 0 ; i < this.played.size() ; i++)
+			if (this.played.get(i).getID() == id)
+			{
+				this.played.get(i).deletePlayers();
+				this.played.remove(i);
+				return;
+			}
+				
+	}
 
 	/**
 	 * Permet de demarrer une partie en attente
@@ -89,8 +142,17 @@ public class GameList
 	 */
 	public synchronized void joinGame(String user, int id)
 	{
-		for (int i = 0; i < this.played.size(); i++)
+		// Ajout dans une partie en attente
+		for (int i = 0; i < this.waiting.size(); i++)
 			if (this.waiting.get(i).getID() == id)
+			{
+				this.waiting.get(i).addPlayer(user);
+				break;
+			}
+		
+		// Ajout dans une partie en cours
+		for (int i = 0; i < this.played.size(); i++)
+			if (this.played.get(i).getID() == id)
 			{
 				this.played.get(i).addPlayer(user);
 				break;
@@ -106,10 +168,31 @@ public class GameList
 	{
 		for (int i = 0; i < this.waiting.size(); i++)
 			if (this.waiting.get(i).getID() == id)
-				return this.played.get(i).getOwner();
+				return this.waiting.get(i).getOwner();
 
 		return null;
 
+	}
+	
+	/**
+	 * Permet de retourner l'ID de partie pour un proprietaire donne
+	 * @param owner Le createur de la partie
+	 * @return Le numero de partie. -1 si non trouve
+	 */
+	public int getId(String owner)
+	{
+		// Chercher dans les parties en attente
+		for (int i = 0; i < this.waiting.size() ; i++)
+			if (this.waiting.get(i).getOwner().equals(owner))
+				return this.waiting.get(i).getID();
+				
+		
+		// Chercher dans les parties en cours de jeu
+		for(int i = 0 ; i < this.played.size() ; i++)
+			if (this.played.get(i).getOwner().equals(owner))
+				return this.played.get(i).getID();
+				
+		return -1;
 	}
 
 	/**
@@ -127,7 +210,7 @@ public class GameList
 		
 		// Chercher dans les parties en cours de jeu
 		for(int i = 0 ; i < this.played.size() ; i++)
-			if (this.waiting.get(i).getID() == id)
+			if (this.played.get(i).getID() == id)
 				return this.played.get(i).getPlayers();
 
 		return null;

@@ -75,7 +75,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 		// Config de composants
 		this.btnValidate.setEnabled(false);
 
-		// Ajout des composant
+		// Ajout des composants
 		this.add(this.labTitle);
 		this.addTable();
 		this.add(this.btnForward);
@@ -106,7 +106,6 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 			{
 				// Recuperer les informations de la ligne selectionne
 				String user = (String) scoresTable.getModel().getValueAt(rowSelected, 0);
-				System.out.println(user);
 
 				// Recuperer l'action
 				int action = comAction.getSelectedIndex();
@@ -120,8 +119,6 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 						if (JOptionPane.showConfirmDialog(base, CONFIRM_DELETE_ACCOUNT + user
 								+ " ?", base.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
-							// Ne plus rien selectionner
-
 							// Demande la suppression du compte
 							base.getListener().requestDeleteAccount(user);
 
@@ -130,11 +127,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 
 							JOptionPane.showMessageDialog(base,
 									"L'utilisateur a bien ete supprime", base.getTitle(),
-									JOptionPane.INFORMATION_MESSAGE);
-
-							// Charger ces donnes et mettre a jour le tableau
-							loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
-							
+									JOptionPane.INFORMATION_MESSAGE);				
 
 						}
 
@@ -159,9 +152,6 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 									+ " a bien ete reinitialiser a 1234", base.getTitle(),
 									JOptionPane.INFORMATION_MESSAGE);
 
-							// Charger ces donnes et mettre a jour le tableau
-							loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
-
 						}
 						
 						break;
@@ -183,9 +173,6 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 							JOptionPane.showMessageDialog(base, "Le score de " + user
 									+ " a bien ete remis a 0", base.getTitle(),
 									JOptionPane.INFORMATION_MESSAGE);
-
-							// Charger ces donnes et mettre a jour le tableau
-							loadData(scoresInfo.getUsers(), scoresInfo.getScores(), scoresInfo.getAdmin());
 
 						}
 
@@ -212,8 +199,10 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 					}
 				});
 
+		this.loader.start();
+		
 	}
-
+	
 	/**
 	 * Permet de retourner le bouton principal. Null s'il n'y a
 	 * aucun bouton principal sur le Panel
