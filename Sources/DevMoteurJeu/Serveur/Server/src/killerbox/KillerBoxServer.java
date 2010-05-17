@@ -196,7 +196,6 @@ public class KillerBoxServer extends Observable implements  Observer
 	/**
 	 * Lorsque le Server change d'etat
 	 */
-	@Override
 	public void update(Observable o, Object obj)
 	{
 		// S'il y a une nouvelle connexion ou un utilisateur deconnecte

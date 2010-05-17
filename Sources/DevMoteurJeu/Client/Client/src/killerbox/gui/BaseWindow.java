@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+import jeu.*;
+
 import network.*;
 import killerbox.network.*;
 import killerbox.gui.panel.*;
@@ -21,6 +23,7 @@ import static killerbox.gui.panel.EnumPanel.*;
 public class BaseWindow extends JFrame implements Observer
 {
 
+	private Modele modele;
 	/**
 	 * Le client
 	 */
@@ -131,7 +134,6 @@ public class BaseWindow extends JFrame implements Observer
 			/**
 			 * Lors du clique sur le bouton deconnecter
 			 */
-			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 
@@ -155,7 +157,6 @@ public class BaseWindow extends JFrame implements Observer
 			/**
 			 * Lors du clique sur le bouton quitter
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				if (confirmQuit(BaseWindow.CONFIRM_QUIT_MESSAGE))
@@ -173,7 +174,6 @@ public class BaseWindow extends JFrame implements Observer
 			/**
 			 * Lors du clique sur le bouton about
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				aboutDialog.setVisible(true);
@@ -315,7 +315,7 @@ public class BaseWindow extends JFrame implements Observer
 			
 			case PANEL_JEU :
 			{
-				this.panel = new PanelJeu(this);
+				this.panel = new PanelJeu(this, modele);
 				break;
 			}
 			
@@ -352,7 +352,6 @@ public class BaseWindow extends JFrame implements Observer
 	 * Lorsque la vue recoit un message.Elle l'affiche sur le panel
 	 * en cours.
 	 */
-	@Override
 	public void update(Observable o, Object arg)
 	{
 		// Si la vue recoit un message (generalement d'erreur)

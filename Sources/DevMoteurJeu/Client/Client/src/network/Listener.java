@@ -52,7 +52,6 @@ public abstract class Listener implements Observer, Runnable
 	 * S'occupe de lire le message recu et d'appeler le decoder
 	 * sur cette ligne
 	 */
-	@Override
 	public void run()
 	{
 		String ligne = null;
@@ -89,7 +88,6 @@ public abstract class Listener implements Observer, Runnable
 	public abstract void setDeconnected();
 	
 
-	@Override
 	public void update(Observable o, Object arg)
 	{
 		if (Boolean.class.isInstance(arg))

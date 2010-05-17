@@ -68,7 +68,6 @@ public class AboutDialog extends JDialog
 		btnOk.addActionListener(new ActionListener()
 		{
 			
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				dispose();

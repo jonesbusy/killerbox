@@ -120,7 +120,6 @@ public class PanelSetAccount extends AbstractPanel
 			/**
 			 * Lors du clique sur le bouton pour supprimer son compte
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				// Confirmer la suppression
@@ -138,7 +137,6 @@ public class PanelSetAccount extends AbstractPanel
 			 * Quand l'utilisateur clique sur le bouton pour
 			 * changer son mot de passe
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				base.setPanel(PANEL_CHANGE_PASSWORD);
@@ -152,7 +150,6 @@ public class PanelSetAccount extends AbstractPanel
 			 * Quand l'utilisateur clique sur le bouton pour
 			 * afficher les scores
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				base.setPanel(PANEL_VIEW_SCORE);

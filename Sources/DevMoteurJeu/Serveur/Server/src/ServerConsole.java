@@ -25,7 +25,6 @@ public class ServerConsole implements Observer
 	/**
 	 * Afficher les messages recu sur la console
 	 */
-	@Override
 	public void update(Observable o, Object obj)
 	{
 		System.out.println((String)obj);

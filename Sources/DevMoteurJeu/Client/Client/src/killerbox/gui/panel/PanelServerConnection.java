@@ -92,13 +92,11 @@ public class PanelServerConnection extends AbstractPanel
 		DocumentListener changeListener = new DocumentListener()
 		{
 			
-			@Override
 			public void removeUpdate(DocumentEvent e)
 			{
 				insertUpdate(e);
 			}
 			
-			@Override
 			public void insertUpdate(DocumentEvent e)
 			{
 
@@ -111,7 +109,6 @@ public class PanelServerConnection extends AbstractPanel
 					btnConnect.setEnabled(false);
 			}
 			
-			@Override
 			public void changedUpdate(DocumentEvent e)
 			{
 
@@ -126,7 +123,6 @@ public class PanelServerConnection extends AbstractPanel
 		this.btnConnect.addActionListener(new ActionListener()
 		{
 			
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				// Pour recuperer le port du serveur
