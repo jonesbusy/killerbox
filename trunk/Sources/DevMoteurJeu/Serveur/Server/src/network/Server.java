@@ -43,7 +43,6 @@ public class Server extends Observable implements Runnable, Observer
 		/**
 		 * Action executee par le thread
 		 */
-		@Override
 		public void run()
 		{
 			while (true)
@@ -267,7 +266,6 @@ public class Server extends Observable implements Runnable, Observer
 	/**
 	 * Permet d'executer le thread et recuperer les connexions
 	 */
-	@Override
 	public void run()
 	{
 		while (true)

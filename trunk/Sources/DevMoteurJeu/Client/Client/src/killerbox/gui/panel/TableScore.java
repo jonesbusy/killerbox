@@ -21,7 +21,6 @@ public class TableScore extends AbstractTableModel
 	/**
 	 * Retourne le nombre de colonne de la table
 	 */
-	@Override
 	public int getColumnCount()
 	{
 		return 2;
@@ -30,7 +29,6 @@ public class TableScore extends AbstractTableModel
 	/**
 	 * Retourne le nombre de ligne de la table
 	 */
-	@Override
 	public int getRowCount()
 	{
 		return users.size();
@@ -50,7 +48,6 @@ public class TableScore extends AbstractTableModel
 	/**
 	 * Retourne la valeur a une ligne est une colone
 	 */
-	@Override
 	public String getValueAt(int row, int col)
 	{
 		if(col == 0)

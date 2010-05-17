@@ -4,7 +4,12 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import killerbox.network.KillerBoxDecoder;
+import killerbox.network.KillerBoxListener;
+
 public class Controller {
+	
+	KillerBoxListener decoder;
 
 	public void gestionDeplacement(CarteBase carte, Joueur joueur, KeyEvent e) {
 		ArrayList<Rectangle> murs = carte.getMurs();

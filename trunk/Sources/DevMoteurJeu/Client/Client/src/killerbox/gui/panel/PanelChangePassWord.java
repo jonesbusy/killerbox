@@ -96,13 +96,11 @@ public class PanelChangePassWord extends AbstractPanel
 		DocumentListener changePass = new DocumentListener()
 		{
 
-			@Override
 			public void removeUpdate(DocumentEvent e)
 			{
 				insertUpdate(e);
 			}
 
-			@Override
 			public void insertUpdate(DocumentEvent e)
 			{
 				// S'il y a quelque chose dans les champs
@@ -115,7 +113,6 @@ public class PanelChangePassWord extends AbstractPanel
 
 			}
 
-			@Override
 			public void changedUpdate(DocumentEvent e)
 			{
 
@@ -132,7 +129,6 @@ public class PanelChangePassWord extends AbstractPanel
 			/**
 			 * Action lorsqu'on clique sur le bouton creer
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				// Les deux password ok
@@ -158,7 +154,6 @@ public class PanelChangePassWord extends AbstractPanel
 		this.btnForward.addActionListener(new ActionListener()
 		{
 			
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				base.setPanel(PANEL_SET_ACCOUNT);

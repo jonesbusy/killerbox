@@ -133,7 +133,6 @@ public class Connexion implements Runnable
 	/**
 	 * Permet de lancer le thread
 	 */
-	@Override
 	public void run()
 	{
 		String ligne;

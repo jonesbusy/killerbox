@@ -39,7 +39,6 @@ public class ServerGui extends JFrame implements Observer
 	/**
 	 * Permet de mettre a jour le message
 	 */
-	@Override
 	public void update(Observable o, Object arg)
 	{
 		if(String.class.isInstance(arg))

@@ -20,10 +20,11 @@ import jeu.Controller;
 import jeu.Joueur;
 
 import killerbox.gui.BaseWindow;
+import jeu.*;
 
 public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionListener {
 
-	private Joueur joueur;
+	private Modele modele;
 	private double angleSourisJoueur;
 	private int PG_X = 400;   // Taille en X du panneau graphique
 	private int PG_Y = 400;   // Taille en Y du panneau graphique
@@ -31,10 +32,10 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 	private CarteBase carte = new CarteBase();
 	Controller controller = new Controller();
 
-	public PanelJeu(BaseWindow base) {
+	public PanelJeu(BaseWindow base, Modele modele) {
 		super(base);
 		
-		this.joueur = new Joueur("hello",50,50,100);
+		this.modele = modele;
 		//joueur.addObserver(this);
 		setBackground(new Color (0, 0, 65));
 		// Chargement de l'image Montagne.gif, située dans le répertoire
@@ -83,7 +84,7 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 	public void paintComponent (Graphics g) {
 		super.paintComponent(g);
 		carte.dessiner(g);
-		joueur.dessiner(g, this);
+		modele.getJoueurActif().dessiner(g, this);
     }
 	
 	public Dimension getPreferredSize() {
@@ -92,40 +93,36 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 	}
 	
 
-	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void mouseMoved(MouseEvent e) {
-		calculerAngle(e.getX(), e.getY(), joueur.getPosX()-4, joueur.getPosY()-25);
-		joueur.setAngleSourisJoueur(angleSourisJoueur);
+		calculerAngle(e.getX(), e.getY(), modele.getJoueurActif().getPosX()-4, modele.getJoueurActif().getPosY()-25);
+		modele.getJoueurActif().setAngleSourisJoueur(angleSourisJoueur);
 		repaint();
 		System.out.println("\nSposX = " + (e.getX()-4));
-		System.out.println("JposX = " + joueur.getPosX());
+		System.out.println("JposX = " + modele.getJoueurActif().getPosX());
 		System.out.println("SposY = " + (e.getY()-25));
-		System.out.println("JposY = " + joueur.getPosY());
+		System.out.println("JposY = " + modele.getJoueurActif().getPosY());
 		
 	}
 
 	public void keyPressed(KeyEvent e) {
 		
-		// TODO Créer un controller pour gérer ce genre d'action
-		controller.gestionDeplacement(carte,joueur,e);
+		// Créer un controller pour gérer ce genre d'action
+		controller.gestionDeplacement(carte,modele.getJoueurActif(),e);
 		repaint();
 		System.out.println("hello");
 		

@@ -83,13 +83,11 @@ public class PanelLogin extends AbstractPanel
 		DocumentListener changeListener = new DocumentListener()
 		{
 			
-			@Override
 			public void removeUpdate(DocumentEvent arg0)
 			{
 				insertUpdate(arg0);
 			}
 			
-			@Override
 			public void insertUpdate(DocumentEvent arg0)
 			{
 				// Enlever le message s'il y en a un
@@ -101,7 +99,6 @@ public class PanelLogin extends AbstractPanel
 					btnConnect.setEnabled(false);
 			}
 			
-			@Override
 			public void changedUpdate(DocumentEvent arg0)
 			{
 
@@ -117,7 +114,6 @@ public class PanelLogin extends AbstractPanel
 			/**
 			 * Lors du clique sur le bouton s'authentifier
 			 */
-			@Override
 			public void actionPerformed(ActionEvent e)
 			{	
 				base.getListener().sendCredentias(texLogin.getText(), new String(texPass.getPassword()));
@@ -130,7 +126,6 @@ public class PanelLogin extends AbstractPanel
 			/**
 			 * Pour aller a la creation du compte
 			 */
-			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				base.setPanel(EnumPanel.PANEL_CREATE_ACCOUNT);
