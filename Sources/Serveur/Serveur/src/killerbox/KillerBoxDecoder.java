@@ -263,7 +263,7 @@ public class KillerBoxDecoder extends Decoder
 					this.gameList.createGame(owner, type);
 
 					// Envoyer l'ID de la partie
-					connexion.send("#game#create#" + this.gameList.getId(owner));
+					connexion.send("#game#create#" + this.gameList.getIdOwner((owner)));
 
 					// Message serveur
 					this.server.relay(this.getUserName(connexion.getId())
@@ -282,7 +282,7 @@ public class KillerBoxDecoder extends Decoder
 			else if (instruction.equals("delete"))
 			{
 				String owner = this.getUserName(connexion.getId());
-				int IdGame = this.gameList.getId(owner);
+				int IdGame = this.gameList.getIdOwner(owner);
 
 				// Les differents utilisateurs dans cette partie
 				String[] users = this.gameList.getUsers(IdGame);
