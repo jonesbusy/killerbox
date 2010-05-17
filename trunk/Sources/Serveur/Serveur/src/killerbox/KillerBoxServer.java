@@ -68,7 +68,7 @@ public class KillerBoxServer extends Observable implements Observer
 			System.exit(0);
 		}
 
-		// Setet les serveur du decodeur
+		// Seter les serveurs du decodeur
 		decoder.setServer(this.serveur);
 		decoder.setKillerBoxServer(this);
 		decoder.setDataBase(this.database);
@@ -142,7 +142,11 @@ public class KillerBoxServer extends Observable implements Observer
 	public void sendGames(String user)
 	{
 		StringBuilder builder = new StringBuilder("#game#list#");
-		Game[] games = this.gameList.getAllGames();
+		
+		// Donner uniquement les parties en attente. Le client n'a effectivement 
+		// aucun interet de recevoir une liste de partie dont il n'a pas la possibilite de rejoindre
+		Game[] games = this.gameList.getWaitingGames();
+		
 		for(Game game : games)
 		{
 			// Ajouter l'ID de la partie, le proprietaire ainsi que le nombre de joueur

@@ -1,6 +1,7 @@
 package killerbox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Permet de representer les differentes parties en cours sur le serveur.
@@ -33,6 +34,13 @@ public class GameList
 	 * encore demare la partie.
 	 */
 	private ArrayList<Game> waiting = new ArrayList<Game>();
+	
+	/**
+	 * Permet de mettre en correspondance les noms d'utilisateur et le numero
+	 * de partie dans lequel ils jouent ou sont inscrits. Permet d'eviter de chercher
+	 * inutilement dans chaque partie les joueurs. 
+	 */
+	private HashMap<String, Integer> userGames = new HashMap<String, Integer>();
 
 	
 	/**
@@ -42,7 +50,9 @@ public class GameList
 	 */
 	public synchronized void createGame(String user, int type)
 	{
-		this.waiting.add(new Game(ID++, user, type));
+		this.waiting.add(new Game(ID, user, type));
+		this.userGames.put(user, ID);
+		ID++;
 	}
 	
 	/**
@@ -57,19 +67,28 @@ public class GameList
 			Game game = this.waiting.get(i);
 			if (game.getOwner().equals(owner))
 			{
+			// Supprimer les correspondances Nom d'utilisateur - ID partie
+				String[] players = game.getPlayers();
+				for(String player : players)
+					this.userGames.remove(player);
+				
 				game.deletePlayers();
 				this.waiting.remove(game);
 				return;
 			}
 		}
 				
-		
 		// Chercher dans les parties en cours de jeu
 		for(int i = 0 ; i < this.played.size() ; i++)
 		{
 			Game game = this.waiting.get(i);
 			if (this.played.get(i).getOwner().equals(owner))
 			{
+				// Supprimer les correspondances Nom d'utilisateur - ID partie
+				String[] players = game.getPlayers();
+				for(String player : players)
+					this.userGames.remove(player);
+				
 				game.deletePlayers();
 				this.played.remove(game);
 				return;
@@ -102,19 +121,12 @@ public class GameList
 	 */
 	public synchronized void joinGame(String user, int id)
 	{
-		// Ajout dans une partie en attente
+		// Ajout dans une partie en attente uniquement
 		for (int i = 0; i < this.waiting.size(); i++)
 			if (this.waiting.get(i).getID() == id)
 			{
+				this.userGames.put(user, id);
 				this.waiting.get(i).addPlayer(user);
-				break;
-			}
-		
-		// Ajout dans une partie en cours
-		for (int i = 0; i < this.played.size(); i++)
-			if (this.played.get(i).getID() == id)
-			{
-				this.played.get(i).addPlayer(user);
 				break;
 			}
 	}
@@ -151,7 +163,7 @@ public class GameList
 	 * @param owner Le createur de la partie
 	 * @return Le numero de partie. -1 si non trouve
 	 */
-	public int getId(String owner)
+	public int getIdOwner(String owner)
 	{
 		// Chercher dans les parties en attente
 		for (int i = 0; i < this.waiting.size() ; i++)
@@ -165,6 +177,20 @@ public class GameList
 				return this.played.get(i).getID();
 				
 		return -1;
+	}
+	
+	/**
+	 * Permet de retourner l'ID de la partie ou joue l'utilisateur
+	 * passe en parametre
+	 * @param user L'utilisateur
+	 * @return L'ID de la partie. Ou -1 si l'utilisateur ne participe pas a une partie
+	 */
+	public int getId(String user)
+	{
+		Integer id = this.userGames.get(user);
+		if(id == null)
+			return -1;
+		else return id;
 	}
 
 	/**
