@@ -19,6 +19,8 @@ public class Joueur { // extends Observable {
 	private double posX;
 	private double posY;
 	private double angleSourisJoueur;
+	
+	private int vitesse;
 
 	/**
 	 * points de vie du joueur
@@ -131,5 +133,9 @@ public class Joueur { // extends Observable {
 		//g.drawRect(colision.x, colision.y, colision.width, colision.height);
 		System.out.println("Angle : " + angleSourisJoueur*180/Math.PI);
 		g.drawLine((int)(posX - 200*Math.cos(angleSourisJoueur)), (int)(posY - 200*Math.sin(angleSourisJoueur)),(int)posX, (int)posY);
+	}
+
+	public int getVitesse() {
+		return vitesse;
 	}
 }

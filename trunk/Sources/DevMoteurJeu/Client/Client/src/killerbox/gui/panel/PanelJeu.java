@@ -15,6 +15,8 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JButton;
 
+import jeu.CarteBase;
+import jeu.Controller;
 import jeu.Joueur;
 
 import killerbox.gui.BaseWindow;
@@ -23,10 +25,11 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 
 	private Joueur joueur;
 	private double angleSourisJoueur;
-	private Rectangle murs[] = new Rectangle[8];
 	private int PG_X = 400;   // Taille en X du panneau graphique
 	private int PG_Y = 400;   // Taille en Y du panneau graphique
 	private Image imageDeFond;		 // Images de fond
+	private CarteBase carte = new CarteBase();
+	Controller controller = new Controller();
 
 	public PanelJeu(BaseWindow base) {
 		super(base);
@@ -45,17 +48,6 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 		Cursor monCurseur = tk.createCustomCursor(img, new Point(16, 16), "mon viseur");
 		setCursor(monCurseur);
 		this.setSize(new Dimension(PG_X,PG_Y));
-		
-
-		// initialisation des murs du jeu
-		murs[0] = new Rectangle(0, 0, 15, 400);
-		murs[1] = new Rectangle(0, 0, 400, 15);			
-		murs[2] = new Rectangle(385, 0, 15, 400);
-		murs[3] = new Rectangle(0, 385, 400, 15);
-		murs[4] = new Rectangle(300, 300, 45, 45);
-		murs[5] = new Rectangle(90, 90, 40, 40);
-		murs[6] = new Rectangle(345, 15, 40, 35);
-		murs[7] = new Rectangle(15, 345, 40, 40);
 		
 		// Redimensionnement de la fenetre
 		base.setSize(this.getSize());
@@ -90,7 +82,7 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 	
 	public void paintComponent (Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(imageDeFond, 0, 0, this);
+		carte.dessiner(g);
 		joueur.dessiner(g, this);
     }
 	
@@ -131,47 +123,10 @@ public class PanelJeu extends AbstractPanel implements KeyListener, MouseMotionL
 	}
 
 	public void keyPressed(KeyEvent e) {
-		System.out.println("hello");
-		final int deplacement = 2;
 		
-		if (e.getKeyCode() == KeyEvent.VK_W)
-		{
-			joueur.move(0, -deplacement);
-			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getColision()))
-					joueur.move(0, deplacement);
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_S)
-		{
-			joueur.move(0, deplacement);
-			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getColision()))
-					joueur.move(0, -deplacement);
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_A)
-		{
-			joueur.move(-deplacement, 0);
-			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getColision()))
-					joueur.move(deplacement, 0);
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_D)
-		{
-			joueur.move(deplacement, 0);
-			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getColision()))
-					joueur.move(-deplacement, 0);
-		}
-		
+		// TODO Créer un controller pour gérer ce genre d'action
+		controller.gestionDeplacement(carte,joueur,e);
 		repaint();
-		
 		System.out.println("hello");
 		
 	}
