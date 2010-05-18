@@ -10,33 +10,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 class PanneauGraphique extends JPanel {//implements Observer {
-	// Vue passive, pour affichage uniquement
-
-		int PG_X = 400;   // Taille en X du panneau graphique
-		int PG_Y = 400;   // Taille en Y du panneau graphique
-		private Image imageDeFond;		 // Images de fond
-		private Joueur joueur;
-		
-	// Constructeur
-		public PanneauGraphique (Joueur joueur){
-			this.joueur = joueur;
-			//joueur.addObserver(this);
-			setBackground(new Color (0, 0, 65));
-			// Chargement de l'image Montagne.gif, située dans le répertoire
-			// des classes.  Image de taille 315*44 pixels
-			imageDeFond = Toolkit.getDefaultToolkit().getImage ("carte.jpg");
-		}
-		
-		public void paintComponent (Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(imageDeFond, 0, 0, this);
-			joueur.dessiner(g, this);
-	    }
-		
-		public Dimension getPreferredSize() {
-		// Retourne la taille souhaitée pour le composant (remplace le "getSize"
-			return new Dimension (PG_X, PG_Y);
-		}
+	
 
 		/*public void update (Observable arg0, Object arg1) {
 			//repaint();
@@ -45,10 +19,7 @@ class PanneauGraphique extends JPanel {//implements Observer {
 
 class Plateau extends JFrame implements KeyListener, MouseMotionListener{
 	
-	private PanneauGraphique panneau;
-	private Joueur joueur;
-	private double angleSourisJoueur;
-	private Rectangle murs[] = new Rectangle[8];
+	//private PanneauGraphique panneau;
 	
 	public Plateau(Joueur joueur){
 		setTitle("Test KillerBox");
