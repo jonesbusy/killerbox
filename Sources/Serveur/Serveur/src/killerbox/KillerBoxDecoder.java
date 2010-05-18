@@ -1,6 +1,6 @@
 package killerbox;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 import network.*;
 
@@ -59,21 +59,28 @@ public class KillerBoxDecoder extends Decoder
 
 	/**
 	 * Permet de decoder un message.
-	 * @param connexion Connexio d'ou provient le message
+	 * @param connexion Connexion d'ou provient le message
 	 * @param message Message a decoder
 	 */
 	@Override
-	public void decode(Controller connexion, String message)
+	public void decode(Controller controller, String message)
 	{
 
+		// On decode des connexion killerbox et pas autre chose
+		KillerBoxController connexion = (KillerBoxController)controller;
+		
 		StringTokenizer tokens = new StringTokenizer(message, "#");
 		String instruction = tokens.nextToken();
 
-		// Deconnecter le client qui le demande
+		/**
+		 * Demande d'authentification
+		 */
 		if (instruction.equals("logout"))
 			server.disconnect(connexion.getId());
 
-		// Demande de connexion
+		/**
+		 * Demande d'authentification
+		 */
 		else if (instruction.equals("login"))
 		{
 			// Login/Pass correct
@@ -83,13 +90,13 @@ public class KillerBoxDecoder extends Decoder
 			// Nom d'utilisateur valide
 			if (this.database.isUserValid(login, pass))
 			{
-				server.send(connexion.getId(), "#login#true");
+				connexion.sendLoginStatus(true);
 				serverKillerBox.setConnected(login, connexion.getId());
 			}
 
 			// Erreur
 			else
-				server.send(connexion.getId(), "#login#false");
+				connexion.sendLoginStatus(false);
 
 		}
 
@@ -106,15 +113,18 @@ public class KillerBoxDecoder extends Decoder
 
 				try
 				{
+					int id = connexion.getId();
 					this.database.addUser(user, pass, false);
-					this.server.send(connexion.getId(), "#account#create#true");
-					this.server.relay(user + " : nouvel utilisateur");
+					connexion.sendLoginStatus(true);
+
+					// Informer le serveur
+					this.server.relay(id, "cree un nouvel utilisateur : " + user);
 				}
 
 				// Ajout impossible, probablement qu'il existe deja
 				catch (Exception e)
 				{
-					this.server.send(connexion.getId(), "#account#create#false");
+					connexion.sendCreateAccount(false);
 				}
 
 			}
@@ -133,31 +143,32 @@ public class KillerBoxDecoder extends Decoder
 				// Supprimer son compte
 				else
 					userToDelete = this.getUserName(connexion.getId());
-
+				
 				// Verifier les droits. Un utilisateur peut supprimer son propre compte,
 				// ou un administrateur peut supprimer n'importe qui
 				if (this.getUserName(connexion.getId()).equals(userToDelete)
 						|| this.database.isAdmin(this.getUserName(connexion.getId())))
 				{
 					try
-					{
+					{	
+						connexion.sendDeleteAccount(true);
+						this.server.relay(connexion.getId(), "supprime le compte - " + userToDelete);
 						this.database.deleteUser(userToDelete);
-						connexion.send("#account#delete#true");
-						this.server.relay(userToDelete + " : a supprime sont compte");
 
 					}
 
 					// Suppression impossible, probablement qu'il n'existe pas
 					catch (Exception e)
 					{
-						connexion.send("#account#delete#false");
+						connexion.sendDeleteAccount(false);
+						this.server.relay(connexion.getId(), "erreur suppression compte - " + userToDelete);
 					}
 				}
 
 				// Interdiction de supprimer, pas les droits
 				else
 				{
-					connexion.send("#account#delete#error");
+					connexion.sendDeleteAccount(false);
 				}
 
 			}
@@ -208,7 +219,7 @@ public class KillerBoxDecoder extends Decoder
 			else if (instruction.equals("request"))
 			{
 				instruction = tokens.nextToken();
-				
+
 				/**
 				 * Est-ce que je suis un admin ?
 				 */
@@ -222,14 +233,14 @@ public class KillerBoxDecoder extends Decoder
 
 					// C'est un admin
 					if (this.database.isAdmin(user))
-						connexion.send("#account#request#admin#" + user + "#true");
+						connexion.sendIsAdmin(user, true);
 
 					// Ce n'est pas un admin
 					else
-						connexion.send("#account#request#admin#" + user + "#false");
+						connexion.sendIsAdmin(user, false);
 				}
 			}
-		
+
 		}
 
 		/**
@@ -241,6 +252,8 @@ public class KillerBoxDecoder extends Decoder
 			{
 				connexion.send("#scores" + this.database.getInfos());
 			}
+			
+			// Ne devrait pas arrive
 			catch (SQLException e)
 			{
 				connexion.send("#scores#");
@@ -258,7 +271,11 @@ public class KillerBoxDecoder extends Decoder
 			 * Le client aimerait la liste des parties
 			 */
 			if (instruction.equals("list"))
-				serverKillerBox.sendGames(this.getUserName(connexion.getId()));
+			{
+				// Preparer la liste des parties
+				String games = this.serverKillerBox.createGamesForSending();
+				connexion.sendGames(games);
+			}
 
 			/**
 			 * Demande de creation de partie
@@ -275,8 +292,7 @@ public class KillerBoxDecoder extends Decoder
 					connexion.send("#game#create#" + this.gameList.getIdOwner((owner)));
 
 					// Message serveur
-					this.server.relay(this.getUserName(connexion.getId())
-							+ " a cree une nouvelle partie de type "
+					this.server.relay(connexion.getId(), "a cree une nouvelle partie de type "
 							+ (type == 0 ? "Tous vs Tous" : "Par Equipe"));
 				}
 				catch (NumberFormatException e)
@@ -316,10 +332,11 @@ public class KillerBoxDecoder extends Decoder
 					String user = this.serverKillerBox.getUserName(connexion.getId());
 
 					// Il reste de la place
-					if (this.gameList.getUsers(id) != null && this.gameList.getUsers(id).length < 8)
+					if (this.gameList.getUsers(id) != null
+							&& this.gameList.getUsers(id).length < 8)
 					{
 						this.gameList.joinGame(user, id);
-						this.server.relay(user + " rejoint la partie de "
+						this.server.relay(id, " rejoint la partie de "
 								+ this.gameList.getOwner(id));
 
 						connexion.send("#game#true");
@@ -335,63 +352,62 @@ public class KillerBoxDecoder extends Decoder
 					connexion.send("#game#join#false");
 				}
 			}
-			
+
 			/**
 			 * Demande pour demarer le jeu
 			 */
-			else if(instruction.equals("start"))
+			else if (instruction.equals("start"))
 			{
-				
+
 				// Recuperer la partie
 				String owner = this.getUserName(connexion.getId());
 				int gameID = this.gameList.getId(owner);
-				
+
 				// Demarrage de la partie reussi (Elle existe et c'est le bon proprietaire)
-				if(gameID != -1 && this.gameList.startGame(owner))
+				if (gameID != -1 && this.gameList.startGame(owner))
 				{
 					connexion.send("#game#start#true");
-					
+
 					// Prevenir les utilisateur du debut de la partie
 					String[] users = this.gameList.getUsers(this.gameList.getId(owner));
-					for(String user : users)
+					for (String user : users)
 						this.serverKillerBox.send(user, "#game#start#true");
 				}
-				
+
 				else
 					connexion.send("#game#start#false");
-				
+
 			}
-					
+
 		} // Fin account
-		
-		
+
 		/**
 		 * Demande de joueurs pour une partie donnee
 		 */
-		else if(instruction.equals("players"))
+		else if (instruction.equals("players"))
 		{
-			
+
 			instruction = tokens.nextToken();
-			
+
 			try
 			{
 				int GameID = Integer.parseInt(instruction);
-				 
+
 				// La partie existe
-				if(this.gameList.getOwner(GameID) != null)
+				if (this.gameList.getOwner(GameID) != null)
 				{
 					StringBuilder builder = new StringBuilder("#players#");
 					String[] users = this.gameList.getUsers(GameID);
-					for(String user : users)
+					for (String user : users)
 						builder.append(user + "#");
-					
+
 					connexion.send(builder.toString());
-					
+
 				}
 				else
 					connexion.send("#players#unknown");
 			}
-			
+
 			// Mauvais parametre
 			catch (NumberFormatException e)
 			{
@@ -403,15 +419,7 @@ public class KillerBoxDecoder extends Decoder
 		 * On ne connait pas, passer au serveur.
 		 */
 		else
-		{
-			String username = this.getUserName(connexion.getId());
-			
-			if (username != null)
-				server.relay(this.getUserName(connexion.getId()) + " : " + message);
-			
-			else
-				server.relay("guest" + connexion.getId() + " : " + message);
-		}
+			server.relay(connexion.getId(), message);
 
 	}
 

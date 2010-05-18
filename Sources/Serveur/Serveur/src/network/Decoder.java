@@ -16,7 +16,7 @@ public abstract class Decoder
 	protected Server server;
 	
 	/**
-	 * Permet d'associer au serveur
+	 * Permet d'associer le serveur au Decodeur
 	 * @param server
 	 */
 	public void setServer(Server server)
@@ -26,9 +26,9 @@ public abstract class Decoder
 
 	/**
 	 * Permet de decoder le message en provenance d'une certaine connexion
-	 * @param connexion La connexion
-	 * @param message Le message
+	 * @param controller Le controleur de connexion
+	 * @param message Le message a decoder
 	 */
-	public abstract void decode(Controller connexion, String message);
+	public abstract void decode(Controller controller, String message);
 	
 }
