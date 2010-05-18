@@ -38,6 +38,7 @@ public class BaseWindow extends JFrame implements Observer
 	 * Le client
 	 */
 	private Client client;
+	
 
 	/**
 	 * Pour stocker temporairement les differents scores recu du serveur.
@@ -394,9 +395,9 @@ public class BaseWindow extends JFrame implements Observer
 				break;
 			}
 			
-			case PANEL_LIST_PLAYERS_GAME:
+			case PANEL_LIST_PLAYERS_GAME_ALL:
 			{
-				this.panel = new PanelListPlayersGameAll(this);
+				this.panel = new PanelListPlayersGameAll(this, 1);
 				break;
 			}
 

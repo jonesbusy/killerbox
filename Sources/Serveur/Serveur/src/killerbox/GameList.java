@@ -58,8 +58,9 @@ public class GameList
 	/**
 	 * Permet de supprimer une partie dont le createur est donne en parametre
 	 * @param owner Le createur de la partie
+	 * @return True si suppression en ordre. False sinon
 	 */
-	public synchronized void deleteGame(String owner)
+	public synchronized boolean deleteGame(String owner)
 	{
 		// Chercher dans les parties en attente
 		for (int i = 0; i < this.waiting.size() ; i++)
@@ -74,7 +75,7 @@ public class GameList
 				
 				game.deletePlayers();
 				this.waiting.remove(game);
-				return;
+				return true;
 			}
 		}
 				
@@ -91,16 +92,19 @@ public class GameList
 				
 				game.deletePlayers();
 				this.played.remove(game);
-				return;
+				return true;
 			}
 		}
+		
+		return false;
 	}
 	
 	/**
 	 * Permet de demarrer une partie en attente
 	 * @param user Le nom d'utilisateur du createur de la partie
+	 * @return True si suppression en ordre. False sinon
 	 */
-	public synchronized void startGame(String user)
+	public synchronized boolean startGame(String user)
 	{
 		for (int i = 0; i < this.waiting.size(); i++)
 		{
@@ -109,9 +113,11 @@ public class GameList
 			{
 				this.played.add(game);
 				this.played.remove(i);
-				break;
+				return true;
 			}
 		}
+		
+		return false;
 	}
 
 	/**

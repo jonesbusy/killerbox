@@ -158,6 +158,16 @@ public class KillerBoxListener extends Listener
 	{
 		client.send("#game#join#" + id + "#");
 	}
+	
+	/**
+	 * Permet de demander les differents utilisateur inscris pour
+	 * une partie donnee
+	 * @param id L'ID de la partie
+	 */
+	public void requestPlayers(int id)
+	{
+		client.send("#players#" + id);
+	}
 
 	/**
 	 * Action lorsque l'ecouteur n'obtient plus d'informations du serveur.

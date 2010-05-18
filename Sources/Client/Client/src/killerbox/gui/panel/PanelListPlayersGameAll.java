@@ -17,6 +17,67 @@ public class PanelListPlayersGameAll extends AbstractPanel
 {
 	
 	/**
+	 * Classe Thread permettant de mettre a jour tout les tant de temps
+	 * les joueur inscris a la partie
+	 * @author Valentin Delaye
+	 * @version 1.0
+	 */
+	private class PlayersLoader extends Thread
+	{
+		
+		/**
+		 * Les donnes sont pretes. On peut les recuperer et 
+		 * mettre a jour le tableau des parties
+		 */
+		private synchronized void getData()
+		{
+			this.notify();
+			
+			repaint();
+			validate();
+			
+		}
+
+		/**
+		 * Permet d'executer le thread. Permet de mettre a jour les donnes concernant
+		 * les parties.
+		 */
+		@Override
+		public void run()
+		{
+			while(true)
+			{
+				controller.requestPlayers(gameId);
+
+				try
+				{
+					synchronized (this)
+					{
+						this.wait();
+					}
+
+					Thread.sleep(UPDATE_TIME);
+				}
+				catch (InterruptedException e)
+				{
+
+				}
+			}
+		}
+		
+	}
+	
+	/**
+	 * ID de la partie
+	 */
+	private int gameId;
+	
+	/**
+	 * Rafraichir les utilisateur inscris tout les tant de temps
+	 */
+	public static final int UPDATE_TIME = 1000;
+	
+	/**
 	 * Pour permettre d'afficher un message sur la Panel.
 	 */
 	private JLabel labMessage = new JLabel();
@@ -27,12 +88,20 @@ public class PanelListPlayersGameAll extends AbstractPanel
 	private JButton btnEndGame = new JButton("Supprimer partie");
 	
 	/**
+	 * Thread pour permettre de recharger la liste
+	 * des joueurs
+	 */
+	private PlayersLoader playersLoader = new PlayersLoader();
+	
+	/**
 	 * Constructeur. Permet de creer le nouveau Panel
 	 * @param window Reference sur la fenetre
+	 * @param gameID Numerode la partie
 	 */
-	public PanelListPlayersGameAll(final BaseWindow window)
+	public PanelListPlayersGameAll(final BaseWindow window, int gameID)
 	{
 		super(window);
+		this.gameId = gameID;
 		
 		// Ecouteurs des composants
 		this.btnEndGame.addActionListener(new ActionListener()
@@ -50,6 +119,9 @@ public class PanelListPlayersGameAll extends AbstractPanel
 		
 		// Ajouter les composant
 		this.add(this.btnEndGame);
+		
+		// Demarrer le thread
+		this.playersLoader.start();
 	}
 
 	/**

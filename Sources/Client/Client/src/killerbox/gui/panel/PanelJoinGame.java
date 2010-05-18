@@ -140,7 +140,6 @@ public class PanelJoinGame extends AbstractPanel
 	 * Barre de scroll quand le tableau des scores a trop de resultats.
 	 */
 	private JScrollPane scrollPane = new JScrollPane(gamesTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
 		
 	/**
 	 * Permet de charger les donnees
