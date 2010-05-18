@@ -219,8 +219,24 @@ public class KillerBoxDecoder extends Decoder
 				{
 					this.base.getPanel().printMessage("La partie s'est terminee");
 				}
+				
+				/**
+				 * C'est ok pour rejoindre la partie
+				 */
+				else if(instruction.equals("true"))
+				{
+					this.base.setPanel(EnumPanel.PANEL_LIST_PLAYERS_GAME_ALL);
+				}
+				
+				/**
+				 * On recoit la liste des joueur
+				 */
+				else if(instruction.equals("players"))
+				{
+					System.out.println("Liste joueur recu");
+				}
 			}
-			
+						
 		}
 		
 		// Si le serveur nous envoie n'importe quoi

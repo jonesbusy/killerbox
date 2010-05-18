@@ -202,10 +202,16 @@ public class KillerBoxDecoder extends Decoder
 
 			}
 
-			// Demande d'informations sur l'utilisateur
+			/**
+			 * Demande d'information du serveur
+			 */
 			else if (instruction.equals("request"))
 			{
 				instruction = tokens.nextToken();
+				
+				/**
+				 * Est-ce que je suis un admin ?
+				 */
 				if (instruction.equals("admin"))
 				{
 					String user;
@@ -223,12 +229,14 @@ public class KillerBoxDecoder extends Decoder
 						connexion.send("#account#request#admin#" + user + "#false");
 				}
 			}
+		
 		}
 
 		/**
 		 * Demande d'informations sur les scores
 		 */
 		else if (instruction.equals("scores"))
+		{
 			try
 			{
 				connexion.send("#scores" + this.database.getInfos());
@@ -237,6 +245,7 @@ public class KillerBoxDecoder extends Decoder
 			{
 				connexion.send("#scores#");
 			}
+		}
 
 		/**
 		 * Demande pour les parties
@@ -313,7 +322,7 @@ public class KillerBoxDecoder extends Decoder
 						this.server.relay(user + " rejoint la partie de "
 								+ this.gameList.getOwner(id));
 
-						connexion.send("#game#join#true");
+						connexion.send("#game#true");
 					}
 
 					// La partie est pleine
@@ -325,6 +334,68 @@ public class KillerBoxDecoder extends Decoder
 				{
 					connexion.send("#game#join#false");
 				}
+			}
+			
+			/**
+			 * Demande pour demarer le jeu
+			 */
+			else if(instruction.equals("start"))
+			{
+				
+				// Recuperer la partie
+				String owner = this.getUserName(connexion.getId());
+				int gameID = this.gameList.getId(owner);
+				
+				// Demarrage de la partie reussi (Elle existe et c'est le bon proprietaire)
+				if(gameID != -1 && this.gameList.startGame(owner))
+				{
+					connexion.send("#game#start#true");
+					
+					// Prevenir les utilisateur du debut de la partie
+					String[] users = this.gameList.getUsers(this.gameList.getId(owner));
+					for(String user : users)
+						this.serverKillerBox.send(user, "#game#start#true");
+				}
+				
+				else
+					connexion.send("#game#start#false");
+				
+			}
+					
+		} // Fin account
+		
+		
+		/**
+		 * Demande de joueurs pour une partie donnee
+		 */
+		else if(instruction.equals("players"))
+		{
+			
+			instruction = tokens.nextToken();
+			
+			try
+			{
+				int GameID = Integer.parseInt(instruction);
+				 
+				// La partie existe
+				if(this.gameList.getOwner(GameID) != null)
+				{
+					StringBuilder builder = new StringBuilder("#players#");
+					String[] users = this.gameList.getUsers(GameID);
+					for(String user : users)
+						builder.append(user + "#");
+					
+					connexion.send(builder.toString());
+					
+				}
+				else
+					connexion.send("#players#unknown");
+			}
+			
+			// Mauvais parametre
+			catch (NumberFormatException e)
+			{
+				connexion.send("#players#error");
 			}
 		}
 
