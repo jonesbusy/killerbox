@@ -19,14 +19,22 @@ public class Lanceur
 	{
 		
 		KillerBoxDecoder decoder = new KillerBoxDecoder();
-		KillerBoxServer server = new KillerBoxServer(7000, decoder, "killerbox", "1234");
-		
-		// Affichage sur la console et GUI
-		new ServerGui(server);
-		new ServerConsole(server);
-		
-		// Demarer le serveur
-		server.start();
+		KillerBoxServer server;
+		try
+		{
+			server = new KillerBoxServer(7000, decoder, "killerbox", "1234");
+			// Affichage sur la console et GUI
+			new ServerGui(server);
+			new ServerConsole(server);
+			
+			// Demarer le serveur
+			server.start();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Impossible de creer le serveur");
+			System.exit(-1);
+		}
 
 	}
 }

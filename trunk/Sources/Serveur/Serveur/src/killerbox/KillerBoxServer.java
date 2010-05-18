@@ -1,5 +1,6 @@
 package killerbox;
 
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -22,20 +23,36 @@ import network.*;
  */
 public class KillerBoxServer extends Observable implements Observer
 {
+	
+	/**
+	 * Erreur si le port est deja occupe.
+	 */
+	private static final String PORT_ERROR = "Un serveur existe deja sur ce numero de port.";
+	
 	/**
 	 * Message d'erreur si la connexion a la base de donnee de echoue
 	 */
 	private static final String ERROR_DATA_BASE = "Erreur de connexion a la base de donnee.";
 	
 	/**
-	 * Pour donner un petit nom du serveur. Utilise pour les messages de log
+	 * Pour donner un petit nom du serveur. Utilise pour les messages de log.
 	 */
 	private static final String SERVER_NAME = "SERVER";
 	
 	/**
-	 * Donner un nom aux utilisateurs invites. Utilise pour les messages de log
+	 * Donner un nom aux utilisateurs invites. Utilise pour les messages de log.
 	 */
 	private static final String GUEST_NAME = "GUEST";
+	
+	/**
+	 * Message lorsqu'un utilisateur quitte le serveur
+	 */
+	private static final String QUIT_SERVER = "quitte le serveur.";
+	
+	/**
+	 * Message lorsqu'un utilisateur rejoint le serveur
+	 */
+	private static final String JOIN_SERVER = "Rejoint le serveur.";
 
 	/**
 	 * Modele de serveur associe.
@@ -72,24 +89,29 @@ public class KillerBoxServer extends Observable implements Observer
 	 * @param pass Le mot de passe de la base de donnee
 	 */
 	public KillerBoxServer(int numeroPort, KillerBoxDecoder decoder, String user,
-			String pass)
+			String pass) throws Exception
 	{
 
-		this.server = new Server(numeroPort, decoder);
-		server.addObserver(this);
 		try
 		{
+			this.server = new Server(numeroPort, decoder);
+			server.addObserver(this);
 			this.database = new killerbox.DataBase("localhost", "killerbox", user, pass);
 		}
+		
+		catch (IOException e)
+		{
+			System.out.println(PORT_ERROR);
+			throw e;
+		}
+		
 		catch (SQLException e)
 		{
-			setChanged();
-			notifyObservers(server.new MessageStatus(ERROR_DATA_BASE));
 			System.out.println(ERROR_DATA_BASE);
-			System.exit(0);
+			throw e;
 		}
 
-		// Seter les serveurs du decodeur
+		// Seter les serveurs du decodeur, ainsi que la base de donnee
 		decoder.setServer(this.server);
 		decoder.setKillerBoxServer(this);
 		decoder.setDataBase(this.database);
@@ -103,9 +125,9 @@ public class KillerBoxServer extends Observable implements Observer
 	{
 		this.server.start();
 		setChanged();
-		notifyObservers(server.new MessageStatus(SERVER_NAME + " : KillerBox v 1.0"));
+		notifyObservers(server.new MessageServerStatus(SERVER_NAME + " : KillerBox v 1.0"));
 	}
-
+	
 	/**
 	 * Permet d'effectuer un broadcast a tout les utilisateurs authentifies.
 	 * @param message Le message a envoyer
@@ -157,10 +179,10 @@ public class KillerBoxServer extends Observable implements Observer
 	}
 
 	/**
-	 * Permet d'envoyer la liste des parties disponibles a un utilisateur
-	 * @param user Le nom d'utilisateur
+	 * Permet de formater la liste des parties pour l'envoi au client. Separe
+	 * toutes les informations par des #
 	 */
-	public void sendGames(String user)
+	public String createGamesForSending()
 	{
 		StringBuilder builder = new StringBuilder("#game#list#");
 
@@ -178,7 +200,7 @@ public class KillerBoxServer extends Observable implements Observer
 			builder.append(game.getNbPlayers() + "#");
 		}
 
-		this.send(user, builder.toString());
+		return builder.toString();
 
 	}
 
@@ -260,7 +282,7 @@ public class KillerBoxServer extends Observable implements Observer
 	 * @param username Le nom d'utilisateur
 	 * @param id L'ID de connexion
 	 */
-	public void setConnected(String username, int id)
+	public synchronized void setConnected(String username, int id)
 	{
 		this.removeUnauthenticated(id);
 
@@ -272,7 +294,7 @@ public class KillerBoxServer extends Observable implements Observer
 
 		// Changement d'etat, car une connexion change de status
 		setChanged();
-		notifyObservers(username + " est maintenant associe a la connexion : " + id);
+		notifyObservers(this.server.new MessageServerStatus(username.toUpperCase() + " : est maintenant associe a la connexion " + id));
 
 	}
 
@@ -289,10 +311,21 @@ public class KillerBoxServer extends Observable implements Observer
 		AbstractServerStatus serverStatus = (AbstractServerStatus) obj;
 		int id = serverStatus.getId();
 		
+		// L'utilisateur
+		String user = this.getUserName(id);
+		
 		switch(serverStatus.status)
 		{
+			
+			// Message d'une connexion
 			case ALIVE_CONNECTION :
 			{
+				// C'est un invite
+				if(user == null)
+					user = GUEST_NAME + " " + id;
+				
+				setChanged();
+				notifyObservers(this.server.new MessageServerStatus(user.toUpperCase() + " : " + serverStatus));
 				
 				break;
 			}
@@ -302,18 +335,14 @@ public class KillerBoxServer extends Observable implements Observer
 
 				unauthenticated.add(id);
 				setChanged();
-				notifyObservers(this.server.new MessageStatus(GUEST_NAME + " " + id + " : rejoint le serveur"));
-
+				notifyObservers(this.server.new MessageServerStatus(GUEST_NAME + " " + id + " : " + JOIN_SERVER));
 				break;
 			}
 			
 			// Notification de suppression de connexion
 			case REMOVED_CONNECTION :
 			{
-			
-				// L'utilisateur
-				String user = this.getUserName(id);
-				
+							
 				// C'est un invite
 				if(user == null)
 				{
@@ -332,7 +361,7 @@ public class KillerBoxServer extends Observable implements Observer
 				}
 				
 				setChanged();
-				notifyObservers(this.server.new MessageStatus(user + " : quitte le serveur"));
+				notifyObservers(this.server.new MessageServerStatus(user.toUpperCase() + " : " + QUIT_SERVER));
 			
 				}
 			
@@ -343,11 +372,11 @@ public class KillerBoxServer extends Observable implements Observer
 				{
 					
 					setChanged();
-					notifyObservers(this.server.new MessageStatus(SERVER_NAME + " : " + serverStatus));
+					notifyObservers(this.server.new MessageServerStatus(SERVER_NAME + " : " + serverStatus));
 					break;
 				}
 			}
 			
 		}
-		
+	
 }

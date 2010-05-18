@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import killerbox.KillerBoxController;
+
 import static network.EnumServerStatus.*;
 
 /**
@@ -14,31 +16,6 @@ import static network.EnumServerStatus.*;
  */
 public class Server extends Observable implements Runnable
 {
-	/**
-	 * ID courant de connexion.
-	 */
-	private static int ID = 0;
-
-	/**
-	 * Le decoder du serveur.
-	 */
-	private Decoder decoder;
-
-	/**
-	 * Erreur si le port est deja occupe.
-	 */
-	private static final String PORT_ERROR = "Un serveur existe deja sur ce numero de port";
-
-	/**
-	 * Message d'affichage lorsque le serveur demarre.
-	 */
-	private static final String START_MESSAGE = "demarrage en cours...";
-
-	/**
-	 * Indique tout le combien de temps le thread notoyeur de connexion
-	 * s'execute.
-	 */
-	private static final int REMOVER_TIME = 2000;
 
 	/**
 	 * Permettre de nettoyer les connexions innactives
@@ -90,64 +67,89 @@ public class Server extends Observable implements Runnable
 		 */
 		public synchronized void purge()
 		{
-			for (int i = 0; i < connexions.size(); i++)
-
-				// Le thread n'est plus actif on le detruit donc
-				if (!connexions.get(i).isAlive())
+			Collection<Controller> values = connections.values();
+			Iterator<Controller> it = values.iterator();
+			
+			Controller co = null;
+			while(it.hasNext())
+			{
+				co = it.next();
+				// Le thread n'est plus actif on tue la connexion et on 
+				// la supprime
+				if (!co.isAlive())
 				{
-					connexions.get(i).kill();
+					co.kill();
 					setChanged();
-					notifyObservers(new ConnectionStatus(connexions.get(i).getId(), REMOVED_CONNECTION));
-					connexions.remove(i);
+					notifyObservers(new MessageServerStatus(co.getId(), REMOVED_CONNECTION));
+					it.remove();
 				}
-		}
-
-	}
-
-	/**
-	 * Permet de representer un status d'une connexion. L'objet est
-	 * representer par l'ID de connexion ainsi que le nouveau status (nouveau, ancien).
-	 * Cela permet d'avertir les vues qu'il y a une nouvelle connexion ou qu'une connexion
-	 * a ete supprimee.
-	 * @author Valentin Delaye
-	 * @version 1.0
-	 * @see AbstractServerStatus
-	 */
-	public class ConnectionStatus extends AbstractServerStatus
-	{
-
-		/**
-		 * Constructeur.
-		 * @param id Identificateur de la connexion
-		 * @param alive Le status. True, c'est une nouvelle connexion sinon False si la
-		 *        connexion est annulee.
-		 */
-		public ConnectionStatus(int id, EnumServerStatus alive)
-		{
-			super(id, alive);
+			}
 		}
 
 	}
 	
 	/**
-	 * Permet de representer un simple status message.
+	 * Permet de representer un simple status message serveur. Celui-ci
+	 * est simplement representer par un message.
 	 * @author Valentin Delaye
 	 * @version 1.0
 	 * @see AbstractServerStatus
 	 */
-	public class MessageStatus extends AbstractServerStatus
+	public class MessageServerStatus extends AbstractServerStatus
 	{
 
 		/**
 		 * Permet de creer un nouveau message serveur.
 		 * @param message Message du serveur.
 		 */
-		public MessageStatus(String message)
+		public MessageServerStatus(String message)
 		{
 			super(0, SERVER_STATUS, message);
 		}
 		
+		/**
+		 * Constructeur. Permet de construire un nouveau status sans message
+		 * @param id ID de la connexion
+		 * @param status Genre de status
+		 */
+		public MessageServerStatus(int id, EnumServerStatus status)
+		{
+			super(id, status);
+		}
+		
+		/**
+		 * Permet de creer un nouveau message de serveur
+		 * @param id ID de la connexion
+		 * @param status Status de la connexion
+		 * @param message Message de la connexion
+		 */
+		public MessageServerStatus(int id, EnumServerStatus status, String message)
+		{
+			super(id, status, message);
+		}
+		
 	}
+		
+	/**
+	 * ID courant de connexion.
+	 */
+	private static int ID = 0;
+
+	/**
+	 * Le decoder du serveur.
+	 */
+	private Decoder decoder;
+
+	/**
+	 * Message d'affichage lorsque le serveur demarre.
+	 */
+	private static final String START_MESSAGE = "demarrage en cours...";
+
+	/**
+	 * Indique tout le combien de temps le thread notoyeur de connexion
+	 * s'execute.
+	 */
+	private static final int REMOVER_TIME = 2000;
 
 	/**
 	 * Numero de port du serveur
@@ -162,7 +164,7 @@ public class Server extends Observable implements Runnable
 	/**
 	 * La liste des Connexions.
 	 */
-	private LinkedList<Controller> connexions = new LinkedList<Controller>();
+	private HashMap<Integer, Controller> connections = new HashMap<Integer, Controller>();
 
 	/**
 	 * Le thread associe au serveur. Celui qui recupere
@@ -172,33 +174,16 @@ public class Server extends Observable implements Runnable
 
 	/**
 	 * Permet de creer un nouveau serveur KillerBox
-	 * @param numeroPort Le numero du port ou tourne le serveur
+	 * @param portNumber Le numero du port ou tourne le serveur
 	 * @param decoder Le decodeur (protocole utilise)
+	 * @throws IOException Si le port est deja occupe
 	 */
-	public Server(int numeroPort, Decoder decoder)
+	public Server(int portNumber, Decoder decoder) throws IOException
 	{
-		try
-		{
-			this.serverSocket = new ServerSocket(numeroPort);
-		}
-
-		catch (IOException e)
-		{
-
-			// Afficher les informations d'erreur sur les vus.
-			setChanged();
-			notifyObservers(new MessageStatus(PORT_ERROR));
-			System.out.println(PORT_ERROR);
-
-			System.exit(1);
-		}
-
-		this.portNumber = numeroPort;
-
+		this.serverSocket = new ServerSocket(portNumber);
+		this.portNumber = portNumber;
 		this.decoder = decoder;
-
 		new ConnectionRemover();
-
 		this.activity = new Thread(this);
 	}
 
@@ -208,28 +193,29 @@ public class Server extends Observable implements Runnable
 	public void start()
 	{
 		setChanged();
-		notifyObservers(new MessageStatus(START_MESSAGE));
+		notifyObservers(new MessageServerStatus(START_MESSAGE));
 		activity.start();
 	}
 
 	/**
-	 * Permet de retourner le nombre de client connectes au serveurs
-	 * @return
+	 * Permet de retourner le nombre de client connectes au serveur.
+	 * @return Le nombre de connexions
 	 */
-	public int getNombreClient()
+	public int getNbConnection()
 	{
-		return connexions.size();
+		return connections.size();
 	}
 
 	/**
 	 * Permet transferer un message non decryptable au serveur.
 	 * Celui ci averti ces observers pour un traitement. (Log, affichage, etc...)
+	 * @param id ID de la connexion qui a genere le message
 	 * @param message Le message
 	 */
-	public void relay(String message)
+	public void relay(int id, String message)
 	{
 		setChanged();
-		notifyObservers(message);
+		notifyObservers(new MessageServerStatus(id, ALIVE_CONNECTION, message));
 	}
 
 	/**
@@ -238,8 +224,8 @@ public class Server extends Observable implements Runnable
 	 */
 	public void broadcast(String message)
 	{
-		for (Controller co : connexions)
-			co.send(message);
+		for (Controller c : this.connections.values())
+			c.send(message);
 	}
 
 	/**
@@ -249,13 +235,9 @@ public class Server extends Observable implements Runnable
 	 */
 	public void send(int id, String message)
 	{
-		// Envoyer le message a l'ID
-		for (Controller co : connexions)
-			if (co.getId() == id)
-			{
-				co.send(message);
-				break;
-			}
+		Controller co = this.connections.get(id);
+		if(co != null)
+			co.send(message);
 	}
 
 	/**
@@ -264,22 +246,18 @@ public class Server extends Observable implements Runnable
 	 */
 	public synchronized void disconnect(int id)
 	{
-		for (int i = 0; i < this.getNombreClient(); i++)
-			if (this.connexions.get(i).getId() == id)
-			{
-				this.connexions.get(i).close();
-				this.connexions.get(i).kill();
-				return;
-			}
+		Controller co = this.connections.get(id);
+		if(co != null)
+			co.close();
 	}
 
 	/**
-	 * Permet de deconnecter tout les client
+	 * Permet de deconnecter tout les clients.
 	 */
 	public synchronized void disconnectAll()
 	{
-		for (int i = 0; i < this.getNombreClient(); i++)
-			this.connexions.get(i).close();
+		for(Controller co : this.connections.values())
+			co.close();
 	}
 
 	/**
@@ -298,17 +276,17 @@ public class Server extends Observable implements Runnable
 					Server.ID++;
 				}
 
-				Controller connexion = new Controller(serverSocket.accept(), Server.ID,
+				KillerBoxController connexion = new KillerBoxController(serverSocket.accept(), Server.ID,
 						this.decoder);
 
 				synchronized (this)
 				{
-					connexions.add(connexion);
+					connections.put(Server.ID, connexion);
 				}
 
 				// Envoyer le nouveau status (nouvelle connexion)
 				setChanged();
-				notifyObservers(new ConnectionStatus(Server.ID, NEW_CONNECTION));
+				notifyObservers(new MessageServerStatus(Server.ID, NEW_CONNECTION));
 
 			}
 
