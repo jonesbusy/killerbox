@@ -57,7 +57,7 @@ public class BaseWindow extends JFrame implements Observer
 	 * Controleur. Permet a la fenetre et aux Panels d'envoyer des messages
 	 * au serveur.
 	 */
-	private KillerBoxListener listener;
+	private KillerBoxController controller;
 
 	/**
 	 * Messages a afficher en cas de deconnexion.
@@ -256,9 +256,9 @@ public class BaseWindow extends JFrame implements Observer
 	 * d'envoyer des messages au serveur.
 	 * @return Le controleur
 	 */
-	public KillerBoxListener getListener()
+	public KillerBoxController getController()
 	{
-		return listener;
+		return controller;
 	}
 
 	/**
@@ -290,14 +290,14 @@ public class BaseWindow extends JFrame implements Observer
 		this.client = client;
 
 		// Creation de l'ecouteur et du decoder
-		this.listener = new KillerBoxListener(client, this, new KillerBoxDecoder(client,
+		this.controller = new KillerBoxController(client, this, new KillerBoxDecoder(client,
 				this));
 
 		// Message d'erreur qui peuvent provenir du client
 		client.addObserver(this);
 
 		// Le client listener recoit toute les informations recues par le serveur
-		client.addObserver(this.listener);
+		client.addObserver(this.controller);
 
 	}
 
