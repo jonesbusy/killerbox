@@ -366,8 +366,6 @@ public class KillerBoxDecoder extends Decoder
 				// Demarrage de la partie reussi (Elle existe et c'est le bon proprietaire)
 				if (gameID != -1 && this.gameList.startGame(owner))
 				{
-					connexion.send("#game#start#true");
-
 					// Prevenir les utilisateur du debut de la partie
 					String[] users = this.gameList.getUsers(this.gameList.getId(owner));
 					for (String user : users)
