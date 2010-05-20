@@ -400,6 +400,12 @@ public class BaseWindow extends JFrame implements Observer
 				this.panel = new PanelListPlayersGameAll(this, 1);
 				break;
 			}
+			
+			case PANEL_GAME:
+			{
+				this.panel = new PanelGame(this);
+				break;
+			}
 
 		}
 

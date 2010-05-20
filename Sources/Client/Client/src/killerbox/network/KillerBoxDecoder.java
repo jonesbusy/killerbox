@@ -1,7 +1,11 @@
 package killerbox.network;
 
+import static killerbox.gui.panel.EnumPanel.PANEL_GAME;
 import network.*;
 import java.util.*;
+
+import javax.swing.JOptionPane;
+
 import killerbox.gui.*;
 import killerbox.gui.panel.*;
 
@@ -234,6 +238,24 @@ public class KillerBoxDecoder extends Decoder
 				else if(instruction.equals("players"))
 				{
 					System.out.println("Liste joueur recu");
+				}
+				
+				/**
+				 * On recoit une validation pour démarrer la partie
+				 */
+				else if(instruction.equals("start"))
+				{
+					instruction = tokens.nextToken();
+					
+					if (instruction.equals("true"))
+					{
+						JOptionPane.showConfirmDialog(base, "La partie a démarré");
+						base.setPanel(PANEL_GAME);
+					}
+					else if (instruction.equals("false"))
+					{
+						JOptionPane.showConfirmDialog(base, "La partie n'a pas pu être créée.");
+					}
 				}
 			}
 						

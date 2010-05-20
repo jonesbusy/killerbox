@@ -184,4 +184,8 @@ public class KillerBoxController extends Controller
 		client.disconnect();
 	}
 
+	public void requestStartGame() {
+		client.send("#game#start#");
+	}
+
 }
