@@ -1,5 +1,6 @@
 package killerbox.gui.panel;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import killerbox.gui.*;
@@ -86,6 +87,11 @@ public class PanelListPlayersGameAll extends AbstractPanel
 	 * Permettre au createur de supprimer la partie
 	 */
 	private JButton btnEndGame = new JButton("Supprimer partie");
+
+	/**
+	 * Permettre au createur de supprimer la partie
+	 */
+	private JButton btnStartGame = new JButton("Démarrer partie");
 	
 	/**
 	 * Thread pour permettre de recharger la liste
@@ -117,8 +123,20 @@ public class PanelListPlayersGameAll extends AbstractPanel
 			}
 		});
 		
+		this.btnStartGame.addActionListener(new ActionListener() {
+			
+			/**
+			 * Quand l'utilisateur clique pour lancer la partie
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.requestStartGame();
+			}
+		});
+		
 		// Ajouter les composant
 		this.add(this.btnEndGame);
+		this.add(this.btnStartGame);
 		
 		// Demarrer le thread
 		this.playersLoader.start();
