@@ -38,7 +38,8 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 			this.notify();	
 
 			// Recuperer les donnes sur les scores
-			scoresInfo = window.getScoresInfo();
+			Data data = window.getData();
+			scoresInfo = data.getScoresInfo();
 			
 			// Seter le model
 			scoresTable.setModel(scoresInfo);
@@ -114,7 +115,7 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 	/**
 	 * Pour permettre d'effectuer une mise a jour des scores
 	 */
-	protected ScoresLoader loader;
+	protected ScoresLoader loader = new ScoresLoader();
 	
 	/**
 	 * Constructeur. Permet de creer le nouveau Panel.
@@ -125,7 +126,6 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 		super(window);
 				
 		// Creer le chargeur de scores
-		this.loader = new ScoresLoader();
 		
 		// Taille zone pour le tableau
 		this.scoresTable.setPreferredScrollableViewportSize(new Dimension(350, 210));

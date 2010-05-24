@@ -1,11 +1,11 @@
 package killerbox.network;
 
-import static killerbox.gui.panel.EnumPanel.PANEL_GAME;
+import static killerbox.gui.panel.EnumPanel.*;
 import network.*;
 import java.util.*;
 
-import javax.swing.JOptionPane;
-
+import javax.swing.*;
+import killerbox.*;
 import killerbox.gui.*;
 import killerbox.gui.panel.*;
 
@@ -60,9 +60,7 @@ public class KillerBoxDecoder extends Decoder
 				
 				// Connection ok
 				if(instruction.equals("true"))
-				{
 					this.base.setPanel(EnumPanel.PANEL_SET_ACCOUNT);
-				}
 				
 				// Erreur d'authentification
 				else if(instruction.equals("false"))
@@ -144,8 +142,24 @@ public class KillerBoxDecoder extends Decoder
 				}
 				
 				// Charger les scores dans la fenetre et refraichir
-				this.base.loadScores(user, score, admin);
-				this.base.getPanel().refreshData();
+				Data data = this.base.getData();
+				data.loadScores(user, score, admin);
+			}
+			
+			/**
+			 * On recoit la liste des joueur
+			 */
+			else if(instruction.equals("players"))
+			{
+				System.out.println("Liste des joueurs recus");
+				ArrayList<String> players = new ArrayList<String>();
+				
+				// Parser la lise des joueurs
+				while(tokens.hasMoreElements())
+					players.add(tokens.nextToken());
+				
+				Data data = this.base.getData();
+				data.loadPlayers(players);
 			}
 			
 			/**
@@ -205,9 +219,22 @@ public class KillerBoxDecoder extends Decoder
 					}
 					
 					// Charger les donnees
-					this.base.loadGames(id, owners, types, nbPlayers);
-					this.base.getPanel().refreshData();
+					Data data = this.base.getData();
+					data.loadGames(id, owners, types, nbPlayers);
 					
+				}
+				
+				/**
+				 * Concernant la creation de la partie
+				 */
+				else if(instruction.equals("create"))
+				{
+					instruction = tokens.nextToken();
+					
+					// Recupere l'ID de la partie
+					int id = Integer.parseInt(instruction);
+					base.setID(id);
+					base.setPanel(EnumPanel.PANEL_LIST_PLAYERS_GAME_ALL_OWNER);
 				}
 				
 				/**
@@ -221,6 +248,7 @@ public class KillerBoxDecoder extends Decoder
 				 */
 				else if(instruction.equals("end"))
 				{
+					this.base.setPanel(PANEL_JOIN_GAME);
 					this.base.getPanel().printMessage("La partie s'est terminee");
 				}
 				
@@ -232,16 +260,9 @@ public class KillerBoxDecoder extends Decoder
 					this.base.setPanel(EnumPanel.PANEL_LIST_PLAYERS_GAME_ALL);
 				}
 				
-				/**
-				 * On recoit la liste des joueur
-				 */
-				else if(instruction.equals("players"))
-				{
-					System.out.println("Liste joueur recu");
-				}
 				
 				/**
-				 * On recoit une validation pour démarrer la partie
+				 * On recoit une validation pour demarrer la partie
 				 */
 				else if(instruction.equals("start"))
 				{
@@ -249,12 +270,8 @@ public class KillerBoxDecoder extends Decoder
 					
 					if (instruction.equals("true"))
 					{
-						JOptionPane.showConfirmDialog(base, "La partie a démarré");
+						JOptionPane.showMessageDialog(base, "La partie a demarre");
 						base.setPanel(PANEL_GAME);
-					}
-					else if (instruction.equals("false"))
-					{
-						JOptionPane.showConfirmDialog(base, "La partie n'a pas pu être créée.");
 					}
 				}
 			}
@@ -264,6 +281,7 @@ public class KillerBoxDecoder extends Decoder
 		// Si le serveur nous envoie n'importe quoi
 		catch(NullPointerException e)
 		{
+			e.printStackTrace();
 			System.out.println("Impossible de decoder : " + message);
 		}
 		

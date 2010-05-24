@@ -64,16 +64,59 @@ public class KillerBoxController extends Controller
 	
 	/**
 	 * Permet d'envoyer la liste des parties disponibles au client
-	 * @param formatted Les partie formatees pour l'envoie
+	 * @param formatted Les partie formatees pour l'envoi
 	 */
 	public void sendGames(String formatted)
 	{
 		this.send(formatted);
 	}
 	
-	public void sendCreateGame(String user)
+	/**
+	 * Permet d'envoyer la liste des score pour chaque utilisateur.
+	 * @param formatted La score formates pour l'envoi
+	 */
+	public void sendScores(String formatted)
 	{
-		
+		send("#scores" + formatted);
+	}
+	
+	/**
+	 * Permet d'envoyer l'ID de la partie creer
+	 * @param id ID de la partie
+	 */
+	public void sendCreateGame(int id)
+	{
+		this.send("#game#create#" + id);
+	}
+	
+	/**
+	 * Permet d'envoyer si la modification du mot de passe s'est bien 
+	 * passee ou non.
+	 * @param status True le mot de passe a ete modifie, false sinon
+	 */
+	public void sendModifyPass(boolean status)
+	{
+		this.send("#modify#pass#true");
+	}
+	
+	/**
+	 * Permet d'envoyer, pour un utilisateur donnee si le mot de passe
+	 * a bien ete modifie ou non
+	 * @param user L'utilisateur a qui le mot de passe a ete modifie
+	 * @param status True le mot de passe a ete modifie, false sinon
+	 */
+	public void sendModifyPass(String user, boolean status)
+	{
+		this.send("#modify#passadmin#" + user + "#" + status);
+	}
+	
+	/**
+	 * Permet d'envoyer si le score a bien ete modifie
+	 * @param status Le nouveau status
+	 */
+	public void sendModifyScores(boolean status)
+	{
+		this.send("#modify#scores#true");
 	}
 
 }

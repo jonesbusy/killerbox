@@ -10,32 +10,32 @@ import javax.swing.table.*;
  * 3 listes (utilisateur, scores, admin). Admin est un boolean qui indique
  * si l'utilisateur est un administrateur.
  * @author Valentin Delaye
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class ScoresInfo extends AbstractTableModel
 {
-	
+
 	/**
 	 * Les differents utilisateurs
 	 */
 	private ArrayList<String> users = new ArrayList<String>();
-	
+
 	/**
 	 * Les differents scores
 	 */
 	private ArrayList<Integer> scores = new ArrayList<Integer>();
-	
+
 	/**
 	 * Indication si administrateur
 	 */
-	private ArrayList<Boolean> admin = new ArrayList<Boolean>(); 
-	
+	private ArrayList<Boolean> admin = new ArrayList<Boolean>();
+
 	/**
 	 * Nom de colonne
 	 */
-	private String[] header = {"Nom d'utilisateur", "Score", "Administrateur"};
-	
+	private String[] header = { "Nom d'utilisateur", "Score", "Administrateur" };
+
 	/**
 	 * Retourne le nombre de colonne de la table
 	 */
@@ -51,20 +51,21 @@ public class ScoresInfo extends AbstractTableModel
 	 * @param score La liste des scores
 	 * @param admin La liste des information sur les admin
 	 */
-	public void loadData(ArrayList<String> users, ArrayList<Integer> scores, ArrayList<Boolean> admin)
-	{		
+	public void loadData(ArrayList<String> users, ArrayList<Integer> scores,
+			ArrayList<Boolean> admin)
+	{
 		this.users = users;
 		this.scores = scores;
 		this.admin = admin;
 	}
-	
+
 	/**
 	 * Retourne la liste des utilisateur
 	 * @return Les utilisateur
 	 */
 	public ArrayList<String> getUsers()
 	{
-		return users;
+		return this.users;
 	}
 
 	/**
@@ -73,16 +74,16 @@ public class ScoresInfo extends AbstractTableModel
 	 */
 	public ArrayList<Integer> getScores()
 	{
-		return scores;
+		return this.scores;
 	}
 
 	/**
-	 * Retourne les informations des 
+	 * Retourne les informations des
 	 * @return Les informations sur les admin
 	 */
 	public ArrayList<Boolean> getAdmin()
 	{
-		return admin;
+		return this.admin;
 	}
 
 	/**
@@ -91,9 +92,9 @@ public class ScoresInfo extends AbstractTableModel
 	@Override
 	public int getRowCount()
 	{
-		return users.size();
+		return this.users.size();
 	}
-	
+
 	/**
 	 * Permet d'ajouter un nouvel utilisateur dans la table
 	 * @param user L'utilisateur
@@ -105,14 +106,14 @@ public class ScoresInfo extends AbstractTableModel
 		this.scores.add(score);
 		this.admin.add(admin);
 	}
-	
+
 	/**
 	 * Retourne le nom de la colonne
 	 */
 	@Override
 	public String getColumnName(int col)
 	{
-		if(col < this.header.length)
+		if (col < this.header.length)
 			return this.header[col];
 		else
 			return null;
@@ -126,18 +127,19 @@ public class ScoresInfo extends AbstractTableModel
 	{
 		try
 		{
-			if(col == 0)
+			if (col == 0)
 				return users.get(row);
-			else if(col == 1)
+			else if (col == 1)
 				return scores.get(row);
-			else if(col == 2)
+			else if (col == 2)
 				return admin.get(row) ? "Oui" : "Non";
 		}
+		
 		catch (IndexOutOfBoundsException e)
 		{
 			return null;
 		}
-		
+
 		return null;
 
 	}

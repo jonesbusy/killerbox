@@ -87,7 +87,6 @@ public class PanelCreateGame extends AbstractPanel
 			{
 				int type = Integer.parseInt(groupBtn.getSelection().getActionCommand());
 				controller.requestCreateGame(type);
-				window.setPanel(PANEL_LIST_PLAYERS_GAME_ALL);
 			}
 		});
 		
