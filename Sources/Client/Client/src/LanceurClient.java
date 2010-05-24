@@ -14,6 +14,13 @@ public class LanceurClient
 	 */
 	public static void main(String[] args)
 	{
-		new BaseWindow();
+		try
+		{
+			new BaseWindow();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e);
+		}
 	}
 }

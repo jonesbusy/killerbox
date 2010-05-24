@@ -100,7 +100,9 @@ public class KillerBoxDecoder extends Decoder
 
 		}
 
-		// Operation sur un compte
+		/**
+		 * Operation sur un compte
+		 */
 		else if (instruction.equals("account"))
 		{
 			instruction = tokens.nextToken();
@@ -115,7 +117,7 @@ public class KillerBoxDecoder extends Decoder
 				{
 					int id = connexion.getId();
 					this.database.addUser(user, pass, false);
-					connexion.sendLoginStatus(true);
+					connexion.sendCreateAccount(true);
 
 					// Informer le serveur
 					this.server.relay(id, "cree un nouvel utilisateur : " + user);
@@ -129,7 +131,9 @@ public class KillerBoxDecoder extends Decoder
 
 			}
 
-			// Suppression d'un utilisateur
+			/**
+			 * Suppression d'un utilisateur
+			 */
 			else if (instruction.equals("delete"))
 			{
 
@@ -167,13 +171,13 @@ public class KillerBoxDecoder extends Decoder
 
 				// Interdiction de supprimer, pas les droits
 				else
-				{
 					connexion.sendDeleteAccount(false);
-				}
 
 			}
 
-			// Modification sur le compte
+			/**
+			 * Modification sur le compte
+			 */
 			else if (instruction.equals("modify"))
 			{
 
@@ -183,7 +187,7 @@ public class KillerBoxDecoder extends Decoder
 				if (instruction.equals("pass"))
 				{
 					this.database.modifyPass(user, tokens.nextToken());
-					connexion.send("#modify#pass#true");
+					connexion.sendModifyPass(true);
 				}
 
 				// Modification pour quelqu'un d'autre (Doit etre admin pour faire ca)
@@ -192,21 +196,23 @@ public class KillerBoxDecoder extends Decoder
 				{
 					user = tokens.nextToken();
 					this.database.modifyPass(user, tokens.nextToken());
-					connexion.send("#modify#passadmin#" + user + "#true");
+					connexion.sendModifyPass(user, true);
 				}
 
-				// Modification du score
+				/**
+				 * Modification du score
+				 */
 				else if (instruction.equals("scores"))
 				{
 					try
 					{
 						this.database.setScore(tokens.nextToken(), Integer.parseInt(tokens
 								.nextToken()));
-						connexion.send("#modify#scores#true");
+						connexion.sendModifyScores(true);
 					}
 					catch (Exception e)
 					{
-						connexion.send("#modify#scores#false");
+						connexion.sendModifyScores(false);
 					}
 
 				}
@@ -250,13 +256,13 @@ public class KillerBoxDecoder extends Decoder
 		{
 			try
 			{
-				connexion.send("#scores" + this.database.getInfos());
+				connexion.sendScores(this.database.getInfos());
 			}
 			
-			// Ne devrait pas arrive
+			// Erreur SQL, impossible d'extraire les scores
 			catch (SQLException e)
 			{
-				connexion.send("#scores#");
+				connexion.sendScores("");
 			}
 		}
 
@@ -289,7 +295,7 @@ public class KillerBoxDecoder extends Decoder
 					this.gameList.createGame(owner, type);
 
 					// Envoyer l'ID de la partie
-					connexion.send("#game#create#" + this.gameList.getIdOwner((owner)));
+					connexion.sendCreateGame(this.gameList.getIdOwner((owner)));
 
 					// Message serveur
 					this.server.relay(connexion.getId(), "a cree une nouvelle partie de type "
@@ -352,6 +358,19 @@ public class KillerBoxDecoder extends Decoder
 					connexion.send("#game#join#false");
 				}
 			}
+			
+			/**
+			 * Demande de quitter une partie
+			 */
+			else if (instruction.endsWith("quit"))
+			{
+				// ID de la partie et utilisateur
+				int id = Integer.parseInt(tokens.nextToken());
+				String user = this.getUserName(connexion.getId());
+				
+				this.gameList.deleteUser(user);
+				this.server.relay(connexion.getId(), " quitte la partie de " + this.gameList.getOwner(id));
+			}
 
 			/**
 			 * Demande pour demarer le jeu
@@ -411,6 +430,21 @@ public class KillerBoxDecoder extends Decoder
 			{
 				connexion.send("#players#error");
 			}
+		}
+		
+		/**
+		 * Information du moteur de jeu. Relayer au joueurs de la partie
+		 */
+		else if(instruction.equals("game-engine"))
+		{
+			instruction = tokens.toString();
+			
+			String user = this.getUserName(connexion.getId());
+			
+			// Provient de quelle partie
+			int id = this.gameList.getId(user);
+			
+			this.serverKillerBox.broadcastGame(id, instruction);
 		}
 
 		/**

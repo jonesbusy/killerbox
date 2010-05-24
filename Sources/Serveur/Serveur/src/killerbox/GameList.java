@@ -82,8 +82,8 @@ public class GameList
 		// Chercher dans les parties en cours de jeu
 		for(int i = 0 ; i < this.played.size() ; i++)
 		{
-			Game game = this.waiting.get(i);
-			if (this.played.get(i).getOwner().equals(owner))
+			Game game = this.played.get(i);
+			if (game.getOwner().equals(owner))
 			{
 				// Supprimer les correspondances Nom d'utilisateur - ID partie
 				String[] players = game.getPlayers();
@@ -112,7 +112,7 @@ public class GameList
 			if (game.getOwner().equals(user))
 			{
 				this.played.add(game);
-				this.played.remove(i);
+				this.waiting.remove(i);
 				return true;
 			}
 		}
@@ -135,6 +135,44 @@ public class GameList
 				this.waiting.get(i).addPlayer(user);
 				break;
 			}
+	}
+	
+	/**
+	 * Permet de supprimer un utilisateur d'une partie
+	 * @param user L'utilisateur qui quitte la partie
+	 */
+	public synchronized void deleteUser(String user)
+	{
+		// ID de la partie
+		int id = this.getId(user);
+		if(id != -1)
+		{
+			// Chercher dans les parties en attente
+			for (int i = 0; i < this.waiting.size(); i++)
+			{
+				Game game = this.waiting.get(i);
+				if (game.getID() == id)
+				{
+					game.deletePlayer(user);
+					break;
+				}
+			}
+			
+			// Chercher dans les parties en cours de jeu
+			for (int i = 0; i < this.played.size(); i++)
+			{
+				Game game = this.played.get(i);
+				if (game.getID() == id)
+				{
+					game.deletePlayer(user);
+					break;
+				}
+			}
+			
+			// Enlever la correspondance utilisateur - partie
+			this.userGames.remove(user);
+			
+		}
 	}
 	
 	/**

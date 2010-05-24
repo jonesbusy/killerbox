@@ -39,7 +39,8 @@ public class PanelJoinGame extends AbstractPanel
 			this.notify();
 			
 			// Recuperer les donnes sur les parties
-			gamesInfo = window.getGamesInfo();
+			Data data = window.getData();
+			gamesInfo = data.getGamesInfo();
 			
 			// Seter le model
 			gamesTable.setModel(gamesInfo);
@@ -142,7 +143,7 @@ public class PanelJoinGame extends AbstractPanel
 	/**
 	 * Permet de charger les donnees
 	 */
-	private GamesLoader loader;
+	private GamesLoader loader = new GamesLoader();
 
 	/**
 	 * Constructeur. Permet de creer le panel
@@ -151,8 +152,7 @@ public class PanelJoinGame extends AbstractPanel
 	public PanelJoinGame(final BaseWindow window)
 	{
 		super(window);
-		this.loader = new GamesLoader();
-		
+
 		// Taille zone pour le tableau
 		this.gamesTable.setPreferredScrollableViewportSize(new Dimension(350, 210));
 		this.gamesTable.setFillsViewportHeight(true);
@@ -202,6 +202,8 @@ public class PanelJoinGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				window.setID(gameSelected);
+				System.out.println("fooo : " + gameSelected);
 				controller.requestJoinGame(gameSelected);
 			}
 		});
@@ -244,7 +246,7 @@ public class PanelJoinGame extends AbstractPanel
 	@Override
 	public JButton getDefaultButton()
 	{
-		return null;
+		return this.btnJoin;
 	}
 
 	/**

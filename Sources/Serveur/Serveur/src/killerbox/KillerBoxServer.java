@@ -213,6 +213,7 @@ public class KillerBoxServer extends Observable implements Observer
 		for (int i = 0; i < this.unauthenticated.size(); i++)
 			if (this.unauthenticated.get(i) == id)
 			{
+				this.gameList.deleteGame(this.getUserName(id));
 				this.unauthenticated.remove(i);
 				break;
 			}

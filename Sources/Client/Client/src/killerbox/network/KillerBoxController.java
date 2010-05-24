@@ -160,6 +160,15 @@ public class KillerBoxController extends Controller
 	}
 	
 	/**
+	 * Demande de quitter le jeu
+	 * @param id ID de la partie
+	 */
+	public void requestQuitGame(int id)
+	{
+		client.send("#game#quit#" + id + "#");
+	}
+	
+	/**
 	 * Permet de demander les differents utilisateur inscris pour
 	 * une partie donnee
 	 * @param id L'ID de la partie

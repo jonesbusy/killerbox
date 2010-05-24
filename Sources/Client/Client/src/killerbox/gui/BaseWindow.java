@@ -14,7 +14,7 @@ import static killerbox.gui.panel.EnumPanel.*;
 
 /**
  * Represente la classe principale de la fenetre. Celle-ci contient
- * differentes informations comme le client, le controleur (KillerBoxListener),
+ * differentes informations comme le client, le controleur (KillerBoxController),
  * les differentes scores, etc. La fenetre s'occupe de contenir differents panel.
  * 
  * La fenetre comprends toujours une reference sur le panel en cours (AbstractPanel)
@@ -35,29 +35,25 @@ public class BaseWindow extends JFrame implements Observer
 {
 
 	/**
-	 * Le client
+	 * Le client. 
 	 */
 	private Client client;
 	
-
 	/**
-	 * Pour stocker temporairement les differents scores recu du serveur.
-	 * Les panel sont alors libres de recuperer ces scores a tout moment.
+	 * Les differentes donnees. Scores, listes joueurs, etc.
 	 */
-	private ScoresInfo scoresInfo = new ScoresInfo();
-	
-	/**
-	 * Pour stocker temporairement les differentes informations concernant les
-	 * parties. Les panels sont alors libres de recuperer ces informations
-	 * a tout moment;
-	 */
-	private GamesInfo gamesInfo = new GamesInfo();
+	private Data data = new Data();
 
 	/**
 	 * Controleur. Permet a la fenetre et aux Panels d'envoyer des messages
 	 * au serveur.
 	 */
 	private KillerBoxController controller;
+	
+	/**
+	 * Id de la partie en cours
+	 */
+	private int id = 0;
 
 	/**
 	 * Messages a afficher en cas de deconnexion.
@@ -152,6 +148,9 @@ public class BaseWindow extends JFrame implements Observer
 
 		// Afficher la fenetre
 		this.setVisible(true);
+		
+		// Observer les donnees
+		this.data.addObserver(this);
 
 		// Creation de l'action de deconnection
 		this.actionDisconnect = new ActionListener()
@@ -240,6 +239,15 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return this.panel;
 	}
+	
+	/**
+	 * Permet de setter l'ID de la partie en cours
+	 * @param id L'id de la partie en cours
+	 */
+	public void setID(int id)
+	{
+		this.id = id;
+	}
 
 	/**
 	 * Permet de retourne l'action pour se deconnecter. Permet aux Panels
@@ -260,25 +268,14 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return controller;
 	}
-
-	/**
-	 * Permet de retourner les scores.
-	 * Permettre ainsi aux Panels d'afficher a tout moment les differents scores.
-	 * @return Les differents scores des utilisateurs
-	 */
-	public ScoresInfo getScoresInfo()
-	{
-		return this.scoresInfo;
-	}
 	
 	/**
-	 * Permet de retourner les informations sur les parties en cours.
-	 * Permettre ainsi aux Panels d'afficher a tout moment les differentes parties.
-	 * @return Les differentes parties
+	 * Permet de retourner les donnees
+	 * @return Les donnes
 	 */
-	public GamesInfo getGamesInfo()
+	public Data getData()
 	{
-		return this.gamesInfo;
+		return this.data;
 	}
 
 	/**
@@ -397,7 +394,13 @@ public class BaseWindow extends JFrame implements Observer
 			
 			case PANEL_LIST_PLAYERS_GAME_ALL:
 			{
-				this.panel = new PanelListPlayersGameAll(this, 1);
+				this.panel = new PanelListPlayersGameAll(this, id);
+				break;
+			}
+			
+			case PANEL_LIST_PLAYERS_GAME_ALL_OWNER :
+			{
+				this.panel = new PanelListPlayersGameAllOwner(this, id);
 				break;
 			}
 			
@@ -406,6 +409,7 @@ public class BaseWindow extends JFrame implements Observer
 				this.panel = new PanelGame(this);
 				break;
 			}
+			
 
 		}
 
@@ -436,30 +440,6 @@ public class BaseWindow extends JFrame implements Observer
 		this.panel.printMessage(message);
 	}
 
-	/**
-	 * Permet de charger les scores recu du serveur
-	 * @param user La liste des utilisateurs
-	 * @param score La liste des scores
-	 * @param admin Liste de boolean pour indiquer le status d'administrateur
-	 */
-	public void loadScores(ArrayList<String> user, ArrayList<Integer> score,
-			ArrayList<Boolean> admin)
-	{
-		this.scoresInfo.loadData(user, score, admin);
-	}
-	
-	/**
-	 * Permet de charger les informations concernant les parties
-	 * @param id La liste des ID de parties
-	 * @param owners La liste des createurs des parties
-	 * @param types La liste des types de partie
-	 * @param nbPlayers Le nombre de joueur des parties
-	 */
-	public void loadGames(ArrayList<Integer> id, ArrayList<String> owners,
-			ArrayList<Integer> types, ArrayList<Integer> nbPlayers)
-	{
-		this.gamesInfo.loadData(id, owners, types, nbPlayers);
-	}
 
 	/**
 	 * Lorsque la vue recoit un message du controleur, elle l'affiche sur le panel
@@ -469,6 +449,9 @@ public class BaseWindow extends JFrame implements Observer
 	@Override
 	public void update(Observable o, Object arg)
 	{
+		// Indiquer au panel de se refraichir
+		this.panel.refreshData();
+		
 		// Si la vue recoit un message (generalement d'erreur)
 		if (String.class.isInstance(arg))
 			this.panel.printMessage((String) arg);
