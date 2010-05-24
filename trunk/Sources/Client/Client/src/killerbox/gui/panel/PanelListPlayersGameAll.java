@@ -100,6 +100,11 @@ public class PanelListPlayersGameAll extends AbstractPanel
 	 * Pour permettre d'afficher un message sur la Panel.
 	 */
 	protected JLabel labMessage = new JLabel();
+	
+	/**
+	 * Label de titre
+	 */
+	private JLabel labTitle = new JLabel("Liste des joueurs inscris");
 
 	/**
 	 * Bouton retour
@@ -170,8 +175,10 @@ public class PanelListPlayersGameAll extends AbstractPanel
 		this.playersTable.setFillsViewportHeight(true);
 		this.splitPane.setDividerSize(0);
 		
-		// Ajouter le tableau
+		// Ajouter les composants
+		this.add(this.labTitle);
 		this.addTable();
+		this.add(this.labMessage);
 		
 		this.add(this.btnForward);
 		
