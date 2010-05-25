@@ -37,21 +37,7 @@ public class PanelJoinGame extends AbstractPanel
 		private synchronized void getData()
 		{
 			this.notify();
-			
-			// Recuperer les donnes sur les parties
-			Data data = window.getData();
-			gamesInfo = data.getGamesInfo();
-			
-			// Seter le model
-			gamesTable.setModel(gamesInfo);
-			
-			// Mettre a jour le scroll pane
-			gamesTable.repaint();
-			gamesTable.validate();
-			scrollPane.getViewport().setView(gamesTable);
-			repaint();
-			validate();
-			
+						
 		}
 
 		/**
@@ -256,6 +242,21 @@ public class PanelJoinGame extends AbstractPanel
 	public void refreshData()
 	{
 		this.loader.getData();
+		
+		// Recuperer les donnes sur les parties
+		Data data = window.getData();
+		gamesInfo = data.getGamesInfo();
+		
+		// Seter le model
+		gamesTable.setModel(gamesInfo);
+		
+		// Mettre a jour le scroll pane
+		gamesTable.repaint();
+		gamesTable.validate();
+		scrollPane.getViewport().setView(gamesTable);
+		repaint();
+		validate();	
+		
 	}
 
 	/**

@@ -27,6 +27,14 @@ public class KillerBoxController extends Controller
 	}
 	
 	/**
+	 * Permet d'envoyer une information de deconexion du client
+	 */
+	public void sendLogout()
+	{
+		this.send("#logout#");
+	}
+	
+	/**
 	 * Permet d'indiquer au client si son login est correct ou non
 	 * @param status True connecion ok, false sinon
 	 */
