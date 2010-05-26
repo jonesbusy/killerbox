@@ -7,6 +7,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import com.sun.xml.internal.ws.resources.ModelerMessages;
+
+import killerbox.game.ControllerGame;
+import killerbox.game.ModelGame;
 import killerbox.gui.BaseWindow;
 
 /**
@@ -29,6 +33,17 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 	 */
 	private JButton btnStartGame = new JButton("Demarrer partie");
 
+	
+	/**
+	 * Modele de la partie
+	 */
+	private ModelGame modelGame = new ModelGame();
+	
+	/**
+	 * Controller du jeu
+	 */
+	private ControllerGame controllerGame = new ControllerGame(modelGame);
+
 	/**
 	 * Constructeur. Permet de creer le panel
 	 * @param window
@@ -37,7 +52,7 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 	public PanelListPlayersGameAllOwner(final BaseWindow window, int gameID)
 	{
 		super(window, gameID);
-
+		
 		// Ecouteurs des composants
 		this.btnEndGame.addActionListener(new ActionListener()
 		{
@@ -67,11 +82,19 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				// Confirmer la suppression de partie
+				// Confirmer le lancement de la partie
 				if (JOptionPane.showConfirmDialog(window, "Est-vous sur de vouloir demarrer la partie ?", window.getTitle(),
 						JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.OK_OPTION)
-					controller.requestStartGame();
+				{
+					// Calculer la position de tous les joueurs
+					controllerGame.positionnerJoueurs();
 					
+					// Envoyer les données du modèle aux clients de la partie
+					controller.sendModel(modelGame);
+					
+					// Démarrer la partie
+					controller.requestStartGame();
+				}	
 			}
 		});
 

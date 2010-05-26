@@ -1,6 +1,11 @@
 package killerbox.network;
 
+import java.util.ArrayList;
+
 import network.*;
+import killerbox.game.CarteBase;
+import killerbox.game.Joueur;
+import killerbox.game.ModelGame;
 import killerbox.gui.*;
 
 /**
@@ -196,5 +201,30 @@ public class KillerBoxController extends Controller
 	public void requestStartGame() {
 		client.send("#game#start#");
 	}
-
+	
+	/**
+	 * Envoie les données du modèles à tous les clients connectés à la même
+	 * partie que le créateur (C'est le créateur uniquement qui utilise cette
+	 * fonction).
+	 * @param modelGame Le modèle de jeu à envoyer
+	 */
+	public void sendModel(ModelGame modelGame) {
+		
+		// On précise !owner pour que les infos ne soient pas renvoyées au
+		// créateur de la partie, mais seulement aux autres joueurs.
+		String header = "#game#infos#!owner#";
+		
+		// JOUEURS
+		for (Joueur joueur : modelGame.getJoueurs()) {
+			// PosX#PosY#nomJoueur
+			client.send(header + joueur.getPosX() + "#" + joueur.getPosY() + "#" + joueur.getNom() + "#");
+		}
+		
+		// CARTE
+		// Note : on envoie le nom de la classe, comme ça, on a plus qu'a
+		// l'instancié chez les autres clients
+		client.send(header + (new CarteBase()).getClass().toString()+ "#");
+	}
+	
+	
 }
