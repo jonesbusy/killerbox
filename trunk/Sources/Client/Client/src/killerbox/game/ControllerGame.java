@@ -4,8 +4,6 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import killerbox.network.Joueur;
-
 public class ControllerGame {
 	
 	/**
