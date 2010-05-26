@@ -21,7 +21,9 @@ import killerbox.gui.BaseWindow;
 
 public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener {
 
-	private ModelGame modele = new ModelGame();
+	private ModelGame modelGame;
+	private ControllerGame controllerGame;
+	
 	private double angleSourisJoueur;
 	private int PG_X = 400;   // Taille en X du panneau graphique
 	private int PG_Y = 400;   // Taille en Y du panneau graphique
@@ -31,29 +33,36 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	public PanelGame(BaseWindow base) {
 		super(base);
 		
-		/*
+		// Création du modèle et du controller s'ils n'existe pas
+		if (window.getModelGame() == null)
+			window.setModelGame(new ModelGame());
 		
-		//joueur.addObserver(this);
-		setBackground(new Color (0, 0, 65));
-		// Chargement de l'image Montagne.gif, située dans le répertoire
-		// des classes.  Image de taille 315*44 pixels
-		imageDeFond = Toolkit.getDefaultToolkit().getImage ("carte.jpg");
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image img = tk.createImage("curseurViseur.gif");
+		if (window.getControllerGame() == null)
+			window.setControllerGame(new ControllerGame(window.getModelGame()));
+		
+		// Récupérer le model et le controller
+		modelGame = window.getModelGame();
+		controllerGame = window.getControllerGame();
+		
+		// Ajout des écouteurs
 		base.setFocusable(true);
 		base.addKeyListener(this);
 		base.addMouseMotionListener(this);
-		Cursor monCurseur = tk.createCustomCursor(img, new Point(16, 16), "mon viseur");
-		setCursor(monCurseur);
+		
+		// On modifie l'image du curseur
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		Image img = tk.createImage("curseurViseur.gif");
+		Cursor curseurViseur = tk.createCustomCursor(img, new Point(16, 16), "viseur");
+		setCursor(curseurViseur);
+		
 		this.setSize(new Dimension(PG_X,PG_Y));
-		
-		// Redimensionnement de la fenetre
-		base.setSize(this.getSize());
-		
-		*/
-		
-		add(new JLabel("Panel de jeu"));
 	}
+	
+	/**
+	 * Méthode dessinant le modèle de jeu sur le panel. C'est à dire le fond
+	 * de la carte, les murs et les joueurs.
+	 */
+
 	
 	private void calculerAngle(double x1, double y1, double x2, double y2) {
 		double a = (x2 - x1);
@@ -72,6 +81,8 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		if (angleSourisJoueur < 0) {
 			angleSourisJoueur += 2 * Math.PI;
 		}
+		
+		repaint();
 	}
 
 	@Override
@@ -84,8 +95,23 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	
 	public void paintComponent (Graphics g) {
 		super.paintComponent(g);
-		carte.dessiner(g);
-		//modele.getJoueurActif().dessiner(g, this);
+		
+		try
+		{
+			switch (modelGame.getEtat()) {
+				case Chargement:
+					g.drawString("Chargement en cours ...", 10, 10);
+					break;
+				case Demarrer:
+					// Dessiner la carte
+					modelGame.getCarte().dessiner(g);
+					
+					// dessiner les joueurs
+				
+				break;
+			}
+		}
+		catch(Exception e){}
     }
 	
 	public Dimension getPreferredSize() {
@@ -110,13 +136,9 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		calculerAngle(e.getX(), e.getY(), modele.getJoueurActif().getPosX()-4, modele.getJoueurActif().getPosY()-25);
-		modele.getJoueurActif().setAngleSourisJoueur(angleSourisJoueur);
+		//calculerAngle(e.getX(), e.getY(), modele.getJoueurActif().getPosX()-4, modele.getJoueurActif().getPosY()-25);
+		//modele.getJoueurActif().setAngleSourisJoueur(angleSourisJoueur);
 		repaint();
-		System.out.println("\nSposX = " + (e.getX()-4));
-		System.out.println("JposX = " + modele.getJoueurActif().getPosX());
-		System.out.println("SposY = " + (e.getY()-25));
-		System.out.println("JposY = " + modele.getJoueurActif().getPosY());
 		
 	}
 
@@ -125,7 +147,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		// Créer un controller pour gérer ce genre d'action
 		//controller.gestionDeplacement(carte,modele.getJoueurActif(),e);
 		repaint();
-		System.out.println("hello");
 		
 	}
 

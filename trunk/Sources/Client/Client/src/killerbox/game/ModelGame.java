@@ -10,6 +10,9 @@ public class ModelGame {
 	// Carte
 	private CarteBase carte;
 	
+	// Etat du modèle
+	private EtatModel etat = EtatModel.Chargement;
+	
 	// Liste des joueurs
 	ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
 	
@@ -27,6 +30,22 @@ public class ModelGame {
 	 */
 	public ArrayList<Joueur> getJoueurs() {
 		return new ArrayList<Joueur>(joueurs);
+	}
+
+	public CarteBase getCarte() {
+		return carte;
+	}
+
+	public void setCarte(CarteBase carte) {
+		this.carte = carte;
+	}
+
+	public EtatModel getEtat() {
+		return etat;
+	}
+
+	public void setEtat(EtatModel etat) {
+		this.etat = etat;
 	}
 
 }
