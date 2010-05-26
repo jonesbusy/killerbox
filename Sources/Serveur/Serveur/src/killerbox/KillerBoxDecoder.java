@@ -377,7 +377,7 @@ public class KillerBoxDecoder extends Decoder
 			}
 
 			/**
-			 * Demande pour demarer le jeu
+			 * Demande pour demarrer le jeu
 			 */
 			else if (instruction.equals("start"))
 			{
@@ -415,6 +415,7 @@ public class KillerBoxDecoder extends Decoder
 				{
 					// Renvoyer à tout le monde de la même partie
 					serverKillerBox.broadcastGame(idGame, message);
+					System.out.println(message);
 				}
 			}
 
