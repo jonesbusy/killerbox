@@ -197,7 +197,11 @@ public class KillerBoxController extends Controller
 		// Fermer proprement le client
 		client.disconnect();
 	}
-
+	
+	/**
+	 * Envoie la demande pour démarrre la partie. Pour que les joueurs puissent
+	 * se mettre à bouger.
+	 */
 	public void requestStartGame() {
 		client.send("#game#start#");
 	}
@@ -224,6 +228,17 @@ public class KillerBoxController extends Controller
 		// Note : on envoie le nom de la classe, comme ça, on a plus qu'a
 		// l'instancié chez les autres clients
 		client.send(header + (new CarteBase()).getClass().toString()+ "#");
+	}
+	
+	/**
+	 * Envoie une demande pour faire passer tous les joueurs de la même partie
+	 * au panel de jeu
+	 */
+	public void requestPanelGame() {
+		// infos : le serveur sait qu'il doit renvoyer le paquet à tous les
+		// joueur de la même partie
+		
+		client.send("#game#infos#panelGame#");
 	}
 	
 	

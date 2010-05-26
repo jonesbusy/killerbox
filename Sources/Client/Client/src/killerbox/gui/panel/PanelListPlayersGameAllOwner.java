@@ -7,9 +7,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import network.Controller;
+
 import com.sun.xml.internal.ws.resources.ModelerMessages;
 
+import killerbox.game.CarteBase;
 import killerbox.game.ControllerGame;
+import killerbox.game.EtatModel;
 import killerbox.game.ModelGame;
 import killerbox.gui.BaseWindow;
 
@@ -32,17 +36,6 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 	 * Permettre au createur de supprimer la partie
 	 */
 	private JButton btnStartGame = new JButton("Demarrer partie");
-
-	
-	/**
-	 * Modele de la partie
-	 */
-	private ModelGame modelGame = new ModelGame();
-	
-	/**
-	 * Controller du jeu
-	 */
-	private ControllerGame controllerGame = new ControllerGame(modelGame);
 
 	/**
 	 * Constructeur. Permet de creer le panel
@@ -67,6 +60,8 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 						"Est-vous sur de vouloir supprimer la partie ?", window.getTitle(),
 						JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 				{
+					
+					
 					controller.requestDeleteGame();
 					window.setPanel(PANEL_SET_ACCOUNT);
 				}
@@ -86,15 +81,26 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 				if (JOptionPane.showConfirmDialog(window, "Est-vous sur de vouloir demarrer la partie ?", window.getTitle(),
 						JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 				{
-					// Calculer la position de tous les joueurs
-					controllerGame.positionnerJoueurs();
+					// Créer le modèle et le controller
+					ModelGame modelGame = new ModelGame();
+					modelGame.setEtat(EtatModel.Chargement);
+					ControllerGame controllerGame = new ControllerGame(modelGame);
 					
-					// Envoyer les données du modèle aux clients de la partie
-					controller.sendModel(modelGame);
+					// choisir la carte
+					modelGame.setCarte(new CarteBase());
+					
+					// créer et positionner les joueurs
+					for (String player : playersInfo.getPlayers()) {
+						controllerGame.addPlayerWithRandomPosition(player,100);
+					}
+					
+					// ajouter le modèle et le controller à la fenêtre
+					window.setModelGame(modelGame);
+					window.setControllerGame(controllerGame);
 					
 					// Démarrer la partie
-					controller.requestStartGame();
-				}	
+					controller.requestPanelGame();
+				}
 			}
 		});
 

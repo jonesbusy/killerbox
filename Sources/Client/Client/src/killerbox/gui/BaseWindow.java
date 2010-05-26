@@ -8,6 +8,8 @@ import java.util.*;
 import network.*;
 import killerbox.*;
 import killerbox.network.*;
+import killerbox.game.ControllerGame;
+import killerbox.game.ModelGame;
 import killerbox.gui.panel.*;
 
 import static killerbox.gui.panel.EnumPanel.*;
@@ -115,6 +117,16 @@ public class BaseWindow extends JFrame implements Observer
 	 * Reference sur la Panel courant.
 	 */
 	private AbstractPanel panel;
+	
+	/**
+	 * Modele du jeu (beaucoup plus simple pour la création du jeu)
+	 */
+	private ModelGame modelGame;
+	
+	/**
+	 * Contoller du jeu
+	 */
+	private ControllerGame controllerGame;
 
 	/**
 	 * Constructeur. Permet de creer la fenetre et places les composants
@@ -455,6 +467,22 @@ public class BaseWindow extends JFrame implements Observer
 		// Si la vue recoit un message (generalement d'erreur)
 		if (String.class.isInstance(arg))
 			this.panel.printMessage((String) arg);
+	}
+	
+	public ModelGame getModelGame() {
+		return modelGame;
+	}
+
+	public void setModelGame(ModelGame modelGame) {
+		this.modelGame = modelGame;
+	}
+
+	public ControllerGame getControllerGame() {
+		return controllerGame;
+	}
+
+	public void setControllerGame(ControllerGame controllerGame) {
+		this.controllerGame = controllerGame;
 	}
 
 }

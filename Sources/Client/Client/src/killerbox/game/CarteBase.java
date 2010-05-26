@@ -11,7 +11,9 @@ import java.util.ArrayList;
 public class CarteBase {
 	
 	private ArrayList<Rectangle> murs = new ArrayList<Rectangle>();
-	private Image imageFond = Toolkit.getDefaultToolkit().getImage ("carte.jpg");
+	private Image imageFond = Toolkit.getDefaultToolkit().getImage("carte.jpg");
+	private int width = 400;
+	private int height = 400;
 	
 	public ArrayList<Rectangle> getMurs() {
 		return new ArrayList<Rectangle>(murs);
@@ -33,5 +35,25 @@ public class CarteBase {
 	public void dessiner(Graphics g)
 	{
 		g.drawImage(imageFond, 0, 0, null);
+	}
+
+	public Image getBackImage() {
+		return imageFond;
+	}
+
+	public double getWidth() {
+		return width;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }

@@ -270,9 +270,21 @@ public class KillerBoxDecoder extends Decoder
 					
 					if (instruction.equals("true"))
 					{
-						JOptionPane.showMessageDialog(base, "La partie a demarre");
+						// on active le jeu
+					}
+				}
+				
+				// Broadcast sur la partie
+				else if (instruction.equals("infos"))
+				{
+					instruction = tokens.nextToken();
+					
+					if (instruction.equals("panelGame"))
+					{
+						// on affiche le panel de jeu
 						base.setPanel(PANEL_GAME);
 					}
+						
 				}
 			}
 						

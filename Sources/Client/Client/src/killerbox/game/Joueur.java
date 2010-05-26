@@ -72,12 +72,14 @@ public class Joueur { // extends Observable {
 	}
 	public void setPosX(double posX) {
 		this.posX = posX;
+		this.colision.x = (int)posX;
 	}
 	public double getPosY() {
 		return posY;
 	}
 	public void setPosY(double posY) {
 		this.posY = posY;
+		this.colision.y = (int)posY;
 	}
 	public double getAngleSourisJoueur() {
 		return angleSourisJoueur;
@@ -85,7 +87,7 @@ public class Joueur { // extends Observable {
 	public void setAngleSourisJoueur(double angleSourisJoueur) {
 		this.angleSourisJoueur = angleSourisJoueur;
 	}
-	public Rectangle getColision() {
+	public Rectangle getRectangle() {
 		return colision;
 	}
 	
