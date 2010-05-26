@@ -290,7 +290,10 @@ public class KillerBoxDecoder extends Decoder
 			{
 				try
 				{
+					// Type de la partie
 					int type = Integer.parseInt(tokens.nextToken());
+					
+					
 					String owner = this.getUserName(connexion.getId());
 					this.gameList.createGame(owner, type);
 
@@ -369,6 +372,7 @@ public class KillerBoxDecoder extends Decoder
 				String user = this.getUserName(connexion.getId());
 				
 				this.gameList.deleteUser(user);
+				
 				this.server.relay(connexion.getId(), " quitte la partie de " + this.gameList.getOwner(id));
 			}
 
@@ -377,7 +381,6 @@ public class KillerBoxDecoder extends Decoder
 			 */
 			else if (instruction.equals("start"))
 			{
-
 				// Recuperer la partie
 				String owner = this.getUserName(connexion.getId());
 				int gameID = this.gameList.getId(owner);
@@ -386,14 +389,33 @@ public class KillerBoxDecoder extends Decoder
 				if (gameID != -1 && this.gameList.startGame(owner))
 				{
 					// Prevenir les utilisateur du debut de la partie
-					String[] users = this.gameList.getUsers(this.gameList.getId(owner));
-					for (String user : users)
-						this.serverKillerBox.send(user, "#game#start#true");
+					serverKillerBox.broadcastGame(gameID, "#game#start#true");
 				}
-
 				else
 					connexion.send("#game#start#false");
 
+			}
+			
+			/**
+			 * Envoi d'infos sur la partie
+			 */
+			else if (instruction.equals("infos"))
+			{
+				String userName = serverKillerBox.getUserName(connexion.getId());
+				int idGame = gameList.getId(userName);
+				
+				instruction = tokens.nextToken();
+				
+				if (instruction.equals("!owner"))
+				{					
+					// Renvoyer à tout le monde de la même partie
+					serverKillerBox.broadcastGameNotOwner(idGame, message);
+				}
+				else
+				{
+					// Renvoyer à tout le monde de la même partie
+					serverKillerBox.broadcastGame(idGame, message);
+				}
 			}
 
 		} // Fin account

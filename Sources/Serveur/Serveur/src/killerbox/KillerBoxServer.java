@@ -380,4 +380,21 @@ public class KillerBoxServer extends Observable implements Observer
 			
 		}
 	
+	/**
+	 * Permet d'envoyer un message a tout les utilisateur d'une partie sauf
+	 * au créateur de celle-ci
+	 * @param id Id de la partie
+	 * @param message Le message a envoyer
+	 */
+	public void broadcastGameNotOwner(int idGame, String message) {
+		// Renvoyer à tout le monde de la même partie, sauf 
+		// au créateur
+		String owner = gameList.getOwner(idGame); 
+		
+		for (String user : gameList.getUsers(idGame)) {
+			if (!user.equals(owner))
+				send(user, message);
+		}
+	}
+	
 }
