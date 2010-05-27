@@ -79,7 +79,8 @@ public class PanelSetAccount extends AbstractPanel
 	 * Bouton pour se deconnecter
 	 */
 	private JButton btnDisconnect = new JButton("Se deconnecter");
-
+	
+	
 	/**
 	 * Constructeur
 	 * @param window Fenetre de base
@@ -115,6 +116,8 @@ public class PanelSetAccount extends AbstractPanel
 
 		// Ecouteur des composants
 		this.btnDisconnect.addActionListener(this.window.getActionDisconnect());
+		this.btnCreate.addActionListener(this.window.getActionCreerPartie());
+		this.btnJoin.addActionListener(this.window.getActionRejoindrePartie());
 		this.btnDeleteAccount.addActionListener(new ActionListener()
 		{
 			/**
@@ -177,31 +180,6 @@ public class PanelSetAccount extends AbstractPanel
 			}
 		});
 		
-		this.btnJoin.addActionListener(new ActionListener()
-		{
-			/**
-			 * Quand l'utilisateur clique pour rejoindre une partie
-			 */
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				window.setPanel(PANEL_JOIN_GAME);
-			}
-		});
-		
-		this.btnCreate.addActionListener(new ActionListener()
-		{
-		
-			/**
-			 * Quand l'utilisateur clique sur le bouton pour creer une partie
-			 */
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				window.setPanel(PANEL_CREATE_GAME);
-			}
-		});
-
 	}
 
 	/**
