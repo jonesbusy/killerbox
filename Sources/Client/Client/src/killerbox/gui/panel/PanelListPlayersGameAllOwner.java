@@ -98,8 +98,18 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 					window.setModelGame(modelGame);
 					window.setControllerGame(controllerGame);
 					
-					// Démarrer la partie
+					// Envoi d'un paquet à tous les joueurs pour changer de panel
 					controller.requestPanelGame();
+					
+					// Envoi d'un ordre de création du controller et du modèle
+					controller.requestCreateModelAndController();
+					
+					// Envoi des données du modèle
+					controllerGame.setNetworkController(controller);
+					controllerGame.sendModele();
+					
+					// Envoie l'ordre de commencer la partie
+					controllerGame.startGame();
 				}
 			}
 		});

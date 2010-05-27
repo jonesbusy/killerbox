@@ -12,23 +12,27 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import com.sun.xml.internal.ws.resources.ModelerMessages;
 
 import killerbox.game.*;
 import killerbox.gui.BaseWindow;
 
-public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener {
-
-	private ModelGame modelGame;
-	private ControllerGame controllerGame;
+public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener, Runnable, Observer{
 	
+	private final int FPS = 10;
 	private double angleSourisJoueur;
 	private int PG_X = 400;   // Taille en X du panneau graphique
 	private int PG_Y = 400;   // Taille en Y du panneau graphique
 	private Image imageDeFond;		 // Images de fond
 	private CarteBase carte = new CarteBase();
+	private Thread refresh = new Thread(this);
 
 	public PanelGame(BaseWindow base) {
 		super(base);
@@ -40,14 +44,15 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		if (window.getControllerGame() == null)
 			window.setControllerGame(new ControllerGame(window.getModelGame()));
 		
-		// Récupérer le model et le controller
-		modelGame = window.getModelGame();
-		controllerGame = window.getControllerGame();
+		// Vérifier si le controller possède déjà le controller réseau
+		if (window.getControllerGame().getNetworkController() == null)
+			window.getControllerGame().setNetworkController(controller);
 		
 		// Ajout des écouteurs
 		base.setFocusable(true);
 		base.addKeyListener(this);
 		base.addMouseMotionListener(this);
+		base.getModelGame().addObserver(this);
 		
 		// On modifie l'image du curseur
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -56,6 +61,8 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		setCursor(curseurViseur);
 		
 		this.setSize(new Dimension(PG_X,PG_Y));
+		
+		refresh.start();
 	}
 	
 	/**
@@ -94,6 +101,9 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	
 	
 	public void paintComponent (Graphics g) {
+		ModelGame modelGame = window.getModelGame();
+		ControllerGame controllerGame = window.getControllerGame();
+		
 		super.paintComponent(g);
 		
 		try
@@ -107,7 +117,9 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 					modelGame.getCarte().dessiner(g);
 					
 					// dessiner les joueurs
-				
+					for (Joueur joueur : modelGame.getJoueurs()) {
+						joueur.dessiner(g, null);
+					}
 				break;
 			}
 		}
@@ -138,16 +150,37 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	public void mouseMoved(MouseEvent e) {
 		//calculerAngle(e.getX(), e.getY(), modele.getJoueurActif().getPosX()-4, modele.getJoueurActif().getPosY()-25);
 		//modele.getJoueurActif().setAngleSourisJoueur(angleSourisJoueur);
-		repaint();
 		
 	}
 
 	public void keyPressed(KeyEvent e) {
+		window.getControllerGame().gestionDeplacement(e);
 		
-		// Créer un controller pour gérer ce genre d'action
-		//controller.gestionDeplacement(carte,modele.getJoueurActif(),e);
-		repaint();
+	}
+
+	@Override
+	public void run() {
+		while(true)
+		{
+			try {
+				Thread.sleep(1000/FPS);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			repaint();
+		}
 		
+	}
+
+	/**
+	 * Model notifie ses changement d'état chargement -> demarrer
+	 */
+	public void update(Observable o, Object arg) {
+		// On adapte la taille de la fenêtre et du panel à celle de la carte
+		Dimension carteDim = window.getModelGame().getCarte().getSize();
+		setSize(carteDim);
+		window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20);
 	}
 
 }

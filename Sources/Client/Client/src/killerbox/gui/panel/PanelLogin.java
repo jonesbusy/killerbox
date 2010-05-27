@@ -131,10 +131,13 @@ public class PanelLogin extends AbstractPanel
 			/**
 			 * Lors du clique sur le bouton s'authentifier. Celui-ci
 			 * fait appel au controleur pour envoyer les informations d'authentification.
+			 * Il garde également directement le nom du joueur
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				window.setNomJoueur(texLogin.getText());
+				
 				controller.sendCredentias(texLogin.getText(),
 						new String(texPass.getPassword()));
 			}
