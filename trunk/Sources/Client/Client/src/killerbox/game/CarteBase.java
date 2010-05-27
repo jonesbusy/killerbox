@@ -1,5 +1,6 @@
 package killerbox.game;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -55,5 +56,9 @@ public class CarteBase {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public Dimension getSize() {
+		return new Dimension((int)getWidth(),(int)getHeight());
 	}
 }

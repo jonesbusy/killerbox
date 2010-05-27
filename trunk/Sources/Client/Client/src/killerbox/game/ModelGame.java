@@ -1,8 +1,9 @@
 package killerbox.game;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
-public class ModelGame {
+public class ModelGame extends Observable{
 
 	// Joueur du client
 	private Joueur joueurActif;
@@ -46,6 +47,40 @@ public class ModelGame {
 
 	public void setEtat(EtatModel etat) {
 		this.etat = etat;
+		setChanged();
+		notifyObservers();
+	}
+	
+	/**
+	 * Permet d'ajouter un joueur à la liste
+	 * @param joueur Le joueur à ajouter
+	 */
+	public void addJoueur(Joueur joueur) {
+		joueurs.add(joueur);
+	}
+	
+	/**
+	 * Permet de mettre le joueur actif à partir du nom
+	 * @param nomJoueur
+	 */
+	public void setJoueurActif(String nomJoueur) {
+		for (Joueur joueur : joueurs) {
+			if (joueur.getNom().equals(nomJoueur))
+				joueurActif = joueur;
+		}
+	}
+	
+	/**
+	 * Fonction retournant le joueur ayant le nom passé en paramètre
+	 * @param nomJoueur Le joueur a retourner
+	 * @return Le joueur correspondant au nom
+	 */
+	public Joueur getJoueurByName(String nomJoueur) {
+		for (Joueur j : joueurs) {
+			if (j.getNom().equals(nomJoueur))
+				return j;
+		}
+		return null;
 	}
 
 }
