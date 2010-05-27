@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import java.util.Observable;
+import java.util.StringTokenizer;
 
 public class Joueur { // extends Observable {
 
@@ -19,8 +20,7 @@ public class Joueur { // extends Observable {
 	private double posX;
 	private double posY;
 	private double angleSourisJoueur;
-	
-	private int vitesse;
+	private int vitesse = 3;
 
 	/**
 	 * points de vie du joueur
@@ -32,6 +32,11 @@ public class Joueur { // extends Observable {
 	 */
 	private Image imageJoueur;
 	private Rectangle colision;
+	
+	/**
+	 * Pour constuire des chaine représentant le joueur (delim)
+	 */
+	private char delim = '#';
 	
 	// constructeur 
 	/**
@@ -50,6 +55,24 @@ public class Joueur { // extends Observable {
 		angleSourisJoueur = 0;
 		imageJoueur = Toolkit.getDefaultToolkit().getImage("playerOk.gif");
 		colision = new Rectangle(posX-3, posY-7, 36, 36);
+	}
+	
+	/**
+	 * Constructeur prévu pour une chaine de caractère.
+	 * Pratique pour le réseau.
+	 * @return
+	 */
+	public Joueur(String joueur)
+	{
+		StringTokenizer token = new StringTokenizer(joueur, String.valueOf(delim));
+		
+		this.nom = token.nextToken();
+		this.posX = Double.valueOf(token.nextToken());
+		this.posY = Double.valueOf(token.nextToken());
+		this.pv = Integer.valueOf(token.nextToken());
+		angleSourisJoueur = 0;
+		imageJoueur = Toolkit.getDefaultToolkit().getImage("playerOk.gif");
+		colision = new Rectangle((int)posX-3, (int)posY-7, 36, 36);
 	}
 	
 	// getters et setters
@@ -98,8 +121,11 @@ public class Joueur { // extends Observable {
 	 * @return les infos du joueur sous la forme d'un string
 	 */
 	public String toString() {
-		return "nom : " + nom + "\nposition : (" + posX + ", " + posY
-				+ ") \npv : " + pv + "\n";
+		char sep = '#';
+		return 	nom + delim +
+				getPosX() + delim +
+				getPosY() + delim +
+				getPv();
 	}
 	
 	/**
@@ -139,5 +165,15 @@ public class Joueur { // extends Observable {
 
 	public int getVitesse() {
 		return vitesse;
+	}
+	
+	/**
+	 * Spécifier la position du joueur
+	 * @param posX
+	 * @param posY
+	 */
+	public void setPos(double posX, double posY) {
+		setPosX(posX);
+		setPosY(posY);
 	}
 }

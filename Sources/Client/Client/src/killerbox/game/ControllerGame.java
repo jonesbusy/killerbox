@@ -4,12 +4,19 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import killerbox.network.KillerBoxController;
+
 public class ControllerGame {
 	
 	/**
 	 * Modele de la partie
 	 */
 	private ModelGame modelGame;
+	
+	/**
+	 * Controller réseau
+	 */
+	private KillerBoxController controllerReseau;
 
 	public ControllerGame(ModelGame modelGame) {
 		this.modelGame = modelGame;
@@ -19,8 +26,11 @@ public class ControllerGame {
 		Joueur joueur = modelGame.getJoueurActif();
 		CarteBase carte = modelGame.getCarte();
 		
-		ArrayList<Rectangle> murs = carte.getMurs();
+		double posFutureX = joueur.getPosX();
+		double posFutureY = joueur.getPosY();
 		
+		ArrayList<Rectangle> murs = carte.getMurs();
+		/*
 		if (e.getKeyCode() == KeyEvent.VK_W)
 		{
 			joueur.move(0, -joueur.getVitesse());
@@ -56,6 +66,30 @@ public class ControllerGame {
 				if(mur.intersects(joueur.getRectangle()))
 					joueur.move(-joueur.getVitesse(), 0);
 		}
+		*/
+		
+		if (e.getKeyCode() == KeyEvent.VK_W)
+		{
+			posFutureY = posFutureY - joueur.getVitesse();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_S)
+		{
+			posFutureY = posFutureY + joueur.getVitesse();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_A)
+		{
+			posFutureX = posFutureX - joueur.getVitesse();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_D)
+		{
+			posFutureX = posFutureX + joueur.getVitesse();
+		}
+		
+		// Indiquer la nouvelle position à tous les clients
+		controllerReseau.sendInfosGame("positionJoueur#"+joueur.getNom()+"#"+posFutureX+"#"+posFutureY);
 		
 	}
 	
@@ -107,7 +141,36 @@ public class ControllerGame {
 			}
 		}
 		
+		modelGame.addJoueur(j);
 		
+		
+	}
+
+	public void setNetworkController(KillerBoxController controller) {
+		controllerReseau = controller;		
+	}
+	
+	public KillerBoxController getNetworkController() {
+		return controllerReseau;		
+	}
+
+	public void sendModele() {
+		// Envoi du nom de la carte
+		controllerReseau.sendInfosGame("!owner#carte#" + modelGame.getCarte().getClass().getName());
+		
+		// Envoi des joueurs
+		for (Joueur joueur : modelGame.getJoueurs()) {
+			controllerReseau.sendInfosGame("!owner#joueur#" + joueur.toString());
+		}
+		
+	}
+	
+	/**
+	 * Envoie un paquet à tous les joueurs pour faire passer l'etat de leur
+	 * modele à "démarré"
+	 */
+	public void startGame() {
+		controllerReseau.sendInfosGame("start");		
 	}
 
 }
