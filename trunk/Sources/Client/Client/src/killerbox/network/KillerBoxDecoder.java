@@ -6,6 +6,11 @@ import java.util.*;
 
 import javax.swing.*;
 import killerbox.*;
+import killerbox.game.CarteBase;
+import killerbox.game.ControllerGame;
+import killerbox.game.EtatModel;
+import killerbox.game.Joueur;
+import killerbox.game.ModelGame;
 import killerbox.gui.*;
 import killerbox.gui.panel.*;
 
@@ -284,6 +289,67 @@ public class KillerBoxDecoder extends Decoder
 						// on affiche le panel de jeu
 						base.setPanel(PANEL_GAME);
 					}
+					else if (instruction.equals("!owner"))
+					{
+						instruction = tokens.nextToken();
+						
+						if (instruction.equals("createModelAndController"))
+						{
+							//TODO a supprimer
+							if (base.getModelGame() == null)
+							{
+								base.setModelGame(new ModelGame());
+								base.setControllerGame(new ControllerGame(base.getModelGame()));
+							}
+						}
+						else if(instruction.equals("carte"))
+						{
+							instruction = tokens.nextToken();
+							
+							// Récupérer le nom de la classe de la carte
+							String carteClass = instruction;
+							
+							// On instancie et passe la carte au modele
+							try {
+								Object carte = null;
+								carte = Class.forName(carteClass).newInstance();
+								base.getModelGame().setCarte((CarteBase)carte);
+							} catch (InstantiationException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+						else if (instruction.equals("joueur"))
+						{
+							int index = message.indexOf(instruction);
+							index = index + instruction.length();
+							String joueur = message.substring(index);
+							
+							base.getModelGame().addJoueur(new Joueur(joueur));
+						}
+					}
+					else if (instruction.equals("start"))
+					{
+						// Sélectionner le joueur actif dans la liste
+						base.getModelGame().setJoueurActif(base.getNomJoueur());
+						base.getModelGame().setEtat(EtatModel.Demarrer);
+					}
+					else if (instruction.equals("positionJoueur"))
+					{
+						String nomJoueur = tokens.nextToken();
+						double posX = Double.valueOf(tokens.nextToken());
+						double posY = Double.valueOf(tokens.nextToken());
+						
+						base.getModelGame().getJoueurByName(nomJoueur).setPos(posX,posY);
+					}
+					
 						
 				}
 			}

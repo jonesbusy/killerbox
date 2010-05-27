@@ -240,6 +240,19 @@ public class KillerBoxController extends Controller
 		
 		client.send("#game#infos#panelGame#");
 	}
+
+	public void requestCreateModelAndController() {
+		client.send("#game#infos#!owner#createModelAndController#");
+	}
+	
+	/**
+	 * Permet d'envoyer des infos à tous les joueurs de la partie
+	 * @param string L'information à envoyer
+	 */
+	public void sendInfosGame(String infos) {
+		client.send("#game#infos#"+infos+"#");
+		
+	}
 	
 	
 }
