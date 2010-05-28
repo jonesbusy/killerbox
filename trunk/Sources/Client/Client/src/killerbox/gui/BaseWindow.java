@@ -9,6 +9,8 @@ import java.util.*;
 import network.*;
 import killerbox.*;
 import killerbox.network.*;
+import killerbox.game.ControllerGame;
+import killerbox.game.ModelGame;
 import killerbox.gui.panel.*;
 
 import static killerbox.gui.panel.EnumPanel.*;
@@ -103,9 +105,24 @@ public class BaseWindow extends JFrame implements Observer
 	private ActionListener actionrejoindre;
 	
 	/**
+	 * Modèle de jeu
+	 */
+	private ModelGame modelGame;
+	
+	/**
+	 * Controller de jeu
+	 */
+	private ControllerGame controllerGame;
+	
+	/**
 	 * Action pour le bouton et menu "creer partie"
 	 */
 	private ActionListener actioncreer;
+	
+	/**
+	 * Nom du joueur
+	 */
+	private String nomJoueur;
 
 	/**
 	 * Menu principal
@@ -536,6 +553,34 @@ public class BaseWindow extends JFrame implements Observer
 		// Si la vue recoit un message (generalement d'erreur)
 		if (String.class.isInstance(arg))
 			this.panel.printMessage((String) arg);
+	}
+
+	public void setModelGame(ModelGame modelGame) {
+		this.modelGame = modelGame;
+	}
+
+	public ModelGame getModelGame() {
+		return modelGame;
+	}
+
+	public void setControllerGame(ControllerGame controllerGame) {
+		this.controllerGame = controllerGame;
+	}
+
+	public ControllerGame getControllerGame() {
+		return controllerGame;
+	}
+
+	public int getHeightMenu() {
+		return menu.getHeight();
+	}
+
+	public void setNomJoueur(String nomJoueur) {
+		this.nomJoueur = nomJoueur;
+	}
+
+	public String getNomJoueur() {
+		return nomJoueur;
 	}
 
 }
