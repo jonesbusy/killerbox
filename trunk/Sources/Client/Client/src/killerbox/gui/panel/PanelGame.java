@@ -33,8 +33,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	private final int FPS = 10;
 	private double angleSourisJoueur;
 	private Image imageDeFond;		 // Images de fond
-	private int PG_X = 400; // Taille en X du panneau graphique
-	private int PG_Y = 400; // Taille en Y du panneau graphique
 	private CarteBase carte = new CarteBase();
 	private EtatCommandes etatCommandes = new EtatCommandes(KeyEvent.VK_W, KeyEvent.VK_S,
 			KeyEvent.VK_D, KeyEvent.VK_A, MouseEvent.BUTTON1);
@@ -92,9 +90,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		
 		// chat
 		chat = new Chat(window.getModelGame());
-		
-
-		this.setSize(new Dimension(PG_X, PG_Y));
 
 		refresh.start();
 		action.start();

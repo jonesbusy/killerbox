@@ -326,9 +326,6 @@ public class KillerBoxDecoder extends Decoder
 							{
 								base.getModelGame().addMessage(new Message(tueur + " vous a tué!", Color.RED));
 								base.getModelGame().setJoueurActif((Joueur)null);
-								base.getControllerGame().afficherMessage(
-										new Message("Vous êtes mort.", Color.RED));
-								base.getModelGame().setJoueurActif((Joueur) null);
 							}
 							else
 							{
@@ -342,7 +339,9 @@ public class KillerBoxDecoder extends Decoder
 
 						if (instruction.equals("createModelAndController"))
 						{
-							base.setModelGame(new ModelGame());
+							if (base.getModelGame() == null)
+								base.setModelGame(new ModelGame());
+							
 							base.setControllerGame(new ControllerGame(base.getModelGame()));
 							base.getControllerGame().setNetworkController(this.base.getController());
 						}
