@@ -16,7 +16,7 @@ public class Joueur { // extends Observable {
 	private static final int DESSUS_JOUEUR_BARRE_VIE = 5;
 	
 
-	private final boolean DEBUG = true;
+	private final boolean DEBUG = false;
 	
 	// attributs
 	/**
