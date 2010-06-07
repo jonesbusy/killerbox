@@ -35,16 +35,12 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	private Image imageDeFond;		 // Images de fond
 	private int PG_X = 400; // Taille en X du panneau graphique
 	private int PG_Y = 400; // Taille en Y du panneau graphique
-	private Image imageDeFond; // Images de fond
 	private CarteBase carte = new CarteBase();
 	private EtatCommandes etatCommandes = new EtatCommandes(KeyEvent.VK_W, KeyEvent.VK_S,
 			KeyEvent.VK_D, KeyEvent.VK_A, MouseEvent.BUTTON1);
 	private Thread refresh = new Thread(this);
 	private Chat chat;
 
-	private Thread action = new Thread(new Runnable() {
-		
-		public void run() {
 	private Thread action = new Thread(new Runnable()
 	{
 
@@ -176,18 +172,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 
 					// dessiner le chat
 					chat.dessiner(g);
-					// dessiner messages
-					int hauteurTexte = g.getFont().getSize();
-					int posY = 10;
-					int posX = 10;
-					for (Message message : modelGame.getMessages())
-					{
-						g.setColor(message.getColor());
-						g.drawString(message.getMessage(), posX, posY);
-						posY = posY + hauteurTexte;
-					}
-
-					break;
 			}
 		}
 		catch(Exception e){}
@@ -196,15 +180,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	public Dimension getPreferredSize() {
 		// Retourne la taille souhaitée pour le composant (remplace le "getSize"
 		return getSize();
-		catch (Exception e)
-		{
-		}
-	}
-
-	public Dimension getPreferredSize()
-	{
-		// Retourne la taille souhaitée pour le composant (remplace le "getSize"
-		return new Dimension(PG_X, PG_Y);
 	}
 
 	public void keyPressed(KeyEvent e)
@@ -269,7 +244,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		chat.width = carteDim.width;
 		chat.height = HAUTEUR_CHAT;
 		window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20 + chat.height);
-		window.setSize(carteDim.width, carteDim.height + window.getHeightMenu() + 20);
 	}
 
 	@Override
