@@ -176,7 +176,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		etatCommandes.setMouseClick(e);
+		
 		
 	}
 
@@ -233,8 +233,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		etatCommandes.setMouseClick(e);
 	}
 
 	@Override
