@@ -2,13 +2,9 @@ package killerbox.game;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.StringTokenizer;
 
-import javax.swing.JOptionPane;
 
 public class Joueur { // extends Observable {
 
@@ -184,12 +180,21 @@ public class Joueur { // extends Observable {
 		barreVie.y = rectJoueur.y - barreVie.height -  DESSUS_JOUEUR_BARRE_VIE;
 		
 		Rectangle vie = new Rectangle(barreVie);
-		vie.width = (int)(vie.width * ((double)pv / pvMax));
+		double pourcentageVieRestante = (double)pv / pvMax;
+		vie.width = (int)(vie.width * pourcentageVieRestante);
 		
 		if (vie.width < 0)
 			vie.width = 0;
-
-		g.setColor(Color.GREEN);
+		
+		// définir la couleur
+		if (pourcentageVieRestante > 0.75)
+			g.setColor(Color.GREEN);
+		else if (pourcentageVieRestante > 0.4)
+			g.setColor(Color.ORANGE);
+		else
+			g.setColor(Color.RED);
+		
+		
 		g.fillRect(vie.x, vie.y, vie.width, vie.height);
 		g.setColor(Color.BLACK);
 		g.drawRect(barreVie.x, barreVie.y, barreVie.width, barreVie.height);

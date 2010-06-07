@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 
 import killerbox.network.KillerBoxController;
 
@@ -25,6 +26,7 @@ public class Tir {
 			boolean fin = false;
 			int waitTime = 1000 / FPS;
 			int depX,depY;
+			Point posFutur = new Point();
 			
 			while(!fin)
 			{
@@ -35,21 +37,19 @@ public class Tir {
 					e.printStackTrace();
 				}
 				
-				depX = (int)(Math.cos(angle) * tir.getVitesse());
-				depY = (int)(Math.sin(angle) * tir.getVitesse());
-
-				position.x = position.x + depX;
-				position.y = position.y + depY;
+				// Récupérer la position futur
+				posFutur.x = position.x + (int)(Math.cos(angle) * tir.getVitesse());
+				posFutur.y = position.y + (int)(Math.sin(angle) * tir.getVitesse());
 				
 				// Vérifier que le tir n'entre pas en collision avec une personne
 				// ou un objet
 				for (Rectangle mur : modelGame.getCarte().getMurs()) {
-					if (mur.contains(position))
+					if (intersectionLigneRectangle(position,posFutur,mur))
 						fin = true;
 				}
 				
 				for (Joueur joueur : modelGame.getJoueurs()) {
-					if (joueur.getRectangle().contains(position))
+					if (intersectionLigneRectangle(position,posFutur,joueur.getRectangle()))
 					{
 						if (checkKill)
 						{
@@ -61,14 +61,21 @@ public class Tir {
 							// Indiquer aux autres joueurs que le joueur est mort
 							if (joueur.getPv() <= 0)
 							{
-								controllerReseau.sendInfosGameOtherPlayers("joueurMort#"+joueur.getNom());
+								controllerReseau.sendInfosGameOtherPlayers("joueurMort#"+joueur.getNom() + "#" + modelGame.getJoueurActif().getNom());
+								modelGame.addMessage(new Message("Vous avez tué " + joueur.getNom() + "!", Color.RED));
 								modelGame.removeJoueur(joueur);
+							}
+							else
+							{
+								controllerReseau.sendInfosGameMessage(modelGame.getJoueurActif().getNom() + " a touché " + joueur.getNom());
 							}
 						}
 						
-						fin = true;	
+						fin = true;
 					}
 				}
+				
+				position.setLocation(posFutur);
 			}
 			
 			// TODO peut mettre une animation de fin du tir (explosion)
@@ -76,12 +83,27 @@ public class Tir {
 			// Supprimer le tir de la liste
 			modelGame.removeTir(thisTir);
 		}
+
+		private boolean intersectionLigneRectangle(Point source,
+				Point position, Rectangle mur) {
+			if (Line2D.linesIntersect(source.x, source.y, position.x, position.y, mur.x, mur.y, mur.x+mur.width, mur.y))
+				return true;
+			else if (Line2D.linesIntersect(source.x, source.y, position.x, position.y, mur.x+mur.width, mur.y, mur.x, mur.y+mur.height))
+				return true;
+			else if (Line2D.linesIntersect(source.x, source.y, position.x, position.y, mur.x, mur.y + mur.height, mur.x + mur.width, mur.y+mur.height))
+				return true;
+			else if (Line2D.linesIntersect(source.x, source.y, position.x, position.y, mur.x, mur.y, mur.x, mur.y+mur.height))
+				return true;
+				
+			return false;
+			
+		}
 	});
 	
 	public void dessiner(Graphics g)
 	{
 		g.setColor(Color.ORANGE);
-		g.fillOval(position.x, position.y, 10, 10);
+		g.fillOval(position.x, position.y, 6, 6);
 	}
 
 	public Tir(Point source, Double angle, TypeTir tir, boolean checkKill, ModelGame modelGame, KillerBoxController controllerReseau) {

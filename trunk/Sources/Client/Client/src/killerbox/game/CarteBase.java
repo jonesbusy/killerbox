@@ -15,7 +15,7 @@ public class CarteBase {
 	private Image imageFond = Toolkit.getDefaultToolkit().getImage("fond.jpg");
 	private int width = 400;
 	private int height = 400;
-	
+
 	public ArrayList<Rectangle> getMurs() {
 		ArrayList<Rectangle> murs = new ArrayList<Rectangle>(this.murs);
 
@@ -29,11 +29,12 @@ public class CarteBase {
 
 	public CarteBase()
 	{
-		murs.add(new Rectangle(280, 280, 45, 45));
-		murs.add(new Rectangle(90, 90, 45, 45));
-		murs.add(new Rectangle(345, 15, 45, 45));
-		murs.add(new Rectangle(15, 345, 45, 45));
-		murs.add(new Rectangle(200, 200, 45, 45));
+		murs.add(new Rectangle(58, 54, 148, 5));
+		murs.add(new Rectangle(58, 54, 5, 142));
+		murs.add(new Rectangle(200, 120, 5, 74));
+		murs.add(new Rectangle(123, 192, 81, 5));
+		murs.add(new Rectangle(143, 273, 5, 100));
+		murs.add(new Rectangle(228, 256, 98, 5));
 	}
 	
 	public void dessiner(Graphics g)
@@ -41,7 +42,7 @@ public class CarteBase {
 		g.drawImage(imageFond, 0, 0, null);
 		for(Rectangle mur : murs)
 		{
-			g.setColor(Color.ORANGE);
+			g.setColor(new Color(228, 106, 0));
 			g.fillRect(mur.x, mur.y, mur.width, mur.height);
 			g.setColor(Color.BLACK);
 			g.drawRect(mur.x, mur.y, mur.width, mur.height);
