@@ -396,5 +396,12 @@ public class KillerBoxServer extends Observable implements Observer
 				send(user, message);
 		}
 	}
+
+	public void broadcastGameNotUser(int idGame, String message, String userName) {
+		for (String user : gameList.getUsers(idGame)) {
+			if (!user.equals(userName))
+				send(user, message);
+		}
+	}
 	
 }
