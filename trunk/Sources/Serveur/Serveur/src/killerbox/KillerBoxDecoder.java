@@ -411,6 +411,10 @@ public class KillerBoxDecoder extends Decoder
 					// Renvoyer à tout le monde de la même partie
 					serverKillerBox.broadcastGameNotOwner(idGame, message);
 				}
+				else if (instruction.equals("others"))
+				{
+					serverKillerBox.broadcastGameNotUser(idGame,message,userName);
+				}
 				else
 				{
 					// Renvoyer à tout le monde de la même partie
