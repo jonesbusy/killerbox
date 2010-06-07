@@ -27,7 +27,6 @@ public class ControllerGame {
 	
 	public void gestionCommandes(EtatCommandes etat)
 	{
-		
 		Joueur joueur = modelGame.getJoueurActif();
 		
 		if (joueur != null)
@@ -88,8 +87,15 @@ public class ControllerGame {
 			if (etat.isTir())
 			{
 				etat.setTir(false);
-				Point source = new Point(modelGame.getJoueurActif().getPosX(),modelGame.getJoueurActif().getPosY());
-				Double angle = modelGame.getJoueurActif().getAngleSourisJoueur();
+				// Calculer la source du tir (il faut qu'elle soit en dehors du rectangle du joueur,
+				// sinon il se tire dessus)
+				
+				Point source = new Point(joueur.getPosX(),joueur.getPosY());
+				Double angle = joueur.getAngleSourisJoueur();
+				double moitieJoueur = joueur.getRectangle().width;
+				source.x = source.x + (int)(Math.cos(angle)*moitieJoueur);
+				source.y = source.y + (int)(Math.sin(angle)*moitieJoueur);
+				
 				Tir tir = new Tir(source, angle, new TypeTir(30),true,modelGame, controllerReseau);
 				modelGame.addTir(tir);
 				controllerReseau.sendInfosGameOtherPlayers("tir#"+tir.toString());
