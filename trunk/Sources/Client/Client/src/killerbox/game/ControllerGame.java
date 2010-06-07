@@ -99,14 +99,7 @@ public class ControllerGame {
 
 	private boolean existeCollision() {
 		Joueur joueurActif = modelGame.getJoueurActif();
-		
-		// Vérification qu'on reste dans la carte
 		CarteBase carte = modelGame.getCarte();
-		Rectangle rectCarte = new Rectangle(0,0,(int)carte.getWidth(),(int)carte.getWidth());
-		if (!joueurActif.getRectangle().intersects(rectCarte))
-		{
-			return true;
-		}
 		
 		// Vérification des murs
 		for (Rectangle mur : carte.getMurs()) {
