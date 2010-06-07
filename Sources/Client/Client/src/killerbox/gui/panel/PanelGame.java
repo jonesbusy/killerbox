@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,7 +25,7 @@ import com.sun.xml.internal.ws.resources.ModelerMessages;
 import killerbox.game.*;
 import killerbox.gui.BaseWindow;
 
-public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener, Runnable, Observer{
+public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener, Runnable, MouseListener, Observer{
 	
 	private final int FPS = 10;
 	private double angleSourisJoueur;
@@ -32,7 +33,23 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	private int PG_Y = 400;   // Taille en Y du panneau graphique
 	private Image imageDeFond;		 // Images de fond
 	private CarteBase carte = new CarteBase();
+	private EtatCommandes etatCommandes = new EtatCommandes(KeyEvent.VK_W,KeyEvent.VK_S,KeyEvent.VK_D,KeyEvent.VK_A,MouseEvent.BUTTON1);
 	private Thread refresh = new Thread(this);
+	private Thread action = new Thread(new Runnable() {
+		
+		public void run() {
+			while (true)
+			{
+				try {
+					Thread.sleep(1000/10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				window.getControllerGame().gestionCommandes(etatCommandes);
+			}
+		}
+	});
 
 	public PanelGame(BaseWindow base) {
 		super(base);
@@ -52,6 +69,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		base.setFocusable(true);
 		base.addKeyListener(this);
 		base.addMouseMotionListener(this);
+		base.addMouseListener(this);
 		base.getModelGame().addObserver(this);
 		
 		// On modifie l'image du curseur
@@ -63,6 +81,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		this.setSize(new Dimension(PG_X,PG_Y));
 		
 		refresh.start();
+		action.start();
 	}
 	
 	/**
@@ -120,6 +139,11 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 					for (Joueur joueur : modelGame.getJoueurs()) {
 						joueur.dessiner(g, null);
 					}
+					
+					// dessiner les tirs
+					for (Tir tir : modelGame.getTirs()) {
+						tir.dessiner(g);
+					}
 				break;
 			}
 		}
@@ -130,31 +154,31 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	// Retourne la taille souhaitée pour le composant (remplace le "getSize"
 		return new Dimension (PG_X, PG_Y);
 	}
-	
 
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+	public void keyPressed(KeyEvent e) {
+		etatCommandes.setKeyPressed(e);
+	}
+
+	public void keyReleased(KeyEvent e) {
+		etatCommandes.setKeyReleased(e);
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		etatCommandes.setMouseClick(e);
 		
 	}
 
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub	
 	}
 
-	public void mouseDragged(MouseEvent arg0) {
+	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		//calculerAngle(e.getX(), e.getY(), modele.getJoueurActif().getPosX()-4, modele.getJoueurActif().getPosY()-25);
-		//modele.getJoueurActif().setAngleSourisJoueur(angleSourisJoueur);
-		
-	}
-
-	public void keyPressed(KeyEvent e) {
-		window.getControllerGame().gestionDeplacement(e);
+		window.getControllerGame().angleJoueurSouris(e);
 		
 	}
 
@@ -181,6 +205,30 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		Dimension carteDim = window.getModelGame().getCarte().getSize();
 		setSize(carteDim);
 		window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20);
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

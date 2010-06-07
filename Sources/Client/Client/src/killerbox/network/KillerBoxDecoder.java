@@ -2,6 +2,8 @@ package killerbox.network;
 
 import static killerbox.gui.panel.EnumPanel.*;
 import network.*;
+
+import java.awt.Point;
 import java.util.*;
 
 import javax.swing.*;
@@ -11,6 +13,8 @@ import killerbox.game.ControllerGame;
 import killerbox.game.EtatModel;
 import killerbox.game.Joueur;
 import killerbox.game.ModelGame;
+import killerbox.game.Tir;
+import killerbox.game.TypeTir;
 import killerbox.gui.*;
 import killerbox.gui.panel.*;
 
@@ -289,6 +293,34 @@ public class KillerBoxDecoder extends Decoder
 						// on affiche le panel de jeu
 						base.setPanel(PANEL_GAME);
 					}
+					else if (instruction.equals("others"))
+					{
+						instruction = tokens.nextToken();
+						
+						if (instruction.equals("positionJoueur"))
+						{
+							String nomJoueur = tokens.nextToken();
+							int posX = Integer.valueOf(tokens.nextToken());
+							int posY = Integer.valueOf(tokens.nextToken());
+							int pv = Integer.valueOf(tokens.nextToken());
+							double angle = Double.valueOf(tokens.nextToken());
+							
+							Joueur joueur = base.getModelGame().getJoueurByName(nomJoueur);
+							joueur.setPos(posX,posY);
+							joueur.setPv(pv);
+							joueur.setAngleSourisJoueur(angle);
+						}
+						else if(instruction.equals("tir"))
+						{
+							Point source = new Point(Integer.valueOf(tokens.nextToken()), Integer.valueOf(tokens.nextToken()));
+							double angle = Double.valueOf(tokens.nextToken());
+							int vitesse = Integer.valueOf(tokens.nextToken());
+							TypeTir typeTir = new TypeTir(vitesse);
+							
+							Tir tir = new Tir(source,angle,typeTir,false,base.getModelGame(),base.getController());
+							base.getModelGame().addTir(tir);
+						}
+					}
 					else if (instruction.equals("!owner"))
 					{
 						instruction = tokens.nextToken();
@@ -340,14 +372,6 @@ public class KillerBoxDecoder extends Decoder
 						// Sélectionner le joueur actif dans la liste
 						base.getModelGame().setJoueurActif(base.getNomJoueur());
 						base.getModelGame().setEtat(EtatModel.Demarrer);
-					}
-					else if (instruction.equals("positionJoueur"))
-					{
-						String nomJoueur = tokens.nextToken();
-						double posX = Double.valueOf(tokens.nextToken());
-						double posY = Double.valueOf(tokens.nextToken());
-						
-						base.getModelGame().getJoueurByName(nomJoueur).setPos(posX,posY);
 					}
 					
 						

@@ -2,12 +2,22 @@ package killerbox.game;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.StringTokenizer;
+
+import javax.swing.JOptionPane;
 
 public class Joueur { // extends Observable {
 
+	private static final int HEIGHT_BARRE_VIE = 6;
+	private static final int DESSUS_JOUEUR_BARRE_VIE = 5;
+	
+
+	private final boolean DEBUG = true;
+	
 	// attributs
 	/**
 	 * nom du joueur
@@ -17,21 +27,20 @@ public class Joueur { // extends Observable {
 	 /**
 	  * coordonnée du joueur
 	  */
-	private double posX;
-	private double posY;
 	private double angleSourisJoueur;
-	private int vitesse = 3;
+	private int vitesse = 7;
 
 	/**
 	 * points de vie du joueur
 	 */
 	private int pv;
+	private int pvMax;
 	
 	/**
 	 * image du joueur
 	 */
 	private Image imageJoueur;
-	private Rectangle colision;
+	private Rectangle rectJoueur;
 	
 	/**
 	 * Pour constuire des chaine représentant le joueur (delim)
@@ -49,12 +58,12 @@ public class Joueur { // extends Observable {
 	 */
 	public Joueur(String nom, int posX, int posY, int pv) {
 		this.nom = nom;
-		this.posX = posX;
-		this.posY = posY;
 		this.pv = pv;
 		angleSourisJoueur = 0;
-		imageJoueur = Toolkit.getDefaultToolkit().getImage("playerOk.gif");
-		colision = new Rectangle(posX-3, posY-7, 36, 36);
+		imageJoueur = Toolkit.getDefaultToolkit().getImage("playerOK.gif");
+		rectJoueur = new Rectangle(0, 0, 36, 29);
+		this.pvMax = pv;
+		setPos(posX, posY);
 	}
 	
 	/**
@@ -65,14 +74,16 @@ public class Joueur { // extends Observable {
 	public Joueur(String joueur)
 	{
 		StringTokenizer token = new StringTokenizer(joueur, String.valueOf(delim));
-		
-		this.nom = token.nextToken();
-		this.posX = Double.valueOf(token.nextToken());
-		this.posY = Double.valueOf(token.nextToken());
-		this.pv = Integer.valueOf(token.nextToken());
+
 		angleSourisJoueur = 0;
 		imageJoueur = Toolkit.getDefaultToolkit().getImage("playerOk.gif");
-		colision = new Rectangle((int)posX-3, (int)posY-7, 36, 36);
+		rectJoueur = new Rectangle(0, 0, 36, 29);
+		
+		this.nom = token.nextToken();
+		setPos(Integer.parseInt(token.nextToken()), Integer.parseInt(token.nextToken()));
+		this.pv = Integer.parseInt(token.nextToken());
+		this.pvMax = pv;
+		this.angleSourisJoueur = Double.valueOf(token.nextToken());
 	}
 	
 	// getters et setters
@@ -90,19 +101,19 @@ public class Joueur { // extends Observable {
 	public void setNom(String name) {
 		this.nom = name;
 	}
-	public double getPosX() {
-		return posX;
+	public int getPosX() {
+		return (int) rectJoueur.getCenterX();
 	}
-	public void setPosX(double posX) {
-		this.posX = posX;
-		this.colision.x = (int)posX;
+	
+	public void setPosX(int posX) {
+		this.rectJoueur.x = (int)posX - (rectJoueur.width/2);
 	}
-	public double getPosY() {
-		return posY;
+	
+	public int getPosY() {
+		return (int) rectJoueur.getCenterY();
 	}
-	public void setPosY(double posY) {
-		this.posY = posY;
-		this.colision.y = (int)posY;
+	public void setPosY(int posY) {
+		this.rectJoueur.y = (int)posY - (rectJoueur.height/2);
 	}
 	public double getAngleSourisJoueur() {
 		return angleSourisJoueur;
@@ -111,7 +122,7 @@ public class Joueur { // extends Observable {
 		this.angleSourisJoueur = angleSourisJoueur;
 	}
 	public Rectangle getRectangle() {
-		return colision;
+		return rectJoueur;
 	}
 	
 	// méthodes	
@@ -123,9 +134,10 @@ public class Joueur { // extends Observable {
 	public String toString() {
 		char sep = '#';
 		return 	nom + delim +
-				getPosX() + delim +
-				getPosY() + delim +
-				getPv();
+				Integer.toString(getPosX()) + delim +
+				Integer.toString(getPosY()) + delim +
+				getPv() + delim +
+				angleSourisJoueur;
 	}
 	
 	/**
@@ -134,13 +146,8 @@ public class Joueur { // extends Observable {
 	 * @param dx deviation en x
 	 * @param dy deviation en y
 	 */
-	public void move(double dx, double dy) {
-		posX += dx;
-		posY += dy;
-		colision.x = (int)posX;
-		colision.y = (int)posY;
-		//setChanged();
-		//notifyObservers();
+	public void move(int dx, int dy) {
+		rectJoueur.setLocation(rectJoueur.x + dx, rectJoueur.y + dy);
 	}
 	
 	/**
@@ -150,17 +157,38 @@ public class Joueur { // extends Observable {
 	 * @param imObs l'objet dans lequel on dessine l'image
 	 */
 	public void dessiner(Graphics g, ImageObserver imObs) {
-		AffineTransform tx = new AffineTransform();
-		tx.translate(posX/*imageJoueur.getWidth(imObs)/2*/, 
-					 posY/*+imageJoueur.getHeight(imObs)/2*/);
-		tx.rotate(angleSourisJoueur);
-		tx.translate(-imageJoueur.getWidth(imObs)/2, 
-				 	 -imageJoueur.getHeight(imObs)/2);
+		Graphics2D g2D = (Graphics2D) g;
 		
-		((Graphics2D)g).drawImage (imageJoueur, tx, imObs);
-		//g.drawRect(colision.x, colision.y, colision.width, colision.height);
-		System.out.println("Angle : " + angleSourisJoueur*180/Math.PI);
-		g.drawLine((int)(posX - 200*Math.cos(angleSourisJoueur)), (int)(posY - 200*Math.sin(angleSourisJoueur)),(int)posX, (int)posY);
+		// TRANSFORMATION
+		AffineTransform t = new AffineTransform();
+		t.translate(getPosX(), getPosY());
+		t.rotate(angleSourisJoueur);
+		t.translate(-imageJoueur.getWidth(null)/2, -imageJoueur.getHeight(null)/2);
+		
+		// DESSIN DE L'IMAGE
+		g2D.drawImage(imageJoueur, t, imObs);
+		//g.drawImage(imageJoueur, rectJoueur.x, rectJoueur.y, null);
+		
+		if (DEBUG)
+		{
+			g.setColor(Color.RED);
+			g.drawRect(rectJoueur.x, rectJoueur.y, rectJoueur.width, rectJoueur.height);
+		}
+		
+		// DESSIN DE LA BARRE DE VIE
+		Rectangle barreVie = new Rectangle();
+		barreVie.width = rectJoueur.width;
+		barreVie.height = HEIGHT_BARRE_VIE;
+		barreVie.x = rectJoueur.x;
+		barreVie.y = rectJoueur.y - barreVie.height -  DESSUS_JOUEUR_BARRE_VIE;
+		
+		Rectangle vie = new Rectangle(barreVie);
+		vie.width = (int)(vie.width * ((double)pv / pvMax));
+
+		g.setColor(Color.GREEN);
+		g.fillRect(vie.x, vie.y, vie.width, vie.height);
+		g.setColor(Color.BLACK);
+		g.drawRect(barreVie.x, barreVie.y, barreVie.width, barreVie.height);
 	}
 
 	public int getVitesse() {
@@ -172,8 +200,8 @@ public class Joueur { // extends Observable {
 	 * @param posX
 	 * @param posY
 	 */
-	public void setPos(double posX, double posY) {
-		setPosX(posX);
-		setPosY(posY);
+	public void setPos(int posX, int posY) {
+		this.rectJoueur.x = (int)posX - (rectJoueur.width/2);
+		this.rectJoueur.y = (int)posY - (rectJoueur.height/2);
 	}
 }

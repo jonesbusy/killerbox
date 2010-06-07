@@ -115,7 +115,7 @@ public class Client extends Observable
 	public void send(String message)
 	{
 		// -- Pour le debug, afficher sur la console --
-		System.out.println(message);
+		System.out.println("SEND : " + message);
 		
 		if(this.output != null)
 		{
