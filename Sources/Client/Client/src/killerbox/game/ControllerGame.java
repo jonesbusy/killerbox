@@ -82,7 +82,7 @@ public class ControllerGame {
 			}
 			
 			// Indiquer la position aux autres joueurs
-			controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+joueur.toString());
+			controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+ joueur.toString());
 			
 			// Regarder s'il y a eu un tir
 			if (etat.isTir())

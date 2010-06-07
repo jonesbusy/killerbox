@@ -44,13 +44,6 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 			// Seter le model
 			scoresTable.setModel(scoresInfo);
 			
-			// Mettre a jour le scroll pane
-			scoresTable.repaint();
-			scoresTable.validate();
-			scrollPane.getViewport().setView(scoresTable);
-			repaint();
-			validate();
-			
 		}
 
 		/**
@@ -151,6 +144,14 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 	public void refreshData()
 	{
 		this.loader.getData();
+		
+		// Mettre a jour le scroll pane
+		scoresTable.repaint();
+		scoresTable.validate();
+		scrollPane.getViewport().setView(scoresTable);
+		repaint();
+		validate();
+		
 	}
 	
 }

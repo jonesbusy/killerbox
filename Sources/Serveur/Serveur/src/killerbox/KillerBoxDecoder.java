@@ -373,8 +373,8 @@ public class KillerBoxDecoder extends Decoder
 				String user = this.getUserName(connexion.getId());
 				String owner = this.gameList.getOwner(id);
 
-				// Si le createur quitte la partie, tout le monde
-				if(this.gameList.getOwner(id).equals(user))
+				// Si le createur quitte la partie, supprimer la partie
+				if(owner != null && owner.equals(user))
 					this.gameList.deleteGame(user);
 				
 				else

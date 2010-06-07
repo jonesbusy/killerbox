@@ -46,13 +46,6 @@ public class PanelListPlayersGameAll extends AbstractPanel
 			
 			// Seter le model
 			playersTable.setModel(playersInfo);
-			
-			// Mettre a jour le scroll pane
-			playersTable.repaint();
-			playersTable.validate();
-			scrollPane.getViewport().setView(playersTable);
-			repaint();
-			validate();
 
 		}
 
@@ -221,6 +214,13 @@ public class PanelListPlayersGameAll extends AbstractPanel
 	public void refreshData()
 	{
 		this.playersLoader.getData();
+		
+		// Mettre a jour le scroll pane
+		playersTable.repaint();
+		playersTable.validate();
+		scrollPane.getViewport().setView(playersTable);
+		repaint();
+		validate();
 	}
 
 }
