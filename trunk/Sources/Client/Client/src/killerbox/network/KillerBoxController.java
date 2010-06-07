@@ -254,5 +254,14 @@ public class KillerBoxController extends Controller
 		
 	}
 	
+	/**
+	 * Permet d'envoyer la trame à tous les autres joueurs de la même partie,
+	 * sauf à soi-même.
+	 * @param string le message à envoyer
+	 */
+	public void sendInfosGameOtherPlayers(String infos) {
+		client.send("#game#infos#others#"+infos+"#");	
+	}
+	
 	
 }

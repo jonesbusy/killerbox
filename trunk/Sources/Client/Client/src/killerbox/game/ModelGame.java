@@ -17,6 +17,8 @@ public class ModelGame extends Observable{
 	// Liste des joueurs
 	ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
 	
+	private ArrayList<Tir> tirs = new ArrayList<Tir>();
+	
 	public Joueur getJoueurActif() {
 		return joueurActif;
 	}
@@ -81,6 +83,18 @@ public class ModelGame extends Observable{
 				return j;
 		}
 		return null;
+	}
+
+	public void addTir(Tir tir) {
+		tirs.add(tir);
+	}
+
+	public ArrayList<Tir> getTirs() {
+		return new ArrayList<Tir>(tirs);
+	}
+
+	public void removeTir(Tir tir) {
+		tirs.remove(tir);		
 	}
 
 }

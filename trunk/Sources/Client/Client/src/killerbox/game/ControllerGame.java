@@ -1,7 +1,9 @@
 package killerbox.game;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import killerbox.network.KillerBoxController;
@@ -21,88 +23,91 @@ public class ControllerGame {
 	public ControllerGame(ModelGame modelGame) {
 		this.modelGame = modelGame;
 	}
-
-	public void gestionDeplacement(KeyEvent e) {
+	
+	public void gestionCommandes(EtatCommandes etat)
+	{
 		Joueur joueur = modelGame.getJoueurActif();
 		CarteBase carte = modelGame.getCarte();
 		
-		double posFutureX = joueur.getPosX();
-		double posFutureY = joueur.getPosY();
+		int posInitX = joueur.getPosX();
+		int posInitY = joueur.getPosY();
 		
-		ArrayList<Rectangle> murs = carte.getMurs();
-		/*
-		if (e.getKeyCode() == KeyEvent.VK_W)
+		if (etat.isHaut())
 		{
-			joueur.move(0, -joueur.getVitesse());
+			joueur.setPosY(joueur.getPosY() - joueur.getVitesse());
 			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getRectangle()))
-					joueur.move(0, joueur.getVitesse());
+			// Gestion des collision
+			if (existeCollision())
+			{
+				joueur.setPosY(posInitY);
+			}
 		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_S)
+		if (etat.isBas())
 		{
-			joueur.move(0, joueur.getVitesse());
+			joueur.setPosY(joueur.getPosY() + joueur.getVitesse());
 			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getRectangle()))
-					joueur.move(0, -joueur.getVitesse());
+			// Gestion des collision
+			if (existeCollision())
+			{
+				joueur.setPosY(posInitY);
+			}
 		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_A)
+		if (etat.isGauche())
 		{
-			joueur.move(-joueur.getVitesse(), 0);
+			joueur.setPosX(joueur.getPosX() - joueur.getVitesse());
 			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getRectangle()))
-					joueur.move(joueur.getVitesse(), 0);
+			// Gestion des collision
+			if (existeCollision())
+			{
+				joueur.setPosX(posInitX);
+			}
 		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_D)
+		if (etat.isDroite())
 		{
-			joueur.move(joueur.getVitesse(), 0);
-			
-			for(Rectangle mur : murs)
-				if(mur.intersects(joueur.getRectangle()))
-					joueur.move(-joueur.getVitesse(), 0);
+			joueur.setPosX(joueur.getPosX() + joueur.getVitesse());
+
+			// Gestion des collision
+			if (existeCollision())
+			{
+				joueur.setPosX(posInitX);
+			}
 		}
-		*/
 		
-		if (e.getKeyCode() == KeyEvent.VK_W)
+		// Indiquer la position aux autres joueurs
+		controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+joueur.toString());
+		
+		// Regarder s'il y a eu un tir
+		if (etat.isTir())
 		{
-			posFutureY = posFutureY - joueur.getVitesse();
+			etat.setTir(false);
+			Point source = new Point(modelGame.getJoueurActif().getPosX(),modelGame.getJoueurActif().getPosY());
+			Double angle = modelGame.getJoueurActif().getAngleSourisJoueur();
+			Tir tir = new Tir(source, angle, new TypeTir(30),true,modelGame, controllerReseau);
+			modelGame.addTir(tir);
+			controllerReseau.sendInfosGameOtherPlayers("tir#"+tir.toString());
 		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_S)
-		{
-			posFutureY = posFutureY + joueur.getVitesse();
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_A)
-		{
-			posFutureX = posFutureX - joueur.getVitesse();
-		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_D)
-		{
-			posFutureX = posFutureX + joueur.getVitesse();
-		}
-		
-		// Indiquer la nouvelle position à tous les clients
-		controllerReseau.sendInfosGame("positionJoueur#"+joueur.getNom()+"#"+posFutureX+"#"+posFutureY);
-		
 	}
-	
-	/**
-	 * Méthode permettant de créer et de positionner les joueurs dans le modèle
-	 * par rapport à la carte
-	 */
-	public void positionnerJoueurs() {
-		// Générer une position aléatoire
+
+	private boolean existeCollision() {
+		Joueur joueurActif = modelGame.getJoueurActif();
 		
-		// Vérifier que la position ne soit pas en conflit avec les joueurs
-		// ou murs de la carte.
+		// Vérification des murs
+		for (Rectangle mur : modelGame.getCarte().getMurs()) {
+			if (mur.intersects(joueurActif.getRectangle()))
+				return true;
+		}
 		
+		// Vérification des joueurs
+		for (Joueur joueur : modelGame.getJoueurs()) {
+			if (joueur != joueurActif)
+				if (joueur.getRectangle().intersects(joueurActif.getRectangle()))
+					return true;
+		}
+		
+		return false;
 	}
 
 	public void addPlayerWithRandomPosition(String player, int lifePoint) {
@@ -116,8 +121,8 @@ public class ControllerGame {
 			collision = false;
 			
 			// Calculer une nouvelle position aléatoire
-			j.setPosX(Math.random()*modelGame.getCarte().getWidth());
-			j.setPosY(Math.random()*modelGame.getCarte().getHeight());
+			j.setPosX((int)(Math.random()*modelGame.getCarte().getWidth()));
+			j.setPosY((int)(Math.random()*modelGame.getCarte().getHeight()));
 			
 			// Vérifier s'il y a une collision
 			for (Joueur j2 : modelGame.getJoueurs()) {
@@ -162,7 +167,6 @@ public class ControllerGame {
 		for (Joueur joueur : modelGame.getJoueurs()) {
 			controllerReseau.sendInfosGame("!owner#joueur#" + joueur.toString());
 		}
-		
 	}
 	
 	/**
@@ -171,6 +175,20 @@ public class ControllerGame {
 	 */
 	public void startGame() {
 		controllerReseau.sendInfosGame("start");		
+	}
+
+	public void angleJoueurSouris(MouseEvent e) {
+		Joueur j = modelGame.getJoueurActif();
+		
+		double angle = Math.atan((double)(e.getY() - j.getPosY())/ (e.getX() - j.getPosX()));
+		
+		if (e.getX() < j.getPosX())
+		{
+			// inverser l'angle
+			angle = Math.PI + angle; 
+		}
+		
+		j.setAngleSourisJoueur(angle);
 	}
 
 }
