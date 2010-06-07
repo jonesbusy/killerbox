@@ -271,4 +271,10 @@ public class KillerBoxController extends Controller
 		client.send("#game#infos#others#" + infos + "#");
 	}
 
+	public void sendInfosGameMessage(String message) {
+		client.send("#game#infos#message#"+message+"#");	
+	}
+	
+	
+
 }
