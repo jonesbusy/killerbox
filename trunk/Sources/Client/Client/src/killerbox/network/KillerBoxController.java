@@ -120,7 +120,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#account#modify#passadmin#" + login + '#' + pass);
 	}
-	
+
 	/**
 	 * Permet de demander les informations
 	 * sur les utilisateurs et leur scores.
@@ -129,7 +129,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#scores#");
 	}
-	
+
 	/**
 	 * Permet de demander les informations sur les differentes parties
 	 */
@@ -137,7 +137,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#game#list#");
 	}
-	
+
 	/**
 	 * Permet de demander la creation d'une nouvelle partie
 	 * @param type Type de la partie. 0 pour Tous vs Tous ou 1 pour par equipe.
@@ -146,7 +146,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#game#create#" + type + "#");
 	}
-	
+
 	/**
 	 * Demande de suppression de partie.
 	 */
@@ -154,7 +154,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#game#delete#");
 	}
-	
+
 	/**
 	 * Demande de rejoindre une partie
 	 * @param id ID de la partie
@@ -163,7 +163,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#game#join#" + id + "#");
 	}
-	
+
 	/**
 	 * Demande de quitter le jeu
 	 * @param id ID de la partie
@@ -172,7 +172,7 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#game#quit#" + id + "#");
 	}
-	
+
 	/**
 	 * Permet de demander les differents utilisateur inscris pour
 	 * une partie donnee
@@ -193,75 +193,82 @@ public class KillerBoxController extends Controller
 		// Seter la fin de la connecion
 		fenetre.getPanel().errorConnection = true;
 		fenetre.printMessage(MESSAGE_DECO);
-		
+
 		// Fermer proprement le client
 		client.disconnect();
 	}
-	
+
 	/**
 	 * Envoie la demande pour démarrre la partie. Pour que les joueurs puissent
 	 * se mettre à bouger.
 	 */
-	public void requestStartGame() {
+	public void requestStartGame()
+	{
 		client.send("#game#start#");
 	}
-	
+
 	/**
 	 * Envoie les données du modèles à tous les clients connectés à la même
 	 * partie que le créateur (C'est le créateur uniquement qui utilise cette
 	 * fonction).
 	 * @param modelGame Le modèle de jeu à envoyer
 	 */
-	public void sendModel(ModelGame modelGame) {
-		
+	public void sendModel(ModelGame modelGame)
+	{
+
 		// On précise !owner pour que les infos ne soient pas renvoyées au
 		// créateur de la partie, mais seulement aux autres joueurs.
 		String header = "#game#infos#!owner#";
-		
+
 		// JOUEURS
-		for (Joueur joueur : modelGame.getJoueurs()) {
+		for (Joueur joueur : modelGame.getJoueurs())
+		{
 			// PosX#PosY#nomJoueur
-			client.send(header + joueur.getPosX() + "#" + joueur.getPosY() + "#" + joueur.getNom() + "#");
+			client.send(header + joueur.getPosX() + "#" + joueur.getPosY() + "#"
+					+ joueur.getNom() + "#");
 		}
-		
+
 		// CARTE
 		// Note : on envoie le nom de la classe, comme ça, on a plus qu'a
 		// l'instancié chez les autres clients
-		client.send(header + (new CarteBase()).getClass().toString()+ "#");
+		client.send(header + (new CarteBase()).getClass().toString() + "#");
 	}
-	
+
 	/**
 	 * Envoie une demande pour faire passer tous les joueurs de la même partie
 	 * au panel de jeu
 	 */
-	public void requestPanelGame() {
+	public void requestPanelGame()
+	{
 		// infos : le serveur sait qu'il doit renvoyer le paquet à tous les
 		// joueur de la même partie
-		
+
 		client.send("#game#infos#panelGame#");
 	}
 
-	public void requestCreateModelAndController() {
+	public void requestCreateModelAndController()
+	{
 		client.send("#game#infos#!owner#createModelAndController#");
 	}
-	
+
 	/**
 	 * Permet d'envoyer des infos à tous les joueurs de la partie
 	 * @param string L'information à envoyer
 	 */
-	public void sendInfosGame(String infos) {
-		client.send("#game#infos#"+infos+"#");
-		
+	public void sendInfosGame(String infos)
+	{
+		client.send("#game#infos#" + infos + "#");
+
 	}
-	
+
 	/**
 	 * Permet d'envoyer la trame à tous les autres joueurs de la même partie,
 	 * sauf à soi-même.
 	 * @param string le message à envoyer
 	 */
-	public void sendInfosGameOtherPlayers(String infos) {
-		client.send("#game#infos#others#"+infos+"#");	
+	public void sendInfosGameOtherPlayers(String infos)
+	{
+		client.send("#game#infos#others#" + infos + "#");
 	}
-	
-	
+
 }
