@@ -46,7 +46,8 @@ public class Joueur { // extends Observable {
 	 * Pour constuire des chaine représentant le joueur (delim)
 	 */
 	private char delim = '#';
-	
+	private boolean mort;
+
 	// constructeur 
 	/**
 	 * Constructeur à 4 arguments de la classe joueur
@@ -184,6 +185,9 @@ public class Joueur { // extends Observable {
 		
 		Rectangle vie = new Rectangle(barreVie);
 		vie.width = (int)(vie.width * ((double)pv / pvMax));
+		
+		if (vie.width < 0)
+			vie.width = 0;
 
 		g.setColor(Color.GREEN);
 		g.fillRect(vie.x, vie.y, vie.width, vie.height);
@@ -203,5 +207,13 @@ public class Joueur { // extends Observable {
 	public void setPos(int posX, int posY) {
 		this.rectJoueur.x = (int)posX - (rectJoueur.width/2);
 		this.rectJoueur.y = (int)posY - (rectJoueur.height/2);
+	}
+
+	public void setMort(boolean mort) {
+		this.mort = mort;
+	}
+	
+	public boolean isMort() {
+		return mort;
 	}
 }

@@ -1,5 +1,6 @@
 package killerbox.game;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -26,68 +27,73 @@ public class ControllerGame {
 	
 	public void gestionCommandes(EtatCommandes etat)
 	{
+		
 		Joueur joueur = modelGame.getJoueurActif();
-		CarteBase carte = modelGame.getCarte();
 		
-		int posInitX = joueur.getPosX();
-		int posInitY = joueur.getPosY();
-		
-		if (etat.isHaut())
+		if (joueur != null)
 		{
-			joueur.setPosY(joueur.getPosY() - joueur.getVitesse());
+			CarteBase carte = modelGame.getCarte();
+				
+			int posInitX = joueur.getPosX();
+			int posInitY = joueur.getPosY();
+				
+			if (etat.isHaut())
+			{
+				joueur.setPosY(joueur.getPosY() - joueur.getVitesse());
+				
+				// Gestion des collision
+				if (existeCollision())
+				{
+					joueur.setPosY(posInitY);
+				}
+			}
 			
-			// Gestion des collision
-			if (existeCollision())
+			if (etat.isBas())
 			{
-				joueur.setPosY(posInitY);
+				joueur.setPosY(joueur.getPosY() + joueur.getVitesse());
+				
+				// Gestion des collision
+				if (existeCollision())
+				{
+					joueur.setPosY(posInitY);
+				}
 			}
-		}
-		
-		if (etat.isBas())
-		{
-			joueur.setPosY(joueur.getPosY() + joueur.getVitesse());
 			
-			// Gestion des collision
-			if (existeCollision())
+			if (etat.isGauche())
 			{
-				joueur.setPosY(posInitY);
+				joueur.setPosX(joueur.getPosX() - joueur.getVitesse());
+				
+				// Gestion des collision
+				if (existeCollision())
+				{
+					joueur.setPosX(posInitX);
+				}
 			}
-		}
-		
-		if (etat.isGauche())
-		{
-			joueur.setPosX(joueur.getPosX() - joueur.getVitesse());
 			
-			// Gestion des collision
-			if (existeCollision())
+			if (etat.isDroite())
 			{
-				joueur.setPosX(posInitX);
+				joueur.setPosX(joueur.getPosX() + joueur.getVitesse());
+	
+				// Gestion des collision
+				if (existeCollision())
+				{
+					joueur.setPosX(posInitX);
+				}
 			}
-		}
-		
-		if (etat.isDroite())
-		{
-			joueur.setPosX(joueur.getPosX() + joueur.getVitesse());
-
-			// Gestion des collision
-			if (existeCollision())
+			
+			// Indiquer la position aux autres joueurs
+			controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+joueur.toString());
+			
+			// Regarder s'il y a eu un tir
+			if (etat.isTir())
 			{
-				joueur.setPosX(posInitX);
+				etat.setTir(false);
+				Point source = new Point(modelGame.getJoueurActif().getPosX(),modelGame.getJoueurActif().getPosY());
+				Double angle = modelGame.getJoueurActif().getAngleSourisJoueur();
+				Tir tir = new Tir(source, angle, new TypeTir(30),true,modelGame, controllerReseau);
+				modelGame.addTir(tir);
+				controllerReseau.sendInfosGameOtherPlayers("tir#"+tir.toString());
 			}
-		}
-		
-		// Indiquer la position aux autres joueurs
-		controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+joueur.toString());
-		
-		// Regarder s'il y a eu un tir
-		if (etat.isTir())
-		{
-			etat.setTir(false);
-			Point source = new Point(modelGame.getJoueurActif().getPosX(),modelGame.getJoueurActif().getPosY());
-			Double angle = modelGame.getJoueurActif().getAngleSourisJoueur();
-			Tir tir = new Tir(source, angle, new TypeTir(30),true,modelGame, controllerReseau);
-			modelGame.addTir(tir);
-			controllerReseau.sendInfosGameOtherPlayers("tir#"+tir.toString());
 		}
 	}
 
@@ -180,15 +186,24 @@ public class ControllerGame {
 	public void angleJoueurSouris(MouseEvent e) {
 		Joueur j = modelGame.getJoueurActif();
 		
-		double angle = Math.atan((double)(e.getY() - j.getPosY())/ (e.getX() - j.getPosX()));
-		
-		if (e.getX() < j.getPosX())
+		if (j != null)
 		{
-			// inverser l'angle
-			angle = Math.PI + angle; 
-		}
 		
-		j.setAngleSourisJoueur(angle);
+			double angle = Math.atan((double)(e.getY() - j.getPosY())/ (e.getX() - j.getPosX()));
+
+			if (e.getX() < j.getPosX())
+			{
+				// inverser l'angle
+				angle = Math.PI + angle; 
+			}
+			
+			j.setAngleSourisJoueur(angle);
+			
+		}
+	}
+
+	public void afficherMessage(Message message) {
+		modelGame.addMessage(message);
 	}
 
 }

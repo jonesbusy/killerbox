@@ -57,6 +57,13 @@ public class Tir {
 							
 							// Indiquer aux autres joueurs qu'un joueur a été touché
 							controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+joueur.toString());
+							
+							// Indiquer aux autres joueurs que le joueur est mort
+							if (joueur.getPv() <= 0)
+							{
+								controllerReseau.sendInfosGameOtherPlayers("joueurMort#"+joueur.getNom());
+								modelGame.removeJoueur(joueur);
+							}
 						}
 						
 						fin = true;	
