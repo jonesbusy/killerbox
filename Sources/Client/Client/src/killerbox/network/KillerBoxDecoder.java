@@ -281,6 +281,11 @@ public class KillerBoxDecoder extends Decoder
 						// on affiche le panel de jeu
 						base.setPanel(PANEL_GAME);
 					}
+					else if (instruction.equals("message"))
+					{
+						String msg = tokens.nextToken();
+						base.getModelGame().addMessage(new Message(msg, Color.GRAY));
+					}
 					else if (instruction.equals("others"))
 					{
 						instruction = tokens.nextToken();
@@ -313,14 +318,21 @@ public class KillerBoxDecoder extends Decoder
 						else if (instruction.equals("joueurMort"))
 						{
 							String nomJoueur = tokens.nextToken();
+							String tueur = tokens.nextToken();
 							Joueur joueurMort = base.getModelGame().getJoueurByName(nomJoueur);
 							base.getModelGame().removeJoueur(joueurMort);
 
 							if (nomJoueur.equals(base.getNomJoueur()))
 							{
+								base.getModelGame().addMessage(new Message(tueur + " vous a tué!", Color.RED));
+								base.getModelGame().setJoueurActif((Joueur)null);
 								base.getControllerGame().afficherMessage(
 										new Message("Vous êtes mort.", Color.RED));
 								base.getModelGame().setJoueurActif((Joueur) null);
+							}
+							else
+							{
+								base.getModelGame().addMessage(new Message(tueur + " a tué " + nomJoueur + "!", Color.RED));
 							}
 						}
 					}
