@@ -29,8 +29,10 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		Runnable, MouseListener, Observer
 {
 
+	private static final int HAUTEUR_CHAT = 100;
 	private final int FPS = 10;
 	private double angleSourisJoueur;
+	private Image imageDeFond;		 // Images de fond
 	private int PG_X = 400; // Taille en X du panneau graphique
 	private int PG_Y = 400; // Taille en Y du panneau graphique
 	private Image imageDeFond; // Images de fond
@@ -38,6 +40,11 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	private EtatCommandes etatCommandes = new EtatCommandes(KeyEvent.VK_W, KeyEvent.VK_S,
 			KeyEvent.VK_D, KeyEvent.VK_A, MouseEvent.BUTTON1);
 	private Thread refresh = new Thread(this);
+	private Chat chat;
+
+	private Thread action = new Thread(new Runnable() {
+		
+		public void run() {
 	private Thread action = new Thread(new Runnable()
 	{
 
@@ -77,8 +84,8 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		// Ajout des écouteurs
 		base.setFocusable(true);
 		base.addKeyListener(this);
-		base.addMouseMotionListener(this);
-		base.addMouseListener(this);
+		addMouseMotionListener(this);
+		addMouseListener(this);
 		base.getModelGame().addObserver(this);
 
 		// On modifie l'image du curseur
@@ -86,6 +93,10 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		Image img = tk.createImage("curseurViseur.gif");
 		Cursor curseurViseur = tk.createCustomCursor(img, new Point(16, 16), "viseur");
 		setCursor(curseurViseur);
+		
+		// chat
+		chat = new Chat(window.getModelGame());
+		
 
 		this.setSize(new Dimension(PG_X, PG_Y));
 
@@ -163,6 +174,8 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 							joueur.dessiner(g, null);
 					}
 
+					// dessiner le chat
+					chat.dessiner(g);
 					// dessiner messages
 					int hauteurTexte = g.getFont().getSize();
 					int posY = 10;
@@ -177,6 +190,12 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 					break;
 			}
 		}
+		catch(Exception e){}
+    }
+	
+	public Dimension getPreferredSize() {
+		// Retourne la taille souhaitée pour le composant (remplace le "getSize"
+		return getSize();
 		catch (Exception e)
 		{
 		}
@@ -246,6 +265,10 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		// On adapte la taille de la fenêtre et du panel à celle de la carte
 		Dimension carteDim = window.getModelGame().getCarte().getSize();
 		setSize(carteDim);
+		chat.y = carteDim.height;
+		chat.width = carteDim.width;
+		chat.height = HAUTEUR_CHAT;
+		window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20 + chat.height);
 		window.setSize(carteDim.width, carteDim.height + window.getHeightMenu() + 20);
 	}
 
