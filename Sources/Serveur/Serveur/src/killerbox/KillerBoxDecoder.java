@@ -384,25 +384,6 @@ public class KillerBoxDecoder extends Decoder
 				
 			}
 
-			/**
-			 * Demande pour demarrer le jeu
-			 */
-			else if (instruction.equals("start"))
-			{
-				// Recuperer la partie
-				String owner = this.getUserName(connexion.getId());
-				int gameID = this.gameList.getId(owner);
-
-				// Demarrage de la partie reussi (Elle existe et c'est le bon proprietaire)
-				if (gameID != -1 && this.gameList.startGame(owner))
-				{
-					// Prevenir les utilisateur du debut de la partie
-					serverKillerBox.broadcastGame(gameID, "#game#start#true");
-				}
-				else
-					connexion.send("#game#start#false");
-
-			}
 
 			/**
 			 * Envoi d'infos sur la partie
@@ -423,11 +404,29 @@ public class KillerBoxDecoder extends Decoder
 				{
 					serverKillerBox.broadcastGameNotUser(idGame, message, userName);
 				}
+				else if(instruction.equals("start"))
+				{
+					// Recuperer la partie
+					String owner = this.getUserName(connexion.getId());
+					int gameID = this.gameList.getId(owner);
+					
+					// Demarrage de la partie reussi (Elle existe et c'est le bon proprietaire)
+					if (gameID != -1 && this.gameList.startGame(owner))
+					{
+						System.out.println("bonjour");
+						// Prevenir les utilisateur du debut de la partie
+						serverKillerBox.broadcastGame(gameID, message);
+					}
+					else
+						connexion.send("#game#start#false");
+				}
+					
 				else
 				{
 					// Renvoyer à tout le monde de la même partie
 					serverKillerBox.broadcastGame(idGame, message);
 					System.out.println(message);
+					
 				}
 			}
 
