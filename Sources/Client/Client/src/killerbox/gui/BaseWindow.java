@@ -25,7 +25,7 @@ import static killerbox.gui.panel.EnumPanel.*;
  * 
  * La vue se charge d'observer les eventuels message du client et du controleur. La
  * plupart des messages recu sont des messages d'erreur.
- *
+ * 
  * @author Fabrizio Beretta Piccoli
  * @author Valentin Delaye
  * @version 1.0
@@ -38,10 +38,10 @@ public class BaseWindow extends JFrame implements Observer
 {
 
 	/**
-	 * Le client. 
+	 * Le client.
 	 */
 	private Client client;
-	
+
 	/**
 	 * Les differentes donnees. Scores, listes joueurs, etc.
 	 */
@@ -52,7 +52,7 @@ public class BaseWindow extends JFrame implements Observer
 	 * au serveur.
 	 */
 	private KillerBoxController controller;
-	
+
 	/**
 	 * Id de la partie en cours
 	 */
@@ -98,27 +98,32 @@ public class BaseWindow extends JFrame implements Observer
 	 * Action pour le bouton et menu "Se deconnecter"
 	 */
 	private ActionListener actionDisconnect;
-	
+
 	/**
 	 * Action pour le bouton et menu "rejoindre partie"
 	 */
-	private ActionListener actionrejoindre;
-	
+	private ActionListener actionJoin;
+
+	/**
+	 * Action pour le bouton et menu "creer partie"
+	 */
+	private ActionListener actionCreate;
+
+	/**
+	 * Action pour le bouton quitter partie
+	 */
+	private ActionListener actionQuitGame;
+
 	/**
 	 * Modèle de jeu
 	 */
 	private ModelGame modelGame;
-	
+
 	/**
 	 * Controller de jeu
 	 */
 	private ControllerGame controllerGame;
-	
-	/**
-	 * Action pour le bouton et menu "creer partie"
-	 */
-	private ActionListener actioncreer;
-	
+
 	/**
 	 * Nom du joueur
 	 */
@@ -136,9 +141,9 @@ public class BaseWindow extends JFrame implements Observer
 	 * Items du menu principal
 	 */
 	private JMenuItem disconnectItem = new JMenuItem("Se deconnecter");
-	private JMenuItem quitItem = new JMenuItem("Quitter");
+	private JMenuItem quitWindowsItem = new JMenuItem("Quitter");
 	private JMenuItem aboutItem = new JMenuItem("A propos de KillerBox");
-	
+
 	/**
 	 * Items du menu partie
 	 */
@@ -175,24 +180,23 @@ public class BaseWindow extends JFrame implements Observer
 		this.menu.add(this.gameMenu);
 		this.menu.add(this.helpMenu);
 		this.fileMenu.add(this.disconnectItem);
-		this.fileMenu.add(this.quitItem);
+		this.fileMenu.add(this.quitWindowsItem);
 		this.helpMenu.add(this.aboutItem);
-		
-		// Construire le menu "Partie" 
+
+		// Construire le menu "Partie"
 		quitGame.setEnabled(false);
 		joinGame.setEnabled(false);
 		createGame.setEnabled(false);
 		this.gameMenu.add(this.quitGame);
 		this.gameMenu.add(this.joinGame);
 		this.gameMenu.add(this.createGame);
-		
 
 		// Panel de connection au demarrage
 		this.setPanel(PANEL_CONNECTION);
 
 		// Afficher la fenetre
 		this.setVisible(true);
-		
+
 		// Observer les donnees
 		this.data.addObserver(this);
 
@@ -200,8 +204,10 @@ public class BaseWindow extends JFrame implements Observer
 		this.actionDisconnect = new ActionListener()
 		{
 			/**
-			 * Lors du clique sur le bouton deconnecter. Envoyer un message au serveur, se deconnecter,
-			 * charger le panel de connexion au serveur et afficher un message comme quoi l'utilisateur
+			 * Lors du clique sur le bouton deconnecter. Envoyer un message au serveur, se
+			 * deconnecter,
+			 * charger le panel de connexion au serveur et afficher un message comme quoi
+			 * l'utilisateur
 			 * s'est bien deconnecte.
 			 */
 			@Override
@@ -211,13 +217,13 @@ public class BaseWindow extends JFrame implements Observer
 				if (confirmQuit(BaseWindow.CONFIRM_DISCONNECT_MESSAGE))
 				{
 					client.send("#logout");
-					if(arg0.getSource() == quitGame)
+					if (arg0.getSource() == quitGame)
 						setPanel(PANEL_SET_ACCOUNT);
-					else 
+					else
 					{
 						client.disconnect();
 						setPanel(PANEL_CONNECTION);
-					}	
+					}
 					panel.printMessage(MESSAGE_DECO);
 				}
 
@@ -226,11 +232,9 @@ public class BaseWindow extends JFrame implements Observer
 
 		// Action des items menu
 		this.disconnectItem.addActionListener(this.actionDisconnect);
-		
-		// action du quitter dans "Partie"
-		this.quitGame.addActionListener(this.actionDisconnect);
 
-		this.quitItem.addActionListener(new ActionListener()
+		// Action pour quitter la fenetre
+		this.quitWindowsItem.addActionListener(new ActionListener()
 		{
 			/**
 			 * Lorsque l'utilisateur clique sur "Quitter"
@@ -248,7 +252,23 @@ public class BaseWindow extends JFrame implements Observer
 			}
 		});
 
-		this.actionrejoindre = new ActionListener()
+		this.actionQuitGame = new ActionListener()
+		{
+			/**
+			 * Quand l'utilisateur clique sur le bouton quitter partie
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				controller.requestQuitGame(id);
+				setPanel(PANEL_SET_ACCOUNT);
+			}
+		};
+
+		// action du quitter dans "Partie"
+		this.quitGame.addActionListener(this.actionQuitGame);
+
+		this.actionJoin = new ActionListener()
 		{
 			/**
 			 * Quand l'utilisateur clique pour rejoindre une partie
@@ -259,12 +279,12 @@ public class BaseWindow extends JFrame implements Observer
 				setPanel(PANEL_JOIN_GAME);
 			}
 		};
-		
-		this.joinGame.addActionListener(this.actionrejoindre);
-		
-		this.actioncreer = new ActionListener()
+
+		this.joinGame.addActionListener(this.actionJoin);
+
+		this.actionCreate = new ActionListener()
 		{
-		
+
 			/**
 			 * Quand l'utilisateur clique sur le bouton pour creer une partie
 			 */
@@ -274,9 +294,9 @@ public class BaseWindow extends JFrame implements Observer
 				setPanel(PANEL_CREATE_GAME);
 			}
 		};
-		
-		this.createGame.addActionListener(this.actioncreer);
-		
+
+		this.createGame.addActionListener(this.actionCreate);
+
 		// Bouton about
 		this.aboutItem.addActionListener(new ActionListener()
 		{
@@ -289,7 +309,7 @@ public class BaseWindow extends JFrame implements Observer
 				aboutDialog.setVisible(true);
 			}
 		});
-		
+
 		// evenement de creer dans "Partie"
 
 		// Evenement de la fenetre
@@ -321,7 +341,7 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return this.panel;
 	}
-	
+
 	/**
 	 * Permet de setter l'ID de la partie en cours
 	 * @param id L'id de la partie en cours
@@ -338,17 +358,25 @@ public class BaseWindow extends JFrame implements Observer
 	 */
 	public ActionListener getActionDisconnect()
 	{
-		return actionDisconnect;
+		return this.actionDisconnect;
 	}
-	
-	public ActionListener getActionCreerPartie() 
+
+	/**
+	 * Permet de retourner l'action pour creer une partie
+	 * @return L'action pour creer une partie
+	 */
+	public ActionListener getActionCreerPartie()
 	{
-		return actioncreer;
+		return this.actionCreate;
 	}
-	
-	public ActionListener getActionRejoindrePartie() 
+
+	/**
+	 * Permet de retourner l'action pour rejoindre une partie
+	 * @return L'action pour rejoindr la partie
+	 */
+	public ActionListener getActionRejoindrePartie()
 	{
-		return actionrejoindre;
+		return this.actionJoin;
 	}
 
 	/**
@@ -360,7 +388,7 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		return controller;
 	}
-	
+
 	/**
 	 * Permet de retourner les donnees
 	 * @return Les donnes
@@ -379,8 +407,8 @@ public class BaseWindow extends JFrame implements Observer
 		this.client = client;
 
 		// Creation de l'ecouteur et du decoder
-		this.controller = new KillerBoxController(client, this, new KillerBoxDecoder(client,
-				this));
+		this.controller = new KillerBoxController(client, this, new KillerBoxDecoder(
+				client, this));
 
 		// Message d'erreur qui peuvent provenir du client
 		client.addObserver(this);
@@ -426,6 +454,11 @@ public class BaseWindow extends JFrame implements Observer
 	 */
 	public void setPanel(EnumPanel type)
 	{
+		
+		this.createGame.setEnabled(false);
+		this.joinGame.setEnabled(false);
+		this.quitGame.setEnabled(false);
+		
 		switch (type)
 		{
 			case PANEL_CONNECTION:
@@ -452,7 +485,6 @@ public class BaseWindow extends JFrame implements Observer
 			{
 				this.createGame.setEnabled(true);
 				this.joinGame.setEnabled(true);
-				this.quitGame.setEnabled(false);
 				this.panel = new PanelSetAccount(this);
 				break;
 			}
@@ -474,41 +506,42 @@ public class BaseWindow extends JFrame implements Observer
 				this.panel = new PanelAdminScores(this);
 				break;
 			}
-			
+
 			case PANEL_JOIN_GAME:
 			{
 				this.quitGame.setEnabled(true);
 				this.panel = new PanelJoinGame(this);
 				break;
 			}
-			
+
 			case PANEL_CREATE_GAME:
 			{
 				this.quitGame.setEnabled(true);
 				this.panel = new PanelCreateGame(this);
 				break;
 			}
-			
+
 			case PANEL_LIST_PLAYERS_GAME_ALL:
 			{
 				this.panel = new PanelListPlayersGameAll(this, id);
 				break;
 			}
-			
-			case PANEL_LIST_PLAYERS_GAME_ALL_OWNER :
+
+			case PANEL_LIST_PLAYERS_GAME_ALL_OWNER:
 			{
 				this.panel = new PanelListPlayersGameAllOwner(this, id);
 				break;
 			}
-			
+
 			case PANEL_GAME:
 			{
+				this.quitGame.setEnabled(true);
 				this.joinGame.setEnabled(false);
 				this.createGame.setEnabled(false);
 				this.panel = new PanelGame(this);
 				break;
 			}
-			
+
 		}
 
 		// Charge le panel
@@ -538,7 +571,6 @@ public class BaseWindow extends JFrame implements Observer
 		this.panel.printMessage(message);
 	}
 
-
 	/**
 	 * Lorsque la vue recoit un message du controleur, elle l'affiche sur le panel
 	 * en cours. Est utilise par exemple quand le controleur indiquer une action
@@ -549,37 +581,44 @@ public class BaseWindow extends JFrame implements Observer
 	{
 		// Indiquer au panel de se refraichir
 		this.panel.refreshData();
-		
+
 		// Si la vue recoit un message (generalement d'erreur)
 		if (String.class.isInstance(arg))
 			this.panel.printMessage((String) arg);
 	}
 
-	public void setModelGame(ModelGame modelGame) {
+	public void setModelGame(ModelGame modelGame)
+	{
 		this.modelGame = modelGame;
 	}
 
-	public ModelGame getModelGame() {
+	public ModelGame getModelGame()
+	{
 		return modelGame;
 	}
 
-	public void setControllerGame(ControllerGame controllerGame) {
+	public void setControllerGame(ControllerGame controllerGame)
+	{
 		this.controllerGame = controllerGame;
 	}
 
-	public ControllerGame getControllerGame() {
+	public ControllerGame getControllerGame()
+	{
 		return controllerGame;
 	}
 
-	public int getHeightMenu() {
+	public int getHeightMenu()
+	{
 		return menu.getHeight();
 	}
 
-	public void setNomJoueur(String nomJoueur) {
+	public void setNomJoueur(String nomJoueur)
+	{
 		this.nomJoueur = nomJoueur;
 	}
 
-	public String getNomJoueur() {
+	public String getNomJoueur()
+	{
 		return nomJoueur;
 	}
 

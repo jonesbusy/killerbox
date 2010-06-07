@@ -23,32 +23,32 @@ import network.*;
  */
 public class KillerBoxServer extends Observable implements Observer
 {
-	
+
 	/**
 	 * Erreur si le port est deja occupe.
 	 */
 	private static final String PORT_ERROR = "Un serveur existe deja sur ce numero de port.";
-	
+
 	/**
 	 * Message d'erreur si la connexion a la base de donnee de echoue
 	 */
 	private static final String ERROR_DATA_BASE = "Erreur de connexion a la base de donnee.";
-	
+
 	/**
 	 * Pour donner un petit nom du serveur. Utilise pour les messages de log.
 	 */
 	private static final String SERVER_NAME = "SERVER";
-	
+
 	/**
 	 * Donner un nom aux utilisateurs invites. Utilise pour les messages de log.
 	 */
 	private static final String GUEST_NAME = "GUEST";
-	
+
 	/**
 	 * Message lorsqu'un utilisateur quitte le serveur
 	 */
 	private static final String QUIT_SERVER = "quitte le serveur.";
-	
+
 	/**
 	 * Message lorsqu'un utilisateur rejoint le serveur
 	 */
@@ -98,13 +98,13 @@ public class KillerBoxServer extends Observable implements Observer
 			server.addObserver(this);
 			this.database = new killerbox.DataBase("localhost", "killerbox", user, pass);
 		}
-		
+
 		catch (IOException e)
 		{
 			System.out.println(PORT_ERROR);
 			throw e;
 		}
-		
+
 		catch (SQLException e)
 		{
 			System.out.println(ERROR_DATA_BASE);
@@ -127,7 +127,7 @@ public class KillerBoxServer extends Observable implements Observer
 		setChanged();
 		notifyObservers(server.new MessageServerStatus(SERVER_NAME + " : KillerBox v 1.0"));
 	}
-	
+
 	/**
 	 * Permet d'effectuer un broadcast a tout les utilisateurs authentifies.
 	 * @param message Le message a envoyer
@@ -295,7 +295,8 @@ public class KillerBoxServer extends Observable implements Observer
 
 		// Changement d'etat, car une connexion change de status
 		setChanged();
-		notifyObservers(this.server.new MessageServerStatus(username.toUpperCase() + " : est maintenant associe a la connexion " + id));
+		notifyObservers(this.server.new MessageServerStatus(username.toUpperCase()
+				+ " : est maintenant associe a la connexion " + id));
 
 	}
 
@@ -311,97 +312,106 @@ public class KillerBoxServer extends Observable implements Observer
 
 		AbstractServerStatus serverStatus = (AbstractServerStatus) obj;
 		int id = serverStatus.getId();
-		
+
 		// L'utilisateur
 		String user = this.getUserName(id);
-		
-		switch(serverStatus.status)
+
+		switch (serverStatus.status)
 		{
-			
+
 			// Message d'une connexion
-			case ALIVE_CONNECTION :
+			case ALIVE_CONNECTION:
 			{
 				// C'est un invite
-				if(user == null)
+				if (user == null)
 					user = GUEST_NAME + " " + id;
-				
+
 				setChanged();
-				notifyObservers(this.server.new MessageServerStatus(user.toUpperCase() + " : " + serverStatus));
-				
+				notifyObservers(this.server.new MessageServerStatus(user.toUpperCase()
+						+ " : " + serverStatus));
+
 				break;
 			}
-			
-			case NEW_CONNECTION :
+
+			case NEW_CONNECTION:
 			{
 
 				unauthenticated.add(id);
 				setChanged();
-				notifyObservers(this.server.new MessageServerStatus(GUEST_NAME + " " + id + " : " + JOIN_SERVER));
+				notifyObservers(this.server.new MessageServerStatus(GUEST_NAME + " " + id
+						+ " : " + JOIN_SERVER));
 				break;
 			}
-			
-			// Notification de suppression de connexion
-			case REMOVED_CONNECTION :
+
+				// Notification de suppression de connexion
+			case REMOVED_CONNECTION:
 			{
-							
+
 				// C'est un invite
-				if(user == null)
+				if (user == null)
 				{
 					user = GUEST_NAME + " " + id;
 					this.removeUnauthenticated(serverStatus.getId());
 				}
-				
+
 				// C'est un client authentifie
 				else
 				{
 					// Supprimer eventuellement les parties de ce proprietaire
 					this.gameList.deleteGame(user);
-				
+
 					// Supprimer les connexions
 					this.removeLogged(serverStatus.getId());
 				}
-				
+
 				setChanged();
-				notifyObservers(this.server.new MessageServerStatus(user.toUpperCase() + " : " + QUIT_SERVER));
-			
-				}
-			
-				break;
-				
-				// Notification serveur
-				case SERVER_STATUS :
-				{
-					
-					setChanged();
-					notifyObservers(this.server.new MessageServerStatus(SERVER_NAME + " : " + serverStatus));
-					break;
-				}
+				notifyObservers(this.server.new MessageServerStatus(user.toUpperCase()
+						+ " : " + QUIT_SERVER));
+
 			}
-			
+
+				break;
+
+			// Notification serveur
+			case SERVER_STATUS:
+			{
+
+				setChanged();
+				notifyObservers(this.server.new MessageServerStatus(SERVER_NAME + " : "
+						+ serverStatus));
+				break;
+			}
 		}
-	
+
+	}
+
 	/**
 	 * Permet d'envoyer un message a tout les utilisateur d'une partie sauf
-	 * au créateur de celle-ci
+	 * au createur de celle-ci
 	 * @param id Id de la partie
 	 * @param message Le message a envoyer
 	 */
-	public void broadcastGameNotOwner(int idGame, String message) {
-		// Renvoyer à tout le monde de la même partie, sauf 
-		// au créateur
-		String owner = gameList.getOwner(idGame); 
-		
-		for (String user : gameList.getUsers(idGame)) {
+	public void broadcastGameNotOwner(int idGame, String message)
+	{
+		// Renvoyer à tout le monde de la meme partie, sauf
+		// au createur
+		String owner = gameList.getOwner(idGame);
+
+		for (String user : gameList.getUsers(idGame))
+		{
 			if (!user.equals(owner))
 				send(user, message);
 		}
 	}
 
-	public void broadcastGameNotUser(int idGame, String message, String userName) {
-		for (String user : gameList.getUsers(idGame)) {
-			if (!user.equals(userName))
-				send(user, message);
-		}
+	public void broadcastGameNotUser(int idGame, String message, String userName)
+	{
+		if(gameList.getUsers(idGame) != null)
+			for (String user : gameList.getUsers(idGame))
+			{
+				if (!user.equals(userName))
+					send(user, message);
+			}
 	}
-	
+
 }

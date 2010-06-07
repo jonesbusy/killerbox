@@ -67,8 +67,8 @@ public class KillerBoxDecoder extends Decoder
 	{
 
 		// On decode des connexion killerbox et pas autre chose
-		KillerBoxController connexion = (KillerBoxController)controller;
-		
+		KillerBoxController connexion = (KillerBoxController) controller;
+
 		StringTokenizer tokens = new StringTokenizer(message, "#");
 		String instruction = tokens.nextToken();
 
@@ -147,16 +147,17 @@ public class KillerBoxDecoder extends Decoder
 				// Supprimer son compte
 				else
 					userToDelete = this.getUserName(connexion.getId());
-				
+
 				// Verifier les droits. Un utilisateur peut supprimer son propre compte,
 				// ou un administrateur peut supprimer n'importe qui
 				if (this.getUserName(connexion.getId()).equals(userToDelete)
 						|| this.database.isAdmin(this.getUserName(connexion.getId())))
 				{
 					try
-					{	
+					{
 						connexion.sendDeleteAccount(true);
-						this.server.relay(connexion.getId(), "supprime le compte - " + userToDelete);
+						this.server.relay(connexion.getId(), "supprime le compte - "
+								+ userToDelete);
 						this.database.deleteUser(userToDelete);
 
 					}
@@ -165,7 +166,8 @@ public class KillerBoxDecoder extends Decoder
 					catch (Exception e)
 					{
 						connexion.sendDeleteAccount(false);
-						this.server.relay(connexion.getId(), "erreur suppression compte - " + userToDelete);
+						this.server.relay(connexion.getId(), "erreur suppression compte - "
+								+ userToDelete);
 					}
 				}
 
@@ -258,7 +260,7 @@ public class KillerBoxDecoder extends Decoder
 			{
 				connexion.sendScores(this.database.getInfos());
 			}
-			
+
 			// Erreur SQL, impossible d'extraire les scores
 			catch (SQLException e)
 			{
@@ -292,8 +294,7 @@ public class KillerBoxDecoder extends Decoder
 				{
 					// Type de la partie
 					int type = Integer.parseInt(tokens.nextToken());
-					
-					
+
 					String owner = this.getUserName(connexion.getId());
 					this.gameList.createGame(owner, type);
 
@@ -361,7 +362,7 @@ public class KillerBoxDecoder extends Decoder
 					connexion.send("#game#join#false");
 				}
 			}
-			
+
 			/**
 			 * Demande de quitter une partie
 			 */
@@ -370,10 +371,17 @@ public class KillerBoxDecoder extends Decoder
 				// ID de la partie et utilisateur
 				int id = Integer.parseInt(tokens.nextToken());
 				String user = this.getUserName(connexion.getId());
+				String owner = this.gameList.getOwner(id);
+
+				// Si le createur quitte la partie, tout le monde
+				if(this.gameList.getOwner(id).equals(user))
+					this.gameList.deleteGame(user);
 				
-				this.gameList.deleteUser(user);
+				else
+					this.gameList.deleteUser(user);
+
+				this.server.relay(connexion.getId(), " quitte la partie de " + owner);
 				
-				this.server.relay(connexion.getId(), " quitte la partie de " + this.gameList.getOwner(id));
 			}
 
 			/**
@@ -395,7 +403,7 @@ public class KillerBoxDecoder extends Decoder
 					connexion.send("#game#start#false");
 
 			}
-			
+
 			/**
 			 * Envoi d'infos sur la partie
 			 */
@@ -403,17 +411,17 @@ public class KillerBoxDecoder extends Decoder
 			{
 				String userName = serverKillerBox.getUserName(connexion.getId());
 				int idGame = gameList.getId(userName);
-				
+
 				instruction = tokens.nextToken();
-				
+
 				if (instruction.equals("!owner"))
-				{					
+				{
 					// Renvoyer à tout le monde de la même partie
 					serverKillerBox.broadcastGameNotOwner(idGame, message);
 				}
 				else if (instruction.equals("others"))
 				{
-					serverKillerBox.broadcastGameNotUser(idGame,message,userName);
+					serverKillerBox.broadcastGameNotUser(idGame, message, userName);
 				}
 				else
 				{
@@ -458,19 +466,19 @@ public class KillerBoxDecoder extends Decoder
 				connexion.send("#players#error");
 			}
 		}
-		
+
 		/**
 		 * Information du moteur de jeu. Relayer au joueurs de la partie
 		 */
-		else if(instruction.equals("game-engine"))
+		else if (instruction.equals("game-engine"))
 		{
 			instruction = tokens.toString();
-			
+
 			String user = this.getUserName(connexion.getId());
-			
+
 			// Provient de quelle partie
 			int id = this.gameList.getId(user);
-			
+
 			this.serverKillerBox.broadcastGame(id, instruction);
 		}
 
