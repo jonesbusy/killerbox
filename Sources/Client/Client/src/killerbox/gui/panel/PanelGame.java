@@ -135,15 +135,27 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 					// Dessiner la carte
 					modelGame.getCarte().dessiner(g);
 					
-					// dessiner les joueurs
-					for (Joueur joueur : modelGame.getJoueurs()) {
-						joueur.dessiner(g, null);
-					}
-					
 					// dessiner les tirs
 					for (Tir tir : modelGame.getTirs()) {
 						tir.dessiner(g);
 					}
+					
+					// dessiner les joueurs
+					for (Joueur joueur : modelGame.getJoueurs()) {
+						if (!joueur.isMort())
+							joueur.dessiner(g, null);
+					}
+					
+					// dessiner messages
+					int hauteurTexte = g.getFont().getSize();
+					int posY = 10;
+					int posX = 10;
+					for (Message message : modelGame.getMessages()) {
+						g.setColor(message.getColor());
+						g.drawString(message.getMessage(), posX, posY);
+						posY = posY + hauteurTexte;
+					}
+					
 				break;
 			}
 		}

@@ -3,6 +3,7 @@ package killerbox.network;
 import static killerbox.gui.panel.EnumPanel.*;
 import network.*;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.*;
 
@@ -12,6 +13,7 @@ import killerbox.game.CarteBase;
 import killerbox.game.ControllerGame;
 import killerbox.game.EtatModel;
 import killerbox.game.Joueur;
+import killerbox.game.Message;
 import killerbox.game.ModelGame;
 import killerbox.game.Tir;
 import killerbox.game.TypeTir;
@@ -319,6 +321,18 @@ public class KillerBoxDecoder extends Decoder
 							
 							Tir tir = new Tir(source,angle,typeTir,false,base.getModelGame(),base.getController());
 							base.getModelGame().addTir(tir);
+						}
+						else if(instruction.equals("joueurMort"))
+						{
+							String nomJoueur = tokens.nextToken();
+							Joueur joueurMort = base.getModelGame().getJoueurByName(nomJoueur);
+							base.getModelGame().removeJoueur(joueurMort);
+
+							if (nomJoueur.equals(base.getNomJoueur()))
+							{
+								base.getControllerGame().afficherMessage(new Message("Vous êtes mort.", Color.RED));
+								base.getModelGame().setJoueurActif((Joueur)null);
+							}
 						}
 					}
 					else if (instruction.equals("!owner"))

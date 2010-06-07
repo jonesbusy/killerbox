@@ -3,6 +3,8 @@ package killerbox.game;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 public class ModelGame extends Observable{
 
 	// Joueur du client
@@ -17,7 +19,12 @@ public class ModelGame extends Observable{
 	// Liste des joueurs
 	ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
 	
+	public ArrayList<Message> getMessages() {
+		return new ArrayList<Message>(messages);
+	}
+
 	private ArrayList<Tir> tirs = new ArrayList<Tir>();
+	private ArrayList<Message> messages = new ArrayList<Message>();
 	
 	public Joueur getJoueurActif() {
 		return joueurActif;
@@ -95,6 +102,14 @@ public class ModelGame extends Observable{
 
 	public void removeTir(Tir tir) {
 		tirs.remove(tir);		
+	}
+
+	public void removeJoueur(Joueur joueur) {
+		joueurs.remove(joueur);		
+	}
+
+	public void addMessage(Message message) {
+		messages.add(message);
 	}
 
 }
