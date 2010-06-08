@@ -284,6 +284,9 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 			// Supprimer le modèle et le controller
 			window.setControllerGame(null);
 			window.setModelGame(null);
+			
+			// Redimensionner la fenêtre
+			window.setSize(new Dimension(BaseWindow.getDefaultWidth(),BaseWindow.getDefaultHeight()));
 		}
 		
 	}

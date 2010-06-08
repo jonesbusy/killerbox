@@ -627,4 +627,12 @@ public class BaseWindow extends JFrame implements Observer
 		return quitGame;
 	}
 
+	public static int getDefaultHeight() {
+		return HEIGHT;
+	}
+
+	public static int getDefaultWidth() {
+		return WIDTH;
+	}
+
 }
