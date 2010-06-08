@@ -17,7 +17,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -276,6 +275,11 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		// S'il s'agit du bouton quitter
 		if (e.getSource() == window.getQuitGame())
 		{
+			// Supprimer les écouteurs
+			window.removeKeyListener(this);
+			removeMouseMotionListener(this);
+			removeMouseListener(this);
+			
 			// Arrêter toutes les threads
 			action.interrupt();
 			refresh.interrupt();
