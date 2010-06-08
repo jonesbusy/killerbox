@@ -54,9 +54,10 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 				}
 				catch (InterruptedException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
 				}
+				
+				// TODO Verifier NullPointer
 				window.getControllerGame().gestionCommandes(etatCommandes);
 			}
 		}
@@ -222,8 +223,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 			}
 			catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
 			repaint();
 		}
