@@ -10,11 +10,12 @@ import killerbox.network.KillerBoxController;
 
 public class Tir {
 	
+	private static final int DEGATS = 3;
 	private Point source, position;
 	private Double angle;
 	private TypeTir tir;
 	private boolean checkKill;
-	private int FPS = 10;
+	private int FPS = 25;
 	private ModelGame modelGame;
 	private char delim = '#';
 	private Tir thisTir = this; // pour les thread anonyme
@@ -53,7 +54,7 @@ public class Tir {
 					{
 						if (checkKill)
 						{
-							joueur.setPv(joueur.getPv() - 10);
+							joueur.setPv(joueur.getPv() - DEGATS);
 							
 							// Indiquer aux autres joueurs qu'un joueur a été touché
 							controllerReseau.sendInfosGameOtherPlayers("positionJoueur#"+joueur.toString());

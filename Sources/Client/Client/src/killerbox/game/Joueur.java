@@ -24,7 +24,7 @@ public class Joueur { // extends Observable {
 	  * coordonnée du joueur
 	  */
 	private double angleSourisJoueur;
-	private int vitesse = 7;
+	private int vitesse = 3;
 
 	/**
 	 * points de vie du joueur

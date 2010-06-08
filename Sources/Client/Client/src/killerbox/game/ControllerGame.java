@@ -96,7 +96,7 @@ public class ControllerGame {
 				source.x = source.x + (int)(Math.cos(angle)*moitieJoueur);
 				source.y = source.y + (int)(Math.sin(angle)*moitieJoueur);
 				
-				Tir tir = new Tir(source, angle, new TypeTir(30),true,modelGame, controllerReseau);
+				Tir tir = new Tir(source, angle, new TypeTir(10),true,modelGame, controllerReseau);
 				modelGame.addTir(tir);
 				controllerReseau.sendInfosGameOtherPlayers("tir#"+tir.toString());
 			}
