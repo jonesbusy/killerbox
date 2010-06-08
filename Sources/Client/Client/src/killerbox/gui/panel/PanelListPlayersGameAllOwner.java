@@ -7,15 +7,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import network.Controller;
-
-import com.sun.xml.internal.ws.resources.ModelerMessages;
-
-import killerbox.game.CarteBase;
-import killerbox.game.ControllerGame;
-import killerbox.game.EtatModel;
-import killerbox.game.ModelGame;
-import killerbox.gui.BaseWindow;
+import killerbox.game.*;
+import killerbox.gui.*;
 
 /**
  * Represente le panel pour afficher la liste des joueurs inscrit pour une partie

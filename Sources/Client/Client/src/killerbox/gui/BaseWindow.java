@@ -144,11 +144,11 @@ public class BaseWindow extends JFrame implements Observer
 	private JMenuItem quitWindowsItem = new JMenuItem("Quitter");
 	private JMenuItem aboutItem = new JMenuItem("A propos de KillerBox");
 
+	private JMenuItem quitGame = new JMenuItem("Quitter la partie");
+
 	/**
 	 * Items du menu partie
 	 */
-	private JMenuItem quitGame = new JMenuItem("Quitter la partie");
-
 	private JMenuItem joinGame = new JMenuItem("Rejoindre la partie");
 	private JMenuItem createGame = new JMenuItem("Creer une partie");
 
@@ -455,11 +455,11 @@ public class BaseWindow extends JFrame implements Observer
 	 */
 	public void setPanel(EnumPanel type)
 	{
-		
+
 		this.createGame.setEnabled(false);
 		this.joinGame.setEnabled(false);
 		this.quitGame.setEnabled(false);
-		
+
 		switch (type)
 		{
 			case PANEL_CONNECTION:
@@ -588,50 +588,93 @@ public class BaseWindow extends JFrame implements Observer
 			this.panel.printMessage((String) arg);
 	}
 
+	/**
+	 * Permet de setter le modele du jeu
+	 * @param modelGame Le modele du jeu
+	 */
 	public void setModelGame(ModelGame modelGame)
 	{
 		this.modelGame = modelGame;
 	}
 
+	/**
+	 * Permet de retourner le modele du jeu
+	 * @return Le modele du jeu
+	 */
 	public ModelGame getModelGame()
 	{
 		return modelGame;
 	}
 
+	/**
+	 * Permet de setter le controleur du jeu
+	 * @param controllerGame Le controleur du jeu
+	 */
 	public void setControllerGame(ControllerGame controllerGame)
 	{
 		this.controllerGame = controllerGame;
 	}
 
+	/**
+	 * Permer de retourner le controleur du jeu
+	 * @return Le controleur du jeu
+	 */
 	public ControllerGame getControllerGame()
 	{
 		return controllerGame;
 	}
 
+	/**
+	 * Permet de retourner la hauteur du menu
+	 * @return La hauteur du menu
+	 */
 	public int getHeightMenu()
 	{
 		return menu.getHeight();
 	}
 
+	/**
+	 * Permet de setter le nom du joueur
+	 * @param nomJoueur Le nom du joueur
+	 */
 	public void setNomJoueur(String nomJoueur)
 	{
 		this.nomJoueur = nomJoueur;
 	}
 
+	/**
+	 * Permet de retourner le nom du joueur
+	 * @return Le nom du joueur
+	 */
 	public String getNomJoueur()
 	{
 		return nomJoueur;
 	}
 
-	public JMenuItem getQuitGame() {
+	/**
+	 * Permet de retourner l'item pour quitter
+	 * @return
+	 */
+	public JMenuItem getQuitGame()
+	{
 		return quitGame;
 	}
 
-	public static int getDefaultHeight() {
+	/**
+	 * Permet de retourner la hauteur de la fenetre
+	 * @return La hauteur de la fenetre
+	 */
+	public static int getDefaultHeight()
+	{
 		return HEIGHT;
 	}
 
-	public static int getDefaultWidth() {
+	/**
+	 * Permet de retourner la largeur de la fenetre
+	 * @return La largeur de la fenetre
+	 */
+	public static int getDefaultWidth()
+	{
 		return WIDTH;
 	}
 

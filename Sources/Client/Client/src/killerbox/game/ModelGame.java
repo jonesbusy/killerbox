@@ -3,8 +3,6 @@ package killerbox.game;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 public class ModelGame extends Observable{
 
 	// Joueur du client

@@ -1,7 +1,5 @@
 package killerbox.network;
 
-import java.util.ArrayList;
-
 import network.*;
 import killerbox.game.CarteBase;
 import killerbox.game.Joueur;
