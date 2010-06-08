@@ -116,11 +116,29 @@ public class PanelListPlayersGameAllOwner extends PanelListPlayersGameAll
 
 		// Ne pas afficher le bouton retour comme c'est un createur de la partie
 		this.btnForward.setVisible(false);
+		this.btnStartGame.setEnabled(false);
 
 		// Ajouter les composant
 		this.add(this.btnEndGame);
 		this.add(this.btnStartGame);
 
 	}
+
+	/**
+	 * Est appele quand le panel est mis a jour
+	 */
+	@Override
+	public void refreshData()
+	{
+		super.refreshData();
+		
+		// On peut demarer la partie uniquement si plus de 1 joueur
+		if(this.playersInfo.getRowCount() > 1)
+			this.btnStartGame.setEnabled(true);
+		else
+			this.btnStartGame.setEnabled(false);
+	}
+	
+	
 
 }

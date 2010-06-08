@@ -175,6 +175,7 @@ public class PanelJoinGame extends AbstractPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				btnRefresh.setEnabled(false);
 				controller.requestGames();
 				labMessage.setText("");
 			}
@@ -189,7 +190,6 @@ public class PanelJoinGame extends AbstractPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				window.setID(gameSelected);
-				System.out.println("fooo : " + gameSelected);
 				controller.requestJoinGame(gameSelected);
 			}
 		});
@@ -245,17 +245,19 @@ public class PanelJoinGame extends AbstractPanel
 		
 		// Recuperer les donnes sur les parties
 		Data data = window.getData();
-		gamesInfo = data.getGamesInfo();
+		this.gamesInfo = data.getGamesInfo();
 		
 		// Seter le model
-		gamesTable.setModel(gamesInfo);
+		this.gamesTable.setModel(gamesInfo);
 		
 		// Mettre a jour le scroll pane
-		gamesTable.repaint();
-		gamesTable.validate();
-		scrollPane.getViewport().setView(gamesTable);
-		repaint();
-		validate();	
+		this.gamesTable.repaint();
+		this.gamesTable.validate();
+		this.scrollPane.getViewport().setView(gamesTable);
+		this.repaint();
+		this.validate();
+		
+		this.btnRefresh.setEnabled(true);
 		
 	}
 
