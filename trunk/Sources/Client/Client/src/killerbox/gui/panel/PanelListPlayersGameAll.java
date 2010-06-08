@@ -5,10 +5,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import killerbox.Data;
-import killerbox.GamesInfo;
-import killerbox.PlayersInfo;
-import killerbox.ScoresInfo;
+import killerbox.*;
 import killerbox.gui.*;
 import static killerbox.gui.panel.EnumPanel.*;
 

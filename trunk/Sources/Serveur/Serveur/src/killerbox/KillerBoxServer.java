@@ -162,7 +162,7 @@ public class KillerBoxServer extends Observable implements Observer
 		// Liste des utilisateur a qui envoyer le message
 		String[] users = this.gameList.getUsers(id);
 
-		// Pour chaqu'un envoyer le message
+		// Si la partie existe, pour chacun envoyer le message
 		if(users != null)
 			for (String user : users)
 				this.send(user, message);

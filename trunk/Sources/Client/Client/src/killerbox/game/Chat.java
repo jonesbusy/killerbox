@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public class Chat extends Rectangle{
 	private ModelGame modelGame;
 

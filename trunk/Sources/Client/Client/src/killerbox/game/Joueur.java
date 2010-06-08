@@ -129,7 +129,6 @@ public class Joueur { // extends Observable {
 	 * @return les infos du joueur sous la forme d'un string
 	 */
 	public String toString() {
-		char sep = '#';
 		return 	nom + delim +
 				Integer.toString(getPosX()) + delim +
 				Integer.toString(getPosY()) + delim +

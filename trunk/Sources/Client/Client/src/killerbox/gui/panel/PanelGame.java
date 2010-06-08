@@ -1,31 +1,18 @@
 package killerbox.gui.panel;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+
+import java.awt.*;
+import java.awt.event.*;
+
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-import com.sun.xml.internal.ws.resources.ModelerMessages;
 
 import killerbox.game.*;
 import killerbox.gui.BaseWindow;
 
+@SuppressWarnings("serial")
 public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener,
 		Runnable, MouseListener, Observer, ActionListener
 {

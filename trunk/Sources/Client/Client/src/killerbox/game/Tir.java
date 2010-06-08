@@ -27,7 +27,7 @@ public class Tir {
 		public void run() {
 			
 			int waitTime = 1000 / FPS;
-			int depX,depY;
+
 			Point posFutur = new Point();
 			
 			while(!fin)
