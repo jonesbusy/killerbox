@@ -44,7 +44,8 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 				}
 				
 				// TODO Verifier NullPointer
-				window.getControllerGame().gestionCommandes(etatCommandes);
+				if (window.getControllerGame() != null)
+					window.getControllerGame().gestionCommandes(etatCommandes);
 			}
 		}
 	});
@@ -262,8 +263,12 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		// S'il s'agit du bouton quitter
 		if (e.getSource() == window.getQuitGame())
 		{
+			// Informer le serveur qu'on quitte la partie
+			controller.requestQuitGame(window.getId());
+			
 			// Supprimer les écouteurs
 			window.removeKeyListener(this);
+			window.getQuitGame().removeActionListener(this);
 			removeMouseMotionListener(this);
 			removeMouseListener(this);
 			

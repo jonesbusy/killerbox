@@ -58,6 +58,14 @@ public class BaseWindow extends JFrame implements Observer
 	 */
 	private int id = 0;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/**
 	 * Messages a afficher en cas de deconnexion.
 	 */
@@ -219,7 +227,9 @@ public class BaseWindow extends JFrame implements Observer
 				{
 					client.send("#logout");
 					if (arg0.getSource() == quitGame)
+					{
 						setPanel(PANEL_SET_ACCOUNT);
+					}
 					else
 					{
 						client.disconnect();
@@ -261,7 +271,7 @@ public class BaseWindow extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				controller.requestQuitGame(id);
+				//controller.requestQuitGame(id);
 				setPanel(PANEL_SET_ACCOUNT);
 			}
 		};
