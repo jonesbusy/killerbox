@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -26,7 +28,7 @@ import killerbox.game.*;
 import killerbox.gui.BaseWindow;
 
 public class PanelGame extends AbstractPanel implements KeyListener, MouseMotionListener,
-		Runnable, MouseListener, Observer
+		Runnable, MouseListener, Observer, ActionListener
 {
 
 	private static final int HAUTEUR_CHAT = 100;
@@ -81,6 +83,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		base.getModelGame().addObserver(this);
+		base.getQuitGame().addActionListener(this);
 
 		// On modifie l'image du curseur
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -266,6 +269,23 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// S'il s'agit du bouton quitter
+		if (e.getSource() == window.getQuitGame())
+		{
+			// Arrêter toutes les threads
+			action.interrupt();
+			refresh.interrupt();
+			window.getControllerGame().arreterPartie();
+			
+			// Supprimer le modèle et le controller
+			window.setControllerGame(null);
+			window.setModelGame(null);
+		}
+		
 	}
 
 }
