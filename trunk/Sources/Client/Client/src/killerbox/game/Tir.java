@@ -20,11 +20,12 @@ public class Tir {
 	private char delim = '#';
 	private Tir thisTir = this; // pour les thread anonyme
 	private KillerBoxController controllerReseau;
+	private boolean fin = false;
 	
 	private Thread gestionTir = new Thread(new Runnable() {
 		
 		public void run() {
-			boolean fin = false;
+			
 			int waitTime = 1000 / FPS;
 			int depX,depY;
 			Point posFutur = new Point();
@@ -130,6 +131,10 @@ public class Tir {
 				Integer.toString(source.y) + delim +
 				angle.toString() + delim +
 				tir.toString();
+	}
+
+	public void arreter() {
+		fin = true;
 	}
 	
 

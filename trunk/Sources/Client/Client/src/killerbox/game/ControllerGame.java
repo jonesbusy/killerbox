@@ -212,5 +212,17 @@ public class ControllerGame {
 	public void afficherMessage(Message message) {
 		modelGame.addMessage(message);
 	}
+	
+	/**
+	 * Méthode permettant d'arrêter proprement la partie
+	 */
+	public void arreterPartie() {
+		
+		// Arrêter toutes les threads de tirs
+		for (Tir tir : modelGame.getTirs()) {
+			tir.arreter();
+		}
+		
+	}
 
 }

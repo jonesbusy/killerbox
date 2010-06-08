@@ -148,6 +148,7 @@ public class BaseWindow extends JFrame implements Observer
 	 * Items du menu partie
 	 */
 	private JMenuItem quitGame = new JMenuItem("Quitter la partie");
+
 	private JMenuItem joinGame = new JMenuItem("Rejoindre la partie");
 	private JMenuItem createGame = new JMenuItem("Creer une partie");
 
@@ -620,6 +621,10 @@ public class BaseWindow extends JFrame implements Observer
 	public String getNomJoueur()
 	{
 		return nomJoueur;
+	}
+
+	public JMenuItem getQuitGame() {
+		return quitGame;
 	}
 
 }
