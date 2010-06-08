@@ -404,6 +404,7 @@ public class KillerBoxDecoder extends Decoder
 				{
 					serverKillerBox.broadcastGameNotUser(idGame, message, userName);
 				}
+				
 				else if(instruction.equals("start"))
 				{
 					// Recuperer la partie
@@ -413,7 +414,6 @@ public class KillerBoxDecoder extends Decoder
 					// Demarrage de la partie reussi (Elle existe et c'est le bon proprietaire)
 					if (gameID != -1 && this.gameList.startGame(owner))
 					{
-						System.out.println("bonjour");
 						// Prevenir les utilisateur du debut de la partie
 						serverKillerBox.broadcastGame(gameID, message);
 					}
