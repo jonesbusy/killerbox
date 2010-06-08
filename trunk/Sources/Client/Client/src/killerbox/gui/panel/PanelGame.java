@@ -30,7 +30,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 {
 
 	private static final int HAUTEUR_CHAT = 100;
-	private final int FPS = 10;
+	private final int FPS = 25;
 	private double angleSourisJoueur;
 	private Image imageDeFond;		 // Images de fond
 	private CarteBase carte = new CarteBase();
@@ -48,7 +48,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 			{
 				try
 				{
-					Thread.sleep(1000 / 10);
+					Thread.sleep(1000 / FPS);
 				}
 				catch (InterruptedException e)
 				{
