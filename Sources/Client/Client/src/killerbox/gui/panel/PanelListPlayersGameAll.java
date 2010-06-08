@@ -221,6 +221,7 @@ public class PanelListPlayersGameAll extends AbstractPanel
 		scrollPane.getViewport().setView(playersTable);
 		repaint();
 		validate();
+		
 	}
 
 }

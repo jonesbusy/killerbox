@@ -66,7 +66,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 	public PanelAdminScores(final BaseWindow window)
 	{
 		super(window);
-		
+
 		this.scoresTable.setAutoCreateRowSorter(true);
 
 		// Selection simple
@@ -119,6 +119,8 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 						if (JOptionPane.showConfirmDialog(window, CONFIRM_DELETE_ACCOUNT + user
 								+ " ?", window.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
+
+							clearJTable();
 							// Demande la suppression du compte
 							controller.requestDeleteAccount(user);
 
@@ -127,7 +129,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 
 							JOptionPane.showMessageDialog(window,
 									"L'utilisateur a bien ete supprime", window.getTitle(),
-									JOptionPane.INFORMATION_MESSAGE);				
+									JOptionPane.INFORMATION_MESSAGE);
 
 						}
 
@@ -142,6 +144,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 						if (JOptionPane.showConfirmDialog(window, CONFIRM_MODIFY_PASS + user
 								+ " ?", window.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
+							clearJTable();
 							controller.requestModifyPass(user, "1234");
 
 							// Actualiser les donnes presentes
@@ -153,7 +156,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 									JOptionPane.INFORMATION_MESSAGE);
 
 						}
-						
+
 						break;
 					}
 
@@ -164,6 +167,7 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 						if (JOptionPane.showConfirmDialog(window, CONFIRM_MODIFY_SCORE + user
 								+ " ?", window.getTitle(), JOptionPane.ERROR_MESSAGE) == JOptionPane.OK_OPTION)
 						{
+							clearJTable();
 							controller.requestModifyScore(user, 0);
 
 							// Actualiser les donnes presentes
@@ -200,9 +204,9 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 				});
 
 		this.loader.start();
-		
+
 	}
-	
+
 	/**
 	 * Permet de retourner le bouton principal. Null s'il n'y a
 	 * aucun bouton principal sur le Panel
@@ -212,6 +216,31 @@ public class PanelAdminScores extends AbstractTableScoresPanel
 	public JButton getDefaultButton()
 	{
 		return this.btnForward;
+	}
+
+	/**
+	 * Est appele quand les nouvelles donnees sont arrivees
+	 */
+	@Override
+	public void refreshData()
+	{
+		super.refreshData();
+
+		scoresTable.setEnabled(true);
+	}
+
+	/**
+	 * Action a effectuer lorsque l'administrateur demande de modifier des information
+	 * du compte. Permet de desactiver temporairement le JTable en attendant les nouvelles
+	 * informations
+	 */
+	private void clearJTable()
+	{
+		scoresTable.setEnabled(false);
+		scoresTable.clearSelection();
+		btnValidate.setEnabled(false);
+		repaint();
+		validate();
 	}
 
 }

@@ -79,6 +79,9 @@ public class PanelScores extends AbstractTableScoresPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				// Desactiver temporairement le bouton
+				btnRefresh.setEnabled(false);
+				
 				// Charger les donnes presente
 				controller.requestScore();
 			}
@@ -99,6 +102,18 @@ public class PanelScores extends AbstractTableScoresPanel
 	public JButton getDefaultButton()
 	{
 		return this.btnForward;
+	}
+
+	/**
+	 * Est appele quand les donnees sont mise a jour
+	 */
+	@Override
+	public void refreshData()
+	{
+		super.refreshData();
+		
+		// Reactiver le bouton actualiser
+		this.btnRefresh.setEnabled(true);
 	}
 	
 }

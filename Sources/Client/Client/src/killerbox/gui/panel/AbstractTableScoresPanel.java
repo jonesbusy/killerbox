@@ -146,11 +146,11 @@ public abstract class AbstractTableScoresPanel extends AbstractPanel
 		this.loader.getData();
 		
 		// Mettre a jour le scroll pane
-		scoresTable.repaint();
-		scoresTable.validate();
-		scrollPane.getViewport().setView(scoresTable);
-		repaint();
-		validate();
+		this.scoresTable.repaint();
+		this.scoresTable.validate();
+		this.scrollPane.getViewport().setView(scoresTable);
+		this.repaint();
+		this.validate();
 		
 	}
 	
