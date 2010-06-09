@@ -42,7 +42,12 @@ public class AboutDialog extends JDialog
 	 * Le bouton ok
 	 */
 	private JButton btnOk = new JButton("Ok");
-
+	
+	/**
+	 * Le logo 
+	 */
+	private JLabel logo = new JLabel(new ImageIcon("KBsmall.jpg"));
+	
 	/**
 	 * Permet de creer la boite about
 	 * @param parent La fenetre parente
@@ -51,12 +56,11 @@ public class AboutDialog extends JDialog
 	{
 		super(parent, "A propos de KillerBox", true);
 		this.parent = parent;
-
-		this.add(new JLabel(
-				"<html><h1><i>KillerBox</i></h1><hr>By Fabrizio Beretta Piccoli <br />"
+ 
+		this.add(logo,BorderLayout.NORTH);		
+		this.add(new JLabel("<html>By Fabrizio Beretta Piccoli <br />"
 						+ "Jonas Berdoz<br />" + "Valentin Delaye<br />"
-						+ "Michael Sandoz<html>"), BorderLayout.CENTER);
-
+						+ "Michael Sandoz<html>"),BorderLayout.CENTER);				
 		this.panel.add(this.btnOk);
 		this.add(this.panel, BorderLayout.SOUTH);
 
