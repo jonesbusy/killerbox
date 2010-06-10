@@ -302,16 +302,4 @@ public class ControllerGame {
 		
 		g2D.setComposite(compositeInitial);
 	}
-
-	public void indiquerJoueurActif(Graphics g) {
-		Thread t = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-	}
 }
