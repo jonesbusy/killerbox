@@ -230,6 +230,9 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 			chat.width = carteDim.width;
 			chat.height = HAUTEUR_CHAT;
 			window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20 + chat.height);
+			
+			// Indiquer l'emplacement du joueur actif
+			window.getControllerGame().indiquerJoueurActif(getGraphics());
 		}
 	}
 
