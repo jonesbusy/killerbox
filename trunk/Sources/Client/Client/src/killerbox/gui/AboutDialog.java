@@ -26,7 +26,7 @@ public class AboutDialog extends JDialog
 	/**
 	 * Hauteur de la boite de dialogue
 	 */
-	public static final int HEIGHT = 200;
+	public static final int HEIGHT = 250;
 
 	/**
 	 * La fenetre parente
@@ -58,9 +58,9 @@ public class AboutDialog extends JDialog
 		this.parent = parent;
  
 		this.add(logo,BorderLayout.NORTH);		
-		this.add(new JLabel("<html>By Fabrizio Beretta Piccoli <br />"
+		this.add(new JLabel("<html>Créé par : <br /><dir>Fabrizio Beretta Piccoli <br />"
 						+ "Jonas Berdoz<br />" + "Valentin Delaye<br />"
-						+ "Michael Sandoz<html>"),BorderLayout.CENTER);				
+						+ "Michaël Sandoz</dir></html>"),BorderLayout.CENTER);				
 		this.panel.add(this.btnOk);
 		this.add(this.panel, BorderLayout.SOUTH);
 
