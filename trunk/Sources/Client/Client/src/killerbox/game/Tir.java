@@ -75,7 +75,7 @@ public class Tir {
 								modelGame.incrementerScore(joueur.getNom(), ScoreJoueur.SCORE_TOUCHE);
 							}
 							
-							controllerReseau.sendInfosGameOtherPlayers("score#"+joueur.getNom() + "#" + modelGame.getScore(joueur.getNom()));
+							controllerReseau.sendInfosGameOtherPlayers("score#"+modelGame.getJoueurActif().getNom() + "#" + modelGame.getScore(joueur.getNom()));
 						}
 						
 						fin = true;

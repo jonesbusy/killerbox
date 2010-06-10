@@ -225,7 +225,6 @@ public class KillerBoxDecoder extends Decoder
 						{
 							nbPlayers.add(-1);
 						}
-
 					}
 
 					// Charger les donnees
@@ -284,7 +283,7 @@ public class KillerBoxDecoder extends Decoder
 					else if (instruction.equals("message"))
 					{
 						String msg = tokens.nextToken();
-						base.getModelGame().addMessage(new Message(msg, Color.GRAY));
+						base.getModelGame().addMessage(new Message(msg, Color.WHITE));
 					}
 					else if (instruction.equals("others"))
 					{
@@ -325,6 +324,12 @@ public class KillerBoxDecoder extends Decoder
 							{
 								base.getModelGame().addMessage(new Message(tueur + " vous a tué!", Color.RED));
 								base.getModelGame().setJoueurActif((Joueur)null);
+								// Mise à jour du score dans la base de donnée
+								try {
+									base.getController().requestModifyScoreByIncrement(nomJoueur, base.getModelGame().getScore(nomJoueur));
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 							else
 							{
@@ -335,6 +340,7 @@ public class KillerBoxDecoder extends Decoder
 						{
 							String nomJoueur = tokens.nextToken();
 							int score = Integer.valueOf(tokens.nextToken());
+							
 							
 							base.getModelGame().setScore(nomJoueur, score);
 						}

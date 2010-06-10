@@ -21,6 +21,8 @@ public class Chat extends Rectangle{
 		// Dessiner le fond
 		g.setColor(Color.BLACK);
 		g.fillRect(x, y, width, height);
+		g.setColor(Color.ORANGE);
+		g.drawRect(x, y, width, height);
 		
 		// dessiner messages
 		int hauteurTexte = g.getFont().getSize();

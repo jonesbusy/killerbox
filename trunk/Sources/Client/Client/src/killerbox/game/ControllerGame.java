@@ -1,8 +1,11 @@
 package killerbox.game;
 
 import java.awt.*;
-import java.awt.Rectangle;
 import java.awt.event.*;
+import java.util.ArrayList;
+
+import javax.crypto.spec.PSource;
+import javax.swing.JOptionPane;
 
 
 import killerbox.network.KillerBoxController;
@@ -220,4 +223,80 @@ public class ControllerGame {
 		
 	}
 
+	public boolean checkFinJeu() {
+		if (modelGame.getJoueurs().size() == 1)
+		{
+			modelGame.setEtat(EtatModel.AFFICHAGE_SCORE);
+			
+			// si on est le dernier joueur à être en jeu, incrémenter son score
+			String nom = modelGame.getJoueurActif().getNom();
+			if (modelGame.getJoueurByName(nom) != null) {
+				controllerReseau.requestModifyScoreByIncrement(nom, modelGame.getScore(nom));
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	public void afficherScores(Graphics g, Dimension dimensionPanel) {
+		// Variables
+		ArrayList<ScoreJoueur> scoresJoueurs = modelGame.getScores();
+		Font police = new Font("Arial", Font.PLAIN, 14);
+		Font policeTitre = new Font("Arial", Font.BOLD, 16);
+		g.setFont(police);
+		int sizePolice = g.getFont().getSize();
+		Rectangle rectScore = new Rectangle();
+		int marge = 10;
+		String titre = "SCORES :";
+		
+		// Récupérer la largeur du plus grand score
+		// Récupérer la largeur du plus grand nom
+		int largeurScore = 0;
+		int largeurNom = 0;
+		for (ScoreJoueur sJ : scoresJoueurs) {
+			int lengthNom = sJ.getName().length();
+			int lenghtScore = String.valueOf(sJ.getScore()).length();
+			
+			if (lengthNom > largeurNom)
+				largeurNom = lengthNom;
+			
+			if (lenghtScore > largeurScore)
+				largeurScore = lengthNom;
+		}
+		largeurScore = largeurScore * sizePolice + marge;
+		largeurNom = largeurNom * sizePolice + marge;
+		int largeurTitre = titre.length() * policeTitre.getSize() + marge;
+		
+		// Calculer le rectangle
+		rectScore.height = (scoresJoueurs.size())*sizePolice + policeTitre.getSize() + 2*marge;
+		if (largeurTitre + marge > largeurNom + largeurScore + marge)
+			rectScore.width = largeurTitre + marge;
+		else
+			rectScore.width = largeurNom + largeurScore + marge;
+		rectScore.x = (dimensionPanel.width - rectScore.width)/2;
+		rectScore.y = (dimensionPanel.height - rectScore.height)/2;
+		
+		// Dessiner le rectangle
+		g.setColor(Color.BLACK);
+		g.fillRect(rectScore.x, rectScore.y, rectScore.width, rectScore.height);
+		g.setColor(Color.ORANGE);
+		g.drawRect(rectScore.x, rectScore.y, rectScore.width, rectScore.height);
+		
+		// Afficher le score de chaque joueur :
+		int posScoreX = rectScore.x + marge;
+		int posScoreY = rectScore.y + sizePolice +marge;
+		
+		g.setColor(Color.WHITE);
+		g.setFont(policeTitre);
+		g.drawString(titre, posScoreX, posScoreY);
+		posScoreY = posScoreY + policeTitre.getSize();
+		g.setFont(police);
+		for (ScoreJoueur sJ : scoresJoueurs) {
+			g.drawString(String.valueOf(sJ.getScore()), posScoreX, posScoreY);
+			g.drawString(sJ.getName(), posScoreX+largeurScore, posScoreY);
+			posScoreY = posScoreY + sizePolice;
+		}
+	}
 }
