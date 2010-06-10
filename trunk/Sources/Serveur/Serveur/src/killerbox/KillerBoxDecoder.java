@@ -11,7 +11,6 @@ import network.*;
  */
 public class KillerBoxDecoder extends Decoder
 {
-
 	/**
 	 * Serveur KillerBox
 	 */
@@ -217,6 +216,21 @@ public class KillerBoxDecoder extends Decoder
 						connexion.sendModifyScores(false);
 					}
 
+				}
+				else if (instruction.equals("scoresIncrement"))
+				{
+					try
+					{
+						String pseudo = tokens.nextToken();
+						int score = Integer.parseInt(tokens.nextToken()) +
+									this.database.getScore(pseudo);
+						this.database.setScore(pseudo,score);
+						connexion.sendModifyScores(true);
+					}
+					catch (Exception e)
+					{
+						connexion.sendModifyScores(false);
+					}
 				}
 
 			}
