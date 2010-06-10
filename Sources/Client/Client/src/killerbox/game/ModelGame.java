@@ -17,6 +17,9 @@ public class ModelGame extends Observable{
 	// Liste des joueurs
 	ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
 	
+	// Liste des score des joueurs
+	ArrayList<ScoreJoueur> scores = new ArrayList<ScoreJoueur>();
+	
 	public ArrayList<Message> getMessages() {
 		return new ArrayList<Message>(messages);
 	}
@@ -108,6 +111,48 @@ public class ModelGame extends Observable{
 
 	public void addMessage(Message message) {
 		messages.add(message);
+	}
+
+	public void incrementerScore(String nom, int score) {
+		boolean joueurExiste = false;
+		
+		for (ScoreJoueur scoreJoueur : scores) {
+			if (scoreJoueur.getName().equals(nom))
+			{
+				scoreJoueur.incrementerScore(score);
+				joueurExiste = true;
+				break;
+			}
+		}
+		
+		if (!joueurExiste)
+			scores.add(new ScoreJoueur(nom, score));
+		
+	}
+
+	public Integer getScore(String nom) {
+		for (ScoreJoueur scoreJoueur : scores) {
+			if (scoreJoueur.getName().equals(nom))
+				return scoreJoueur.getScore();
+		}
+		
+		return null;
+	}
+
+	public void setScore(String nomJoueur, int score) {
+		boolean joueurExiste = false;
+		
+		for (ScoreJoueur scoreJoueur : scores) {
+			if (scoreJoueur.getName().equals(nomJoueur))
+			{
+				scoreJoueur.setScore(score);
+				joueurExiste = true;
+				break;
+			}
+		}
+		
+		if (!joueurExiste)
+			scores.add(new ScoreJoueur(nomJoueur, score));
 	}
 
 }

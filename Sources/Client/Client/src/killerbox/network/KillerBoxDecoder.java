@@ -305,13 +305,12 @@ public class KillerBoxDecoder extends Decoder
 						}
 						else if (instruction.equals("tir"))
 						{
-							Point source = new Point(Integer.valueOf(tokens.nextToken()),
-									Integer.valueOf(tokens.nextToken()));
+							Joueur joueur = base.getModelGame().getJoueurByName(tokens.nextToken());
 							double angle = Double.valueOf(tokens.nextToken());
 							int vitesse = Integer.valueOf(tokens.nextToken());
 							TypeTir typeTir = new TypeTir(vitesse);
 
-							Tir tir = new Tir(source, angle, typeTir, false,
+							Tir tir = new Tir(joueur, angle, typeTir,
 									base.getModelGame(), base.getController());
 							base.getModelGame().addTir(tir);
 						}
@@ -331,6 +330,13 @@ public class KillerBoxDecoder extends Decoder
 							{
 								base.getModelGame().addMessage(new Message(tueur + " a tué " + nomJoueur + "!", Color.RED));
 							}
+						}
+						else if (instruction.equals("score"))
+						{
+							String nomJoueur = tokens.nextToken();
+							int score = Integer.valueOf(tokens.nextToken());
+							
+							base.getModelGame().setScore(nomJoueur, score);
 						}
 					}
 					else if (instruction.equals("!owner"))
