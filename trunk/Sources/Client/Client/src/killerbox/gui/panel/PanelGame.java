@@ -162,7 +162,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 					break;
 				case AFFICHAGE_SCORE:
 					dessinerJeu(g, modelGame);
-					controllerGame.afficherScores(g,getSize());
+					controllerGame.afficherScores(g,new Dimension(getSize().width, getSize().height - chat.height));
 					break;
 				case Demarrer:
 					dessinerJeu(g, modelGame);
