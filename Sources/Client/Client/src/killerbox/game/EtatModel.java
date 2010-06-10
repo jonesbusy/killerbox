@@ -2,5 +2,6 @@ package killerbox.game;
 
 public enum EtatModel {
 	Chargement,
-	Demarrer
+	Demarrer,
+	AFFICHAGE_SCORE
 }

@@ -155,4 +155,8 @@ public class ModelGame extends Observable{
 			scores.add(new ScoreJoueur(nomJoueur, score));
 	}
 
+	public ArrayList<ScoreJoueur> getScores() {
+		return new ArrayList<ScoreJoueur>(scores);
+	}
+
 }

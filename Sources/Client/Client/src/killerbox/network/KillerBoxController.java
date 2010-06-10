@@ -97,6 +97,17 @@ public class KillerBoxController extends Controller
 	{
 		client.send("#account#modify#scores#" + login + '#' + score);
 	}
+	
+	/**
+	 * Effectuer une demande de d'incrémentation de score. Uniquement un
+	 * administrateur est autorise a executer ceci. La modification d'un score
+	 * a la fin d'une partie est automatiquement change par le serveur lui meme. Un client
+	 * (non administrateur) n'a pas la possibilite de changer son score.
+	 * @param login Le compte dont on veut modifier le score.
+	 */
+	public void requestModifyScoreByIncrement(String login, int score) {
+		client.send("#account#modify#scoresIncrement#" + login + '#' + score);
+	}
 
 	/**
 	 * Effectuer une demande de modification de mot de passe.

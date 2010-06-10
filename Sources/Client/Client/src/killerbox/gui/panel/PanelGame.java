@@ -29,7 +29,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 
 	private Thread action = new Thread(new Runnable()
 	{
-
 		public void run()
 		{
 			while (true)
@@ -46,6 +45,28 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 				// TODO Verifier NullPointer
 				if (window.getControllerGame() != null)
 					window.getControllerGame().gestionCommandes(etatCommandes);
+			}
+		}
+	});
+	
+	private Thread checkFinJeu = new Thread(new Runnable() {
+
+		public void run() {
+			boolean finJeu = false;
+			while (!finJeu)
+			{
+				try
+				{
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e)
+				{
+					
+				}
+				
+				// TODO Verifier NullPointer
+				if (window.getControllerGame() != null)
+					finJeu = window.getControllerGame().checkFinJeu();
 			}
 		}
 	});
@@ -81,9 +102,9 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		
 		// chat
 		chat = new Chat(window.getModelGame());
-
 		refresh.start();
 		action.start();
+		checkFinJeu.start();
 	}
 
 	/**
@@ -139,29 +160,37 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 				case Chargement:
 					g.drawString("Chargement en cours ...", 10, 10);
 					break;
+				case AFFICHAGE_SCORE:
+					dessinerJeu(g, modelGame);
+					controllerGame.afficherScores(g,getSize());
+					break;
 				case Demarrer:
-					// Dessiner la carte
-					modelGame.getCarte().dessiner(g);
-
-					// dessiner les tirs
-					for (Tir tir : modelGame.getTirs())
-					{
-						tir.dessiner(g);
-					}
-
-					// dessiner les joueurs
-					for (Joueur joueur : modelGame.getJoueurs())
-					{
-						if (!joueur.isMort())
-							joueur.dessiner(g, null);
-					}
-
-					// dessiner le chat
-					chat.dessiner(g);
+					dessinerJeu(g, modelGame);
 			}
 		}
 		catch(Exception e){}
     }
+
+	private void dessinerJeu(Graphics g, ModelGame modelGame) {
+		// Dessiner la carte
+		modelGame.getCarte().dessiner(g);
+
+		// dessiner les tirs
+		for (Tir tir : modelGame.getTirs())
+		{
+			tir.dessiner(g);
+		}
+
+		// dessiner les joueurs
+		for (Joueur joueur : modelGame.getJoueurs())
+		{
+			if (!joueur.isMort())
+				joueur.dessiner(g, null);
+		}
+
+		// dessiner le chat
+		chat.dessiner(g);
+	}
 	
 	public Dimension getPreferredSize() {
 		// Retourne la taille souhaitée pour le composant (remplace le "getSize"
@@ -218,17 +247,23 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 	}
 
 	/**
-	 * Model notifie ses changement d'état chargement -> demarrer
+	 * Model notifie ses changement d'état
+	 *  - chargement -> demarrer
+	 *  - démarrer -> résultats
+	 * 
 	 */
 	public void update(Observable o, Object arg)
 	{
-		// On adapte la taille de la fenêtre et du panel à celle de la carte
-		Dimension carteDim = window.getModelGame().getCarte().getSize();
-		setSize(carteDim);
-		chat.y = carteDim.height;
-		chat.width = carteDim.width;
-		chat.height = HAUTEUR_CHAT;
-		window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20 + chat.height);
+		if (window.getModelGame().getEtat().equals(EtatModel.Demarrer))
+		{
+			// On adapte la taille de la fenêtre et du panel à celle de la carte
+			Dimension carteDim = window.getModelGame().getCarte().getSize();
+			setSize(carteDim);
+			chat.y = carteDim.height;
+			chat.width = carteDim.width;
+			chat.height = HAUTEUR_CHAT;
+			window.setSize(carteDim.width,carteDim.height + window.getHeightMenu()+ 20 + chat.height);
+		}
 	}
 
 	@Override
@@ -275,6 +310,7 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 			// Arrêter toutes les threads
 			action.interrupt();
 			refresh.interrupt();
+			checkFinJeu.interrupt();
 			window.getControllerGame().arreterPartie();
 			
 			// Supprimer le modèle et le controller
