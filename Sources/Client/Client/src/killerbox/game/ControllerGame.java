@@ -263,7 +263,7 @@ public class ControllerGame {
 				largeurNom = lengthNom;
 			
 			if (lenghtScore > largeurScore)
-				largeurScore = lengthNom;
+				largeurScore = lenghtScore;
 		}
 		largeurScore = largeurScore * sizePolice + marge;
 		largeurNom = largeurNom * sizePolice + marge;
