@@ -582,21 +582,6 @@ public class BaseWindow extends JFrame implements Observer
 		this.panel.printMessage(message);
 	}
 
-	/**
-	 * Lorsque la vue recoit un message du controleur, elle l'affiche sur le panel
-	 * en cours. Est utilise par exemple quand le controleur indiquer une action
-	 * impossible (Erreur de creation de compte, mauvaises informations de login, etc.)
-	 */
-	@Override
-	public void update(Observable o, Object arg)
-	{
-		// Indiquer au panel de se refraichir
-		this.panel.refreshData();
-
-		// Si la vue recoit un message (generalement d'erreur)
-		if (String.class.isInstance(arg))
-			this.panel.printMessage((String) arg);
-	}
 
 	/**
 	 * Permet de setter le modele du jeu
@@ -686,6 +671,22 @@ public class BaseWindow extends JFrame implements Observer
 	public static int getDefaultWidth()
 	{
 		return WIDTH;
+	}
+	
+	/**
+	 * Lorsque la vue recoit un message du controleur, elle l'affiche sur le panel
+	 * en cours. Est utilise par exemple quand le controleur indiquer une action
+	 * impossible (Erreur de creation de compte, mauvaises informations de login, etc.)
+	 */
+	@Override
+	public void update(Observable o, Object arg)
+	{
+		// Indiquer au panel de se refraichir
+		this.panel.refreshData();
+
+		// Si la vue recoit un message (generalement d'erreur)
+		if (String.class.isInstance(arg))
+			this.panel.printMessage((String) arg);
 	}
 
 }
