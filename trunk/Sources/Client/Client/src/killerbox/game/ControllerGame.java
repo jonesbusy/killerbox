@@ -90,11 +90,8 @@ public class ControllerGame {
 				
 				Point source = new Point(joueur.getPosX(),joueur.getPosY());
 				Double angle = joueur.getAngleSourisJoueur();
-				double moitieJoueur = joueur.getRectangle().width;
-				source.x = source.x + (int)(Math.cos(angle)*moitieJoueur);
-				source.y = source.y + (int)(Math.sin(angle)*moitieJoueur);
 				
-				Tir tir = new Tir(source, angle, new TypeTir(10),true,modelGame, controllerReseau);
+				Tir tir = new Tir(joueur, angle, new TypeTir(10),modelGame, controllerReseau);
 				modelGame.addTir(tir);
 				controllerReseau.sendInfosGameOtherPlayers("tir#"+tir.toString());
 			}
