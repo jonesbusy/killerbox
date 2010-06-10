@@ -241,12 +241,18 @@ public class ControllerGame {
 	}
 
 	public void afficherScores(Graphics g, Dimension dimensionPanel) {
+		
+
+		Graphics2D g2D = (Graphics2D)g;
+		Composite compositeInitial = g2D.getComposite();
+		g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+		
 		// Variables
 		ArrayList<ScoreJoueur> scoresJoueurs = modelGame.getScores();
-		Font police = new Font("Arial", Font.PLAIN, 14);
+		Font policeScore = new Font("Arial", Font.PLAIN, 14);
 		Font policeTitre = new Font("Arial", Font.BOLD, 16);
-		g.setFont(police);
-		int sizePolice = g.getFont().getSize();
+		g2D.setFont(policeScore);
+		int sizePoliceScore = policeScore.getSize();
 		Rectangle rectScore = new Rectangle();
 		int marge = 10;
 		String titre = "SCORES :";
@@ -265,12 +271,12 @@ public class ControllerGame {
 			if (lenghtScore > largeurScore)
 				largeurScore = lenghtScore;
 		}
-		largeurScore = largeurScore * sizePolice + marge;
-		largeurNom = largeurNom * sizePolice + marge;
+		largeurScore = largeurScore * sizePoliceScore + marge;
+		largeurNom = largeurNom * sizePoliceScore + marge;
 		int largeurTitre = titre.length() * policeTitre.getSize() + marge;
 		
 		// Calculer le rectangle
-		rectScore.height = (scoresJoueurs.size())*sizePolice + policeTitre.getSize() + 2*marge;
+		rectScore.height = (scoresJoueurs.size())*sizePoliceScore + policeTitre.getSize() + 2*marge;
 		if (largeurTitre + marge > largeurNom + largeurScore + marge)
 			rectScore.width = largeurTitre + marge;
 		else
@@ -279,24 +285,26 @@ public class ControllerGame {
 		rectScore.y = (dimensionPanel.height - rectScore.height)/2;
 		
 		// Dessiner le rectangle
-		g.setColor(Color.BLACK);
-		g.fillRect(rectScore.x, rectScore.y, rectScore.width, rectScore.height);
-		g.setColor(Color.ORANGE);
-		g.drawRect(rectScore.x, rectScore.y, rectScore.width, rectScore.height);
+		g2D.setColor(Color.BLACK);
+		g2D.fillRect(rectScore.x, rectScore.y, rectScore.width, rectScore.height);
+		g2D.setColor(Color.ORANGE);
+		g2D.drawRect(rectScore.x, rectScore.y, rectScore.width, rectScore.height);
 		
 		// Afficher le score de chaque joueur :
 		int posScoreX = rectScore.x + marge;
-		int posScoreY = rectScore.y + sizePolice +marge;
+		int posScoreY = rectScore.y + sizePoliceScore +marge;
 		
-		g.setColor(Color.WHITE);
-		g.setFont(policeTitre);
-		g.drawString(titre, posScoreX, posScoreY);
+		g2D.setColor(Color.WHITE);
+		g2D.setFont(policeTitre);
+		g2D.drawString(titre, posScoreX, posScoreY);
 		posScoreY = posScoreY + policeTitre.getSize();
-		g.setFont(police);
+		g2D.setFont(policeScore);
 		for (ScoreJoueur sJ : scoresJoueurs) {
-			g.drawString(String.valueOf(sJ.getScore()), posScoreX, posScoreY);
-			g.drawString(sJ.getName(), posScoreX+largeurScore, posScoreY);
-			posScoreY = posScoreY + sizePolice;
+			g2D.drawString(String.valueOf(sJ.getScore()), posScoreX, posScoreY);
+			g2D.drawString(sJ.getName(), posScoreX+largeurScore, posScoreY);
+			posScoreY = posScoreY + sizePoliceScore;
 		}
+		
+		g2D.setComposite(compositeInitial);
 	}
 }
