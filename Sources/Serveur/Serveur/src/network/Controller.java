@@ -12,7 +12,7 @@ import java.io.*;
  * @author Valentin Delaye
  * @version 1.0
  */
-public abstract class Controller implements Runnable
+public class Controller implements Runnable
 {
 	
 	/**

@@ -114,7 +114,6 @@ public class KillerBoxServer extends Observable implements Observer
 		// Seter les serveurs du decodeur, ainsi que la base de donnee
 		decoder.setServer(this.server);
 		decoder.setKillerBoxServer(this);
-		decoder.setDataBase(this.database);
 
 	}
 
@@ -273,6 +272,15 @@ public class KillerBoxServer extends Observable implements Observer
 	public GameList getGameList()
 	{
 		return this.gameList;
+	}
+	
+	/**
+	 * Permet de retourner la base de donnee associee au serveur
+	 * @return La base de donnee
+	 */
+	public DataBase getDataBase()
+	{
+		return this.database;
 	}
 
 	/**
