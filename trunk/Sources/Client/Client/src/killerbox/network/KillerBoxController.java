@@ -92,6 +92,7 @@ public class KillerBoxController extends Controller
 	 * a la fin d'une partie est automatiquement change par le serveur lui meme. Un client
 	 * (non administrateur) n'a pas la possibilite de changer son score.
 	 * @param login Le compte dont on veut modifier le score.
+	 * @param score Le nouveau score
 	 */
 	public void requestModifyScore(String login, int score)
 	{
