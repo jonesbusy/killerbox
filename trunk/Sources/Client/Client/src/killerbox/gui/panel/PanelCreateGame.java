@@ -114,6 +114,9 @@ public class PanelCreateGame extends AbstractPanel
 		this.add(this.btnForward);
 		this.add(this.btnCreate);
 		
+		// Desactiver le mode en equipe, pour des question de temps
+		this.btnTeam.setEnabled(false);
+		
 	}
 
 	/**
