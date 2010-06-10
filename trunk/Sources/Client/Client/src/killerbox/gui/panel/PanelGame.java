@@ -19,9 +19,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 
 	private static final int HAUTEUR_CHAT = 100;
 	private final int FPS = 25;
-	private double angleSourisJoueur;
-	private Image imageDeFond;		 // Images de fond
-	private CarteBase carte = new CarteBase();
 	private EtatCommandes etatCommandes = new EtatCommandes(KeyEvent.VK_W, KeyEvent.VK_S,
 			KeyEvent.VK_D, KeyEvent.VK_A, MouseEvent.BUTTON1);
 	private Thread refresh = new Thread(this);
@@ -105,36 +102,6 @@ public class PanelGame extends AbstractPanel implements KeyListener, MouseMotion
 		refresh.start();
 		action.start();
 		checkFinJeu.start();
-	}
-
-	/**
-	 * Méthode dessinant le modèle de jeu sur le panel. C'est à dire le fond
-	 * de la carte, les murs et les joueurs.
-	 */
-
-	private void calculerAngle(double x1, double y1, double x2, double y2)
-	{
-		double a = (x2 - x1);
-		double b = (y2 - y1);
-		double length = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-
-		angleSourisJoueur = Math.asin(Math.abs(b) / length);
-		if (b < 0)
-		{
-			angleSourisJoueur = -angleSourisJoueur;
-		}
-		if (a < 0)
-		{
-			angleSourisJoueur = Math.PI - angleSourisJoueur;
-		}
-		// Rescaled into [0, 2*PI[.
-		angleSourisJoueur %= 2 * Math.PI;
-		if (angleSourisJoueur < 0)
-		{
-			angleSourisJoueur += 2 * Math.PI;
-		}
-
-		repaint();
 	}
 
 	@Override

@@ -4,9 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import javax.crypto.spec.PSource;
-import javax.swing.JOptionPane;
-
 
 import killerbox.network.KillerBoxController;
 
@@ -32,7 +29,6 @@ public class ControllerGame {
 		
 		if (joueur != null)
 		{
-			CarteBase carte = modelGame.getCarte();
 				
 			int posInitX = joueur.getPosX();
 			int posInitY = joueur.getPosY();
@@ -91,7 +87,6 @@ public class ControllerGame {
 				// Calculer la source du tir (il faut qu'elle soit en dehors du rectangle du joueur,
 				// sinon il se tire dessus)
 				
-				Point source = new Point(joueur.getPosX(),joueur.getPosY());
 				Double angle = joueur.getAngleSourisJoueur();
 				
 				Tir tir = new Tir(joueur, angle, new TypeTir(10),modelGame, controllerReseau);
