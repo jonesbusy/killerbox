@@ -424,7 +424,7 @@ public class KillerBoxDecoder extends Decoder
 				{
 					// Renvoyer à tout le monde de la même partie
 					serverKillerBox.broadcastGame(idGame, message);
-					System.out.println(message);
+					//System.out.println(message);
 					
 				}
 			}
