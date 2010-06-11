@@ -236,8 +236,6 @@ public class ControllerGame {
 	}
 
 	public void afficherScores(Graphics g, Dimension dimensionPanel) {
-		
-
 		Graphics2D g2D = (Graphics2D)g;
 		Composite compositeInitial = g2D.getComposite();
 		g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
