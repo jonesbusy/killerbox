@@ -80,7 +80,7 @@ public abstract class Controller implements Observer, Runnable
 					throw new IOException();
 				
 				// --- Message debug pour afficher les messages recu dans la console ---
-				System.out.println("GET : " + ligne);
+				//System.out.println("GET : " + ligne);
 				
 				// Decoder la ligne
 				this.decoder.decode(ligne);

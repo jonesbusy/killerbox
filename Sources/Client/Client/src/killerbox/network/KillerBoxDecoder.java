@@ -417,7 +417,7 @@ public class KillerBoxDecoder extends Decoder
 		catch (NullPointerException e)
 		{
 			e.printStackTrace();
-			System.out.println("Impossible de decoder : " + message);
+			//System.out.println("Impossible de decoder : " + message);
 		}
 
 	}
