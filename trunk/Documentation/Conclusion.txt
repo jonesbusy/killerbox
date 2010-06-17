@@ -1,4 +1,0 @@
-Bien que toutes les fonctionnalités n'aient pas été implémentées, le résultat de notre jeu KillerBox nous satisfait. En effet, 5 semaines pour effectuer un tel projet est très peu. Nous nous sommes rendu compte assez rapidement qu’il y aurait pas mal de travail à faire et que du retard risquait d’être pris.
-Néanmoins, le  jeu est fonctionnel et il est possible d'effectuer des parties tous contre tous.
-L'aspect de gestion de projet à été très intéressant pour nous bien qu'il ait fallu fournir passablement de documentation. La communication dans le groupe s'est bien passée, et chacun savait ce qu'il avait à faire. 
-Ce projet nous à permis d'améliorer nos compétence dans les domaines de la programmation en réseau ou graphique en Java et également dans la gestion de projet.
